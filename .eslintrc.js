@@ -97,10 +97,7 @@ module.exports = {
         ],
         'static-render-methods': [
           { 'name': '/^render.+$/', 'type': 'method', static: true }
-        ],
-        // 'arrow-class-funcs': [
-        //   { 'name': '/^.+$/', 'type': 'property', 'propertyType': 'ArrowFunctionExpression' }
-        // ]
+        ]
       }
     }],
     'react/sort-comp': 0,
@@ -110,9 +107,13 @@ module.exports = {
     'babel/new-cap': 0,
     'babel/object-curly-spacing': 0,
     'babel/object-shorthand': 1,
-    'babel/arrow-parens': 1,
+    'babel/arrow-parens': 0,
     'babel/no-await-in-loop': 1,
     'arrow-parens': 0,
+    'new-cap': [
+      'error',
+      { newIsCap: true, capIsNewExceptions: ['Color'] },
+    ],
     indent: [
       'error',
       2

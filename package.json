@@ -22,12 +22,20 @@
     "type": "git",
     "url": "git+ssh@github.com:Jazmon/tampereen-tapahtumat.git"
   },
+  "issues": {
+    "url": "https://github.com/Jazmon/tampereen-tapahtumat/issues"
+  },
+  "contributors": [],
+  "engines": {
+    "node": ">=6.6.0",
+    "npm": ">=3.10.7"
+  },
   "dependencies": {
     "babel-cli": "^6.16.0",
     "babel-core": "^6.17.0",
     "babel-polyfill": "^6.16.0",
     "babel-preset-react-native": "^1.9.0",
-    "babel-preset-stage-3": "^6.17.0",
+    "babel-preset-stage-0": "^6.16.0",
     "babel-relay-plugin": "^0.9.3",
     "react": "15.3.2",
     "react-native": "0.34.1",

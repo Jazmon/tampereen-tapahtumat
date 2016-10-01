@@ -1,12 +1,47 @@
 {
   "name": "TampereenTapahtumat",
+  "description": "A map of events in Tampere in the next few days",
+  "keywords": [
+    "react",
+    "react native",
+    "map",
+    "tampere",
+    "event",
+    "tapahtuma"
+  ],
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node node_modules/react-native/local-cli/cli.js start"
+    "start": "node node_modules/react-native/local-cli/cli.js start",
+    "lint": "./node_modules/.bin/eslint -c .eslintrc.js src"
+  },
+  "author": "Atte Huhtakangas <atte.huhtakangas@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://github.com/Jazmon/tampereen-tapahtumat",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh@github.com:Jazmon/tampereen-tapahtumat.git"
   },
   "dependencies": {
+    "babel-cli": "^6.16.0",
+    "babel-core": "^6.17.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-react-native": "^1.9.0",
+    "babel-preset-stage-3": "^6.17.0",
+    "babel-relay-plugin": "^0.9.3",
     "react": "15.3.2",
-    "react-native": "0.34.1"
+    "react-native": "0.34.1",
+    "react-native-vector-icons": "^2.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^3.7.0",
+    "eslint-config-airbnb": "^12.0.0",
+    "eslint-plugin-babel": "^3.3.0",
+    "eslint-plugin-flowtype": "^2.19.0",
+    "eslint-plugin-import": "^2.0.0",
+    "eslint-plugin-jsx-a11y": "^2.2.2",
+    "eslint-plugin-react": "^6.3.0",
+    "eslint-plugin-react-native": "^2.0.0",
+    "eslint-plugin-sort-class-members": "^1.1.1"
   }
 }

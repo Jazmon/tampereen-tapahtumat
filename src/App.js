@@ -1,9 +1,14 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import {
   View,
   Text,
   StyleSheet,
 } from 'react-native';
+
+import configureStore from './configureStore';
+
+const store = configureStore();
 
 const App = () => (
   <View style={styles.container}>
@@ -40,4 +45,8 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);

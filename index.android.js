@@ -7,10 +7,10 @@ import {
   AppRegistry,
 } from 'react-native';
 
-import App from './src/App';
+import Root from './src/Root';
 
 const TampereenTapahtumat = () => (
-  <App />
+  <Root />
 );
 
 AppRegistry.registerComponent('TampereenTapahtumat', () => TampereenTapahtumat);

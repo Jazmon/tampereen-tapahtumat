@@ -1,14 +1,11 @@
 import React from 'react';
-import { Provider } from 'react-redux';
+import { connect } from 'react-redux';
 import {
   View,
   Text,
   StyleSheet,
 } from 'react-native';
-
-import configureStore from './configureStore';
-
-const store = configureStore();
+import 'rxjs';
 
 const App = () => (
   <View style={styles.container}>
@@ -45,8 +42,11 @@ const styles = StyleSheet.create({
   },
 });
 
-export default (
-  <Provider store={store}>
-    <App />
-  </Provider>
-);
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    harambe: 'rip',
+  };
+};
+
+export default connect(mapStateToProps)(App);

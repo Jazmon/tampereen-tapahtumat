@@ -2,8 +2,8 @@ import { Observable } from 'rxjs/Observable';
 import * as ActionTypes from '../ActionTypes';
 import { receiveEvents } from '../actions';
 
-export default function searchEvents(action$) {
-  return action$.oftype(ActionTypes.REQUEST_EVENTS)
+export default (action$) =>
+  action$.ofType(ActionTypes.REQUEST_EVENTS)
     .map(action => action.payload.query)
     // .filter(q => !!q)
     .switchMap(() =>
@@ -16,4 +16,3 @@ export default function searchEvents(action$) {
         //   Observable.of(replace)
         // ))
     );
-}

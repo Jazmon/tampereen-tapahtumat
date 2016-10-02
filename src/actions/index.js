@@ -1,6 +1,7 @@
 import * as ActionTypes from '../ActionTypes';
 
 export function requestEvents() {
+  console.log('request events');
   return {
     type: ActionTypes.REQUEST_EVENTS,
   };

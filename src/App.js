@@ -4,11 +4,24 @@ import {
   View,
   Text,
   StyleSheet,
+  TouchableNativeFeedback,
 } from 'react-native';
 import 'rxjs';
 
-const App = () => (
+import {
+  requestEvents,
+} from './actions';
+
+const App = (props) => (
   <View style={styles.container}>
+    <TouchableNativeFeedback
+      onPress={props.requestEvents}
+      background={TouchableNativeFeedback.SelectableBackground()}
+    >
+      <View>
+        <Text>Click me!</Text>
+      </View>
+    </TouchableNativeFeedback>
     <Text style={styles.welcome}>
       Welcome to React Native!
     </Text>
@@ -41,12 +54,23 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 });
+// export default connect(
+//   ({ reposByUser }, ownProps) => ({
+//     reposByUser,
+//     user: ownProps.params.user
+//   }),
+//   { requestReposByUser }
+// )(ReposByUser);
+// const mapStateToProps = (state: { events: any }, ownProps) => ({
+//   ...state,
+// });
 
-const mapStateToProps = (state) => {
-  console.log(state);
-  return {
-    harambe: 'rip',
-  };
-};
+export default connect(
+  (props, ownProps) => ({
+    ...props.events,
+    ...ownProps,
+  }),
+  { requestEvents }
+)(App);
 
-export default connect(mapStateToProps)(App);
+// export default connect(mapStateToProps(state,))(App);

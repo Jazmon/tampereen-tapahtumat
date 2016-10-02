@@ -1,6 +1,12 @@
 import * as ActionTypes from '../ActionTypes';
 
-export default function events(state = {}, action) {
+const initialState = {
+  events: [],
+  isFetching: false,
+  error: null,
+};
+
+export default function events(state = initialState, action) {
   switch (action.type) {
   case ActionTypes.REQUEST_EVENTS:
     return {

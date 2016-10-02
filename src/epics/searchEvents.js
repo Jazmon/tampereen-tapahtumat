@@ -4,11 +4,11 @@ import { receiveEvents } from '../actions';
 
 export default (action$) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
-    .map(action => action.payload.query)
+    // .map(action => action.payload.query)
     // .filter(q => !!q)
     .switchMap(() =>
       Observable.timer(800)
-        .map(() => fetch('https://foo.bar/api/'))
+        .map(() => console.log('asdfasdf') || fetch('https://foo.bar/api/'))
         .map(res => res.json)
         .map(receiveEvents)
         // .takeUntil(action$.ofType(ActionTypes.))

@@ -4,15 +4,9 @@ import { receiveEvents } from '../actions';
 
 export default (action$) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
-    // .map(action => action.payload.query)
-    // .filter(q => !!q)
     .switchMap(() =>
-      Observable.timer(800)
-        .map(() => console.log('asdfasdf') || fetch('https://foo.bar/api/'))
-        .map(res => res.json)
-        .map(receiveEvents)
-        // .takeUntil(action$.ofType(ActionTypes.))
-        // .mergeMap(() => Observable.merge(
-        //   Observable.of(replace)
-        // ))
+      Observable.fromPromise(fetch('http://visittampere.fi/api/search?type=event'))
+      .switchMap((res) =>
+        Observable.fromPromise(res.json()))
+        .map(events => receiveEvents(events))
     );

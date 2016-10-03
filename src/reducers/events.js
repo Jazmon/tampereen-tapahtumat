@@ -17,7 +17,7 @@ export default function events(state = initialState, action) {
   case ActionTypes.RECEIVE_EVENTS:
     return {
       ...state,
-      events: action.payload.events,
+      events: [...state.events, action.payload.events],
       isFetching: false,
     };
 

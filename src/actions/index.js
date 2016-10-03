@@ -8,6 +8,7 @@ export function requestEvents() {
 }
 
 export function receiveEvents(events) {
+  console.log('receive events', events);
   return {
     type: ActionTypes.RECEIVE_EVENTS,
     payload: {

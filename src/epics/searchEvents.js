@@ -7,6 +7,8 @@ import moment from 'moment';
 import * as ActionTypes from '../ActionTypes';
 import { receiveEvents } from '../actions';
 
+import config from '../../config.json';
+
 /* eslint-disable global-require */
 if (locale.startsWith('fi')) {
   require('moment/locale/fi');
@@ -15,11 +17,10 @@ if (locale.startsWith('fi')) {
 }
 /* eslint-enable global-require */
 
-Geocoder.fallbackToGoogle('AIzaSyDtMhGRmlbnuDXisY0Zg7pFkv-4Ot0mSqI');
+Geocoder.fallbackToGoogle(config.googleApiKey);
 
 export const getLocation = async(event: Object) => {
   try {
-    // console.log('getlocation', 'event', event);
     const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(event.address);
     const geoCode: GeoCode = addresses[addresses.length - 1];
     if (!geoCode) {
@@ -30,7 +31,6 @@ export const getLocation = async(event: Object) => {
       latitude: geoCode.position.lat,
       longitude: geoCode.position.lng,
     };
-    // console.log('latlng', latlng);
     return {
       ...event,
       latlng,
@@ -79,14 +79,18 @@ const getApiLocale = (locale_: ?string): ?string => {
   return locale_.split('-')[0];
 };
 
-const apiLocale = getApiLocale(locale) || 'en';
+const apiLocale = getApiLocale(locale) || config.defaultApiLocale;
 
-const apiUrl = 'http://visittampere.fi/api/search?type=event';
+const apiUrl = config.baseApiUrl;
 const start = moment().startOf('day').valueOf();
 const end = moment().add(6, 'days').endOf('day').valueOf();
-const lang = locale ? apiLocale : 'en';
-const url = `${apiUrl}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
+const lang = locale ? apiLocale : config.defaultApiLocale;
+const eventLimit = 20;
 
+const url = `${apiUrl}&limit=${eventLimit}&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
+
+
+// This is where the magic happens :)
 export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
     .switchMap(() =>

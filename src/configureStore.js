@@ -7,9 +7,7 @@ import rootReducer from './reducers';
 import rootEpic from './epics';
 
 const epicMiddleware = createEpicMiddleware(rootEpic);
-// import createSagaMiddleware from 'redux-saga';
 const configureStore = (initialState) => {
-  // const sagaMw = createSagaMiddleware();
   const middlewares = [
     epicMiddleware,
     createLogger(),

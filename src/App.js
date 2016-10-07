@@ -1,47 +1,69 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {
   View,
   Text,
   StyleSheet,
+  Dimensions,
   TouchableNativeFeedback,
 } from 'react-native';
+import MapView from 'react-native-maps';
 import 'rxjs';
 
 import {
   requestEvents,
 } from './actions';
 
-const App = (props) => (
-  <View style={styles.container}>
-    <TouchableNativeFeedback
-      onPress={props.requestEvents}
-      background={TouchableNativeFeedback.SelectableBackground()}
-    >
-      <View>
-        <Text>Click me!</Text>
-      </View>
-    </TouchableNativeFeedback>
-    <Text style={styles.welcome}>
-      Welcome to React Native!
-    </Text>
-    <Text style={styles.instructions}>
-      To get started, edit index.android.js
-    </Text>
-    <Text style={styles.instructions}>
-      Double tap R on your keyboard to reload,{'\n'}
-      Shake or press menu button for dev menu
-    </Text>
-  </View>
-);
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE = 61.497421;
+const LONGITUDE = 23.757292;
+const LATITUDE_DELTA = 0.0322;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const SPACE = 0.01;
 
+class App extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.props.requestEvents();
+  }
+
+  render() {
+    return (
+      <View style={styles.container}>
+
+        <MapView
+          style={styles.mapView}
+          initialRegion={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+        >
+          {this.props.events.map(event => !!event ? (
+            <MapView.Marker
+              key={`marker-${event.id}`}
+              coordinate={event.latlng}
+              title={event.title}
+              description={event.description}
+            />
+          ) : null)}
+        </MapView>
+      </View>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+  },
+  mapView: {
+    ...StyleSheet.absoluteFillObject,
   },
   welcome: {
     fontSize: 20,

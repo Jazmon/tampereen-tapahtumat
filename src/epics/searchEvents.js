@@ -1,3 +1,4 @@
+// @flow
 import { Observable } from 'rxjs/Observable';
 import Geocoder from 'react-native-geocoder';
 import locale from 'react-native-locale-detector';
@@ -53,18 +54,24 @@ Geocoder.fallbackToGoogle('AIzaSyDtMhGRmlbnuDXisY0Zg7pFkv-4Ot0mSqI');
 //   this.setState({ loading: false });
 // })
 
-export const getLocation = async(address: string) => {
+export const getLocation = async(event: Object) => {
   try {
-    const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(address);
+    console.log('getlocation', 'event', event);
+    const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(event.address);
     const geoCode: GeoCode = addresses[addresses.length - 1];
     if (!geoCode) {
       return null;
     }
+
     const latlng: LatLng = {
       latitude: geoCode.position.lat,
       longitude: geoCode.position.lng,
     };
-    return latlng;
+    console.log('latlng', latlng);
+    return {
+      ...event,
+      latlng,
+    };
   } catch (err) {
     console.warn(err);
     return null;
@@ -123,14 +130,21 @@ const end = moment().add(6, 'days').endOf('day').valueOf();
 const lang = locale ? apiLocale : 'en';
 const url = `${apiUrl}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
 
-export default (action$) =>
+export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
     .switchMap(() =>
-      Observable.fromPromise(fetch(url))
+      Observable.fromPromise(fetch(url)))
       .switchMap((res) =>
         Observable.fromPromise(res.json()))
-        .map(parseEvents)
-        .flatMap(e => e)
-        .flatMap(event => console.log('event', event) || Observable.fromPromise(getLocation(event.address)))
-        .map(events => receiveEvents(events))
-    );
+        .flatMap(events => events)
+        .map(getLocationlessMarker)
+        .map(applyAddressToEvent)
+        .flatMap(event =>
+          Observable.fromPromise(getLocation(event))
+          .map(receiveEvents))
+
+        // .map(parseEvents)
+        // .flatMap(e => e)
+        // .flatMap(event => console.log('event', event) || Observable.fromPromise(getLocation(event.address)))
+        // .map(events => receiveEvents(events))
+    ;

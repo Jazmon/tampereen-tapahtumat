@@ -5,8 +5,7 @@ SMALL INFO BAR DATA
   ACTIONS:  Click anywhere to open big info bar 
    
 BIG INFO BAR DATA 
-  HEADER:   Event title,
-            Back button
+  HEADER:   Event title 
   CONTENT:  (Picture), 
             Long description 
   ACTIONS:  Navigate 

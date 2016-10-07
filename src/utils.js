@@ -1,5 +1,5 @@
-const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
-  if (obj && obj.hasOwnProperty(prop) && !!obj[prop]) {
+export const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
+  if (obj && {}.hasOwnProperty.call(obj, prop) && !!obj[prop]) {
     return `${str}${spacer}${obj[prop]}`;
   }
   return str;

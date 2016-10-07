@@ -112,7 +112,7 @@ module.exports = {
     'arrow-parens': 0,
     'new-cap': [
       'error',
-      { newIsCap: true, capIsNewExceptions: ['Color', 'SelectableBackground'], newIsCapExceptionPattern: ['SelectableBackground'] },
+      { newIsCap: true, capIsNewExceptions: ['Color', 'SelectableBackground'] },
     ],
     indent: [
       'error',

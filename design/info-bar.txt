@@ -1,0 +1,12 @@
+SMALL INFO BAR DATA 
+  HEADER:   Event title  
+  CONTENT:  (Picture), 
+            Short description 
+  ACTIONS:  Click anywhere to open big info bar 
+   
+BIG INFO BAR DATA 
+  HEADER:   Event title 
+  CONTENT:  (Picture), 
+            Long description 
+  ACTIONS:  Navigate 
+            Go to website 

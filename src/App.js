@@ -11,7 +11,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
+
 import 'rxjs';
+import defaultMarker from './assets/default-marker.png';
+import debugMarker from './assets/debug-marker.png';
 
 import {
   requestEvents,
@@ -111,6 +114,7 @@ class App extends Component {
               coordinate={event.latlng}
               title={event.title}
               description={event.description}
+              image={getImagePath(event.type)}
             />
           ))}
         </MapView>
@@ -132,22 +136,20 @@ class App extends Component {
   }
 }
 
-const markers = [
-  {
-    latlng: {
-      latitude: 61.497452,
-      longitude: 23.766331,
+const getImagePath = (type) => {
+  const markerImages = [
+    { type: 'debug',
+      source: debugMarker,
     },
-    type: 'debug'
-  },
-  {
-    latlng: {
-      latitude: 61.497552,
-      longitude: 23.764831,
-    },
-    type: 'muna',
-  }
-];
+  ];
+
+  return markerImages.some((image) => image.type === type)
+  ?
+  markerImages.filter((image) => image.type === type)[0].source
+  :
+  defaultMarker;
+}
+
 
 const styles = StyleSheet.create({
   container: {

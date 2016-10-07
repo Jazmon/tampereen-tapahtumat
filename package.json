@@ -43,13 +43,17 @@
     "react-native": "0.34.1",
     "react-native-blur": "^1.0.1",
     "react-native-geocoder": "^0.4.5",
+    "react-native-locale-detector": "^1.0.1",
     "react-native-maps": "^0.8.2",
     "react-native-slider": "^0.9.1",
     "react-native-vector-icons": "^2.1.0",
     "react-redux": "^4.4.5",
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
-    "redux-logger": "^2.6.1"
+    "redux-logger": "^2.6.1",
+    "redux-observable": "^0.12.0",
+    "remote-redux-devtools": "^0.4.9",
+    "rxjs": "^5.0.0-beta.12"
   },
   "devDependencies": {
     "eslint": "^3.7.0",

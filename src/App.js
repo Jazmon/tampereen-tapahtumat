@@ -132,6 +132,23 @@ class App extends Component {
   }
 }
 
+const markers = [
+  {
+    latlng: {
+      latitude: 61.497452,
+      longitude: 23.766331,
+    },
+    type: 'debug'
+  },
+  {
+    latlng: {
+      latitude: 61.497552,
+      longitude: 23.764831,
+    },
+    type: 'muna',
+  }
+];
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

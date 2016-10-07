@@ -30,28 +30,58 @@ type Props = {
 };
 
 type State = {
+  region: Object;
 };
 
 class App extends Component {
   props: Props;
+  map: Object;
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      region: new MapView.AnimatedRegion({
+        latitude: LATITUDE,
+        longitude: LONGITUDE,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      }),
+    };
+  }
+
   state: State;
 
   componentDidMount() {
     this.props.requestEvents();
   }
 
+  componentDidUpdate() {
+    const coords: Array<LatLng> = this.props.events
+      .filter(event => !!event)
+      .map(event => event.latlng);
+    if (coords.length > 0) {
+      this.map.fitToCoordinates(coords, {
+        edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+        animated: true,
+      });
+    }
+  }
+
+  onRegionChange = (region) => {
+    this.state.region.setValue(region);
+  }
+
   render() {
     const { events, isFetching, error } = this.props;
+    const { region } = this.state;
     return (
       <View style={styles.container}>
         <MapView
+          ref={ref => { this.map = ref; }}
           style={styles.mapView}
-          initialRegion={{
-            latitude: LATITUDE,
-            longitude: LONGITUDE,
-            latitudeDelta: LATITUDE_DELTA,
-            longitudeDelta: LONGITUDE_DELTA,
-          }}
+          region={region}
+          onRegionChange={this.onRegionChange}
         >
           {events.map(event => event ? (
             <MapView.Marker

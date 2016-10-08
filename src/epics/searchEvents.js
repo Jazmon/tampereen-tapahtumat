@@ -99,6 +99,7 @@ const onlyDefined = (obj: ?any) => !!obj;
 // console.log('url', url);
 
 // This is where the magic happens :)
+// TODO: res error handling
 export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
     .switchMap(() =>

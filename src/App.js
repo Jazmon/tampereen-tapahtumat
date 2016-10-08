@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   StatusBar,
+  Platform,
   Text,
   ActivityIndicator,
 } from 'react-native';
@@ -17,6 +18,8 @@ import {
 } from './actions';
 
 const { width, height } = Dimensions.get('window');
+const IOS = Platform.OS === 'ios';
+const ANDROID = Platform.OS === 'android';
 const ASPECT_RATIO = width / height;
 const LATITUDE = 61.497421;
 const LONGITUDE = 23.757292;
@@ -41,13 +44,14 @@ class App extends Component {
   constructor(props: Props) {
     super(props);
 
+    const region = {
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    };
     this.state = {
-      region: new MapView.AnimatedRegion({
-        latitude: LATITUDE,
-        longitude: LONGITUDE,
-        latitudeDelta: LATITUDE_DELTA,
-        longitudeDelta: LONGITUDE_DELTA,
-      }),
+      region: ANDROID ? new MapView.AnimatedRegion(region) : region,
     };
   }
 
@@ -70,7 +74,7 @@ class App extends Component {
   }
 
   onRegionChange = (region) => {
-    this.state.region.setValue(region);
+    if (ANDROID) this.state.region.setValue(region);
   }
 
   render() {
@@ -88,6 +92,7 @@ class App extends Component {
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
           region={region}
+          // provider="google"
           onRegionChange={this.onRegionChange}
         >
           {events.map(event => (

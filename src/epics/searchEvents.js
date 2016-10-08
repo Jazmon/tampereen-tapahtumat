@@ -9,6 +9,8 @@ import { receiveEvents } from '../actions';
 
 import config from '../../config.json';
 
+// This loads moment locales for the language based on the locale.
+// Yes, it's ugly but it's the only way :(
 /* eslint-disable global-require */
 if (locale.startsWith('fi')) {
   require('moment/locale/fi');
@@ -56,6 +58,7 @@ const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
   return str;
 };
 
+// Parses the address from the contact info.
 export const getAddressFromEvent = (event: Event): string => {
   let address = '';
   const obj = event.contact_info;
@@ -75,20 +78,25 @@ const applyAddressToEvent = (event) => ({
 });
 
 const getApiLocale = (locale_: ?string): ?string => {
-  if (!locale_) return null;
+  if (!locale_ || locale_ === 'und') return null;
   return locale_.split('-')[0];
 };
 
 const apiLocale = getApiLocale(locale) || config.defaultApiLocale;
-
+const eventLimit = 20;
+const dayLimit = 6;
 const apiUrl = config.baseApiUrl;
 const start = moment().startOf('day').valueOf();
-const end = moment().add(6, 'days').endOf('day').valueOf();
+const end = moment().add(dayLimit, 'days').endOf('day').valueOf();
 const lang = locale ? apiLocale : config.defaultApiLocale;
-const eventLimit = 20;
-
 const url = `${apiUrl}&limit=${eventLimit}&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
 
+const onlyDefined = (obj: ?any) => !!obj;
+
+// console.log('locale', locale);
+// console.log('apiLocale', apiLocale);
+// console.log('lang', lang);
+// console.log('url', url);
 
 // This is where the magic happens :)
 export default (action$: Object) =>
@@ -102,5 +110,6 @@ export default (action$: Object) =>
         .map(applyAddressToEvent)
         .flatMap(event =>
           Observable.fromPromise(getLocation(event))
+          .filter(onlyDefined)
           .delay(400)
           .map(receiveEvents));

@@ -5,6 +5,7 @@ import {
   View,
   StyleSheet,
   Dimensions,
+  StatusBar,
   Text,
   ActivityIndicator,
 } from 'react-native';
@@ -58,7 +59,7 @@ class App extends Component {
 
   componentDidUpdate() {
     const coords: Array<LatLng> = this.props.events
-      .filter(event => !!event)
+      // .filter(event => !!event)
       .map(event => event.latlng);
     if (coords.length > 0) {
       this.map.fitToCoordinates(coords, {
@@ -77,20 +78,26 @@ class App extends Component {
     const { region } = this.state;
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="default"
+          backgroundColor="rgba(0, 0, 0, 0.25)"
+          translucent
+          animated
+        />
         <MapView
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
           region={region}
           onRegionChange={this.onRegionChange}
         >
-          {events.map(event => event ? (
+          {events.map(event => (
             <MapView.Marker
               key={`marker-${event.id}`}
               coordinate={event.latlng}
               title={event.title}
               description={event.description}
             />
-          ) : null)}
+          ))}
         </MapView>
         {isFetching &&
           <View style={styles.loading}>

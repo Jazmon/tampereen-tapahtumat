@@ -57,8 +57,11 @@ class App extends Component {
 
   state: State;
 
-  componentDidMount() {
+  componentWillMount() {
     this.props.requestEvents();
+  }
+
+  componentDidMount() {
   }
 
   componentDidUpdate() {

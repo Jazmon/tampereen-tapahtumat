@@ -10,18 +10,26 @@ const epicMiddleware = createEpicMiddleware(rootEpic);
 const configureStore = (initialState) => {
   const middlewares = [
     epicMiddleware,
+  ];
+
+  const devMiddlewares = [
+    ...middlewares,
     createLogger(),
   ];
 
   const enhancers = [
     applyMiddleware(...middlewares),
+  ];
+
+  const devEnhancers = [
+    applyMiddleware(...devMiddlewares),
     devTools(),
   ];
 
   const store = createStore(
     rootReducer,
     initialState,
-    compose(...enhancers),
+    compose(...__DEV__ ? devEnhancers : enhancers),
   );
 
   return store;

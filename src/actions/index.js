@@ -1,25 +1,33 @@
 import * as ActionTypes from '../ActionTypes';
 
-export function requestEvents() {
-  return {
-    type: ActionTypes.REQUEST_EVENTS,
-  };
-}
+export const selectDay = (day) => ({
+  type: ActionTypes.SELECT_DAY,
+  payload: {
+    day,
+  },
+});
 
-export function receiveEvents(events) {
-  return {
-    type: ActionTypes.RECEIVE_EVENTS,
-    payload: {
-      events,
-    },
-  };
-}
+export const invalidateDay = (day) => ({
+  type: ActionTypes.INVALIDATE_DAY,
+  payload: {
+    day,
+  },
+});
 
-export function receiveEventsError(error) {
-  return {
-    type: ActionTypes.RECEIVE_EVENTS_ERROR,
-    payload: {
-      error,
-    },
-  };
-}
+export const requestEvents = () => ({
+  type: ActionTypes.REQUEST_EVENTS,
+});
+
+export const receiveEvents = (events) => ({
+  type: ActionTypes.RECEIVE_EVENTS,
+  payload: {
+    events,
+  },
+});
+
+export const receiveEventsError = (error) => ({
+  type: ActionTypes.RECEIVE_EVENTS_ERROR,
+  payload: {
+    error,
+  },
+});

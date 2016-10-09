@@ -5,7 +5,7 @@ import locale from 'react-native-locale-detector';
 import moment from 'moment';
 
 import * as ActionTypes from '../ActionTypes';
-import { receiveEvents } from '../actions';
+import { receiveEvents, receiveEventsError } from '../actions';
 
 import config from '../../config.json';
 
@@ -103,7 +103,12 @@ const onlyDefined = (obj: ?any) => !!obj;
 export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
     .switchMap(() =>
-      Observable.fromPromise(fetch(url)))
+      Observable.fromPromise(fetch(url))
+      .catch(error => receiveEventsError(error)))
+      // .catch(error => Observable.of({
+      //   type: ActionTypes.RECEIVE_EVENTS_ERROR,
+      //   payload: { error },
+      // })))
       .switchMap((res) =>
         Observable.fromPromise(res.json()))
         .mergeMap(events => events)
@@ -112,5 +117,5 @@ export default (action$: Object) =>
         .flatMap(event =>
           Observable.fromPromise(getLocation(event))
           .filter(onlyDefined)
-          .delay(400)
+          // .delay(400)
           .map(receiveEvents));

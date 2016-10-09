@@ -26,6 +26,13 @@ const LONGITUDE = 23.757292;
 const LATITUDE_DELTA = 0.0322;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
+const REGION = {
+  latitude: LATITUDE,
+  longitude: LONGITUDE,
+  latitudeDelta: LATITUDE_DELTA,
+  longitudeDelta: LONGITUDE_DELTA,
+};
+
 type Props = {
   events: Array<Marker>;
   isFetching: boolean;
@@ -44,14 +51,8 @@ class App extends Component {
   constructor(props: Props) {
     super(props);
 
-    const region = {
-      latitude: LATITUDE,
-      longitude: LONGITUDE,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    };
     this.state = {
-      region: ANDROID ? new MapView.AnimatedRegion(region) : region,
+      region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
     };
   }
 
@@ -87,14 +88,20 @@ class App extends Component {
       <View style={styles.container}>
         <StatusBar
           barStyle="default"
-          backgroundColor="rgba(0, 0, 0, 0.25)"
-          translucent
+          backgroundColor="#cb47f2"
+          // translucent
           animated
         />
         <MapView
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
           region={region}
+          cacheEnabled={true}
+          initialRegion={REGION}
+          showsScale={true}
+          loadingEnabled={true}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
           // provider="google"
           onRegionChange={this.onRegionChange}
         >
@@ -128,6 +135,7 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#b5b5b5',
   },
   mapView: {
     ...StyleSheet.absoluteFillObject,

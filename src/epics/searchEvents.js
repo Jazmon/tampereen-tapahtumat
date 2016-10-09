@@ -100,6 +100,8 @@ const onlyDefined = (obj: ?any) => !!obj;
 
 // This is where the magic happens :)
 // TODO: res error handling
+// TODO: caching and taking events from cache
+// TODO: setting events by date
 export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
     .switchMap(() =>

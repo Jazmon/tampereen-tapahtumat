@@ -11,6 +11,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
+import Slider from 'react-native-slider';
+import locale from 'react-native-locale-detector';
+import moment from 'moment';
 
 import 'rxjs';
 import defaultMarker from './assets/default-marker.png';
@@ -19,6 +22,16 @@ import debugMarker from './assets/debug-marker.png';
 import {
   requestEvents,
 } from './actions';
+
+// This loads moment locales for the language based on the locale.
+// Yes, it's ugly but it's the only way :(
+/* eslint-disable global-require */
+if (locale.startsWith('fi')) {
+  require('moment/locale/fi');
+} else if (locale.startsWith('se')) {
+  require('moment/locale/se');
+}
+/* eslint-enable global-require */
 
 const { width, height } = Dimensions.get('window');
 const IOS = Platform.OS === 'ios';
@@ -45,6 +58,7 @@ type Props = {
 
 type State = {
   region: Object;
+  date: number;
 };
 
 class App extends Component {
@@ -56,6 +70,7 @@ class App extends Component {
 
     this.state = {
       region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
+      date: 0,
     };
   }
 
@@ -84,6 +99,10 @@ class App extends Component {
     if (ANDROID) this.state.region.setValue(region);
   }
 
+  setDate = (value: number): void => {
+    this.setState({ date: value });
+  };
+
   render() {
     const { events, isFetching, error } = this.props;
     const { region } = this.state;
@@ -99,7 +118,7 @@ class App extends Component {
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
           region={region}
-          cacheEnabled={true}
+          // cacheEnabled={true}
           initialRegion={REGION}
           showsScale={true}
           loadingEnabled={true}
@@ -118,6 +137,38 @@ class App extends Component {
             />
           ))}
         </MapView>
+        <View style={styles.sliderBox}>
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={6}
+            onValueChange={this.setDate}
+            thumbTintColor="#304FFE"
+            minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
+            maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
+            step={1}
+            value={this.state.date}
+          />
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginHorizontal: 6,
+          }}>
+            {[0, 1, 2, 3, 4, 5, 6].map(val => (
+              <View
+                key={`asd-${val}`}
+                style={{
+
+                }}
+              >
+                <Text style={{
+                  color: this.state.date === val ? '#fff' : '#000',
+                }}>{moment().add(val, 'days').startOf('day').format('dd')}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+
         {isFetching &&
           <View style={styles.loading}>
             <ActivityIndicator
@@ -148,7 +199,7 @@ const getImagePath = (type) => {
   markerImages.filter((image) => image.type === type)[0].source
   :
   defaultMarker;
-}
+};
 
 
 const styles = StyleSheet.create({
@@ -168,6 +219,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  slider: {
+  },
+  sliderBox: {
+    marginHorizontal: 24,
+    marginTop: 8,
+    borderRadius: 2,
+    paddingHorizontal: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    flex: 0,
   },
 });
 

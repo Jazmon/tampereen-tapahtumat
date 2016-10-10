@@ -112,7 +112,7 @@ module.exports = {
     'arrow-parens': 0,
     'new-cap': [
       'error',
-      { newIsCap: true, capIsNewExceptions: ['Color'] },
+      { newIsCap: true, capIsNewExceptions: ['Color', 'TouchableNativeFeedback.SelectableBackground'] },
     ],
     indent: [
       'error',

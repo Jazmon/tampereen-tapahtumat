@@ -125,7 +125,7 @@ class App extends Component {
           showsUserLocation={true}
           showsMyLocationButton={true}
           // provider="google"
-          onRegionChange={this.onRegionChange}
+          // onRegionChange={this.onRegionChange}
         >
           {events.map(event => (
             <MapView.Marker

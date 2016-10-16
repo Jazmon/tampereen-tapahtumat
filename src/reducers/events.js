@@ -1,12 +1,22 @@
+// @flow
 import * as ActionTypes from '../ActionTypes';
+import type { ActionType } from '../actions';
 
-const initialState = {
-  events: [],
+type EventsState = {
+  items: Array<Event>; // TODO improve by removing Object
+  isFetching: boolean;
+  didInvalidate: boolean;
+  error: ?Object;
+};
+
+const initialState: EventsState = {
+  items: [],
   isFetching: false,
+  didInvalidate: false,
   error: null,
 };
 
-export default function events(state = initialState, action) {
+export const events = (state: EventsState = initialState, action: ActionType) => {
   switch (action.type) {
   case ActionTypes.REQUEST_EVENTS:
     return {
@@ -17,7 +27,7 @@ export default function events(state = initialState, action) {
   case ActionTypes.RECEIVE_EVENTS:
     return {
       ...state,
-      events: [...state.events, action.payload.events],
+      items: action.payload,
       isFetching: false,
     };
 
@@ -25,9 +35,24 @@ export default function events(state = initialState, action) {
     return {
       ...state,
       isFetching: false,
-      error: action.payload.error,
+      error: action.payload,
     };
   default:
     return state;
   }
-}
+};
+
+export const eventsByDate = (state: Object = {}, action: ActionType) => {
+  switch (action.type) {
+  case ActionTypes.RECEIVE_EVENTS:
+  case ActionTypes.REQUEST_EVENTS:
+    return {
+      ...state,
+      [action.payload]: events(state[action.payload], action),
+    };
+  default:
+    return state;
+  }
+};
+
+export default events;

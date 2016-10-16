@@ -1,3 +1,4 @@
+// @flow
 import { combineEpics } from 'redux-observable';
 import searchEvents from './searchEvents';
 

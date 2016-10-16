@@ -141,7 +141,7 @@ module.exports = {
     ],
     'no-mixed-operators': 0,
     'class-methods-use-this': 0,
-    'react/forbid-prop-types': 0, // replace with 1 for very strict type checks
+    'react/forbid-prop-types': 1, // replace with 1 for very strict type checks
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
   }
 };

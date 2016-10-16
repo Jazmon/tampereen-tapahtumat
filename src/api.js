@@ -1,3 +1,4 @@
+// @flow
 import Geocoder from 'react-native-geocoder';
 import moment from 'moment';
 
@@ -6,7 +7,7 @@ import { getAddressFromEvent } from './utils';
 const API_URL_BASE = 'http://visittampere.fi/api/search?type=event';
 
 Geocoder.fallbackToGoogle('AIzaSyDtMhGRmlbnuDXisY0Zg7pFkv-4Ot0mSqI');
-export const fetchEvents = async({ url }) => {
+export const fetchEvents = async({ url }: { url: string }) => {
   try {
     const response = await fetch(url);
     const events = await response.json();
@@ -37,11 +38,13 @@ export const getLocation = async(address: string) => {
 
 // returns all events from this day up to a week
 export const getEvents = async() => {
-  const start = moment().startOf('day').valueOf();
-  const end = moment().add(6, 'days').endOf('day').valueOf();
-  const url = `${API_URL_BASE}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=fi`;
+  const start: number = moment().startOf('day').valueOf();
+  const end: number = moment().add(6, 'days').endOf('day').valueOf();
+  const url: string = `${API_URL_BASE}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=fi`;
+  // eslint-disable-next-line consistent-return
   fetchEvents({ url }).then(events => {
-    const promises = [];
+    if (events === null) { return null; }
+    const promises: Array<Object> = [];
     const markers = events.map((event) => {
       const marker: Object = {
         id: event.item_id,

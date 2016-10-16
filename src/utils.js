@@ -1,3 +1,4 @@
+// @flow
 export const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
   if (obj && {}.hasOwnProperty.call(obj, prop) && !!obj[prop]) {
     return `${str}${spacer}${obj[prop]}`;

@@ -1,0 +1,6 @@
+# Notes
+
+## react-native-maps
+* padding support can be implemented, but needs implementing
+* styling (has a PR, but has issues with play services version regarding updating)
+* custom callouts broken atm https://github.com/airbnb/react-native-maps/issues/553

@@ -3,7 +3,7 @@ import React from 'react';
 import {
   StyleSheet,
   Image,
-  View
+  View,
 } from 'react-native';
 
 import defaultMarker from './assets/default-marker.png';
@@ -44,7 +44,7 @@ EventMarker.defaultProps = {
 const styles = StyleSheet.create({
   markerImage: {
     transform: [{ scale: 0.5 }],
-  }
+  },
 });
 
 export default EventMarker;

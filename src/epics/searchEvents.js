@@ -93,6 +93,37 @@ const url = `${apiUrl}&limit=${eventLimit}&start_datetime=${start}&end_datetime=
 
 const onlyDefined = (obj: ?any) => !!obj;
 
+const getEvents = async({ date }: { date: number }) => {
+  const dayStart = moment().add(date, 'days').startOf('day').valueOf();
+  const dayEnd = moment().add(date, 'days').endOf('day').valueOf();
+  const dayUrl = `${apiUrl}&limit=${eventLimit}&start_datetime=${dayStart}&end_datetime=${dayEnd}&lang=${lang}`;
+  console.log('dayUrl', dayUrl);
+  const response = await fetch(dayUrl);
+  const json = await response.json();
+  console.log('json', json);
+  return json;
+};
+
+const flattenMultipleDateEvents = async(events: Array<Event>) => {
+  let newEvents = [...events];
+  events
+    .filter(event => !event.single_datetime)
+    .forEach(event => {
+      const duplicatedEvents = event.times.map(time => {
+        const newEvent: Event = {
+          ...event,
+          single_datetime: true,
+          times: [],
+          start_datetime: time.start_datetime,
+          end_datetime: time.end_datetime,
+        };
+        return newEvent;
+      });
+      newEvents = [...newEvents, ...duplicatedEvents];
+    });
+  return newEvents;
+};
+
 // console.log('locale', locale);
 // console.log('apiLocale', apiLocale);
 // console.log('lang', lang);
@@ -102,17 +133,32 @@ const onlyDefined = (obj: ?any) => !!obj;
 // TODO: res error handling
 // TODO: caching and taking events from cache
 // TODO: setting events by date
+// TODO: multiply events when multiple dates
 export default (action$: Object) =>
   action$.ofType(ActionTypes.REQUEST_EVENTS)
-    .switchMap(() =>
-      Observable.fromPromise(fetch(url)))
-      .switchMap((res) =>
-        Observable.fromPromise(res.json()))
-        .mergeMap(events => events)
+    .flatMap(action =>
+      Observable.fromPromise(getEvents(action.payload))
+        .mergeMap(flattenMultipleDateEvents)
+        .mergeMap(events => events) // Splits stream into individual event objects
         .map(getLocationlessMarker)
         .map(applyAddressToEvent)
         .flatMap(event =>
           Observable.fromPromise(getLocation(event))
           .filter(onlyDefined)
-          .delay(400)
-          .map(receiveEvents));
+          // .delay(400)
+          .map(e => receiveEvents(e instanceof Array ? e : [e], action.payload))));
+
+// export default (action$: Object) =>
+//   action$.ofType(ActionTypes.REQUEST_EVENTS)
+//     .switchMap(action =>
+//       Observable.fromPromise(fetch(url))
+//       .switchMap((res) =>
+//         Observable.fromPromise(res.json()))
+//         .mergeMap(events => events) // Splits stream into individual event objects
+//         .map(getLocationlessMarker)
+//         .map(applyAddressToEvent)
+//         .flatMap(event =>
+//           Observable.fromPromise(getLocation(event))
+//           .filter(onlyDefined)
+//           .delay(400)
+//           .map(e => receiveEvents(e, action.payload))));

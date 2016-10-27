@@ -1,10 +1,10 @@
 // @flow
 import { combineReducers } from 'redux';
-import { events, eventsByDate } from './events';
+import { eventsByDate } from './events';
 import selectedDate from './selectedDate';
 
 export default combineReducers({
-  events,
+  // events,
   date: selectedDate,
   eventsByDate,
 });

@@ -5,36 +5,25 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  StatusBar,
   Platform,
   Text,
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import Slider from 'react-native-slider';
-import locale from 'react-native-locale-detector';
-import moment from 'moment';
-
+import _ from 'lodash';
 import 'rxjs';
-import defaultMarker from './assets/default-marker.png';
-import debugMarker from './assets/debug-marker.png';
+
+import CustomCallout from './components/CustomCallout';
+import Base from './components/Base';
+import SliderBox from './components/SliderBox';
 
 import {
   requestEvents,
+  selectDate,
 } from './actions';
 
-// This loads moment locales for the language based on the locale.
-// Yes, it's ugly but it's the only way :(
-/* eslint-disable global-require */
-if (locale.startsWith('fi')) {
-  require('moment/locale/fi');
-} else if (locale.startsWith('se')) {
-  require('moment/locale/se');
-}
-/* eslint-enable global-require */
-
 const { width, height } = Dimensions.get('window');
-const IOS = Platform.OS === 'ios';
+// const IOS = Platform.OS === 'ios';
 const ANDROID = Platform.OS === 'android';
 const ASPECT_RATIO = width / height;
 const LATITUDE = 61.497421;
@@ -49,16 +38,33 @@ const REGION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
+const getTempEvents = ({ eventCount } = { eventCount: 4 }) =>
+  _.range(eventCount).map((n, i) => ({
+    latlng: {
+      latitude: LATITUDE + Math.random() / 100,
+      longitude: LONGITUDE + Math.random() / 100,
+    },
+    id: i,
+    title: `Marker ${i}`,
+    description: '',
+  })
+);
+
+const TEMP_EVENTS = getTempEvents();
 type Props = {
-  events: Array<Marker>;
+  // events: Array<Marker>;
+  date: number;
+  eventsByDate: Object;
   isFetching: boolean;
   error: ?Object;
   requestEvents: Function;
+  selectDate: Function;
 };
 
 type State = {
   region: Object;
   date: number;
+  marker: ?Marker
 };
 
 class App extends Component {
@@ -71,27 +77,28 @@ class App extends Component {
     this.state = {
       region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
       date: 0,
+      marker: null,
     };
   }
 
   state: State;
 
   componentWillMount() {
-    this.props.requestEvents();
-  }
-
-  componentDidMount() {
+    this.props.requestEvents(this.props.date);
   }
 
   componentDidUpdate() {
-    const coords: Array<LatLng> = this.props.events
-      // .filter(event => !!event)
-      .map(event => event.latlng);
-    if (coords.length > 0) {
-      this.map.fitToCoordinates(coords, {
-        edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
-        animated: true,
-      });
+    if (this.props.eventsByDate[this.props.date]) {
+      const coords: Array<LatLng> = this.props.eventsByDate[this.props.date].items
+        .map(event => event.latlng);
+      if (coords.length > 0) {
+        if (this.map.fitToCoordinates) {
+          this.map.fitToCoordinates(coords, {
+            edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+            animated: true,
+          });
+        }
+      }
     }
   }
 
@@ -100,76 +107,65 @@ class App extends Component {
   }
 
   setDate = (value: number): void => {
-    this.setState({ date: value });
+    // this.setState({ date: value });
+    this.props.selectDate(value);
   };
 
+  // setActiveMarker = ({ event, coordinate, position }:
+  //   { event: Marker; coordinate: LatLng; position: Point; }
+  // ) => {
+  //   this.setState({ marker: event });
+  // }
+
   render() {
-    const { events, isFetching, error } = this.props;
+    const { eventsByDate, date } = this.props;
     const { region } = this.state;
+    const loading = !eventsByDate[date] || eventsByDate[date].isFetching;
+    const error = !!eventsByDate[date] && eventsByDate[date].error;
     return (
-      <View style={styles.container}>
-        <StatusBar
-          barStyle="default"
-          backgroundColor="#cb47f2"
-          // translucent
-          animated
-        />
-        <MapView
+      <Base>
+        <MapView.Animated
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
-          region={region}
-          // cacheEnabled={true}
-          initialRegion={REGION}
+          // region={region}
           showsScale={true}
-          loadingEnabled={true}
+          loadingEnabled={false}
+          toolbarEnabled={true}
           showsUserLocation={true}
           showsMyLocationButton={true}
+          // cacheEnabled={true}
+          initialRegion={REGION}
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
-          {events.map(event => (
-            <MapView.Marker
+          {eventsByDate[date] && eventsByDate[date].items.map(event => (
+            <MapView.Marker.Animated
               key={`marker-${event.id}`}
               coordinate={event.latlng}
               title={event.title}
               description={event.description}
-              image={getImagePath(event.type)}
-            />
+              // onPress={({ coordinate, position }) =>
+              //   this.setActiveMarker({ event, coordinate, position })}
+              // calloutOffset={{ x: -8, y: 28 }}
+              // calloutAnchor={{ x: 0.5, y: 0.4 }}
+
+              // image={getImagePath(event.type)}
+            >
+              <MapView.Callout tooltip={true} >
+                <CustomCallout>
+                  <Text>Event: {event.title}</Text>
+                </CustomCallout>
+              </MapView.Callout>
+            </MapView.Marker.Animated>
           ))}
-        </MapView>
-        <View style={styles.sliderBox}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={6}
-            onValueChange={this.setDate}
-            thumbTintColor="#304FFE"
-            minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
-            maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
-            step={1}
-            value={this.state.date}
-          />
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 6,
-          }}>
-            {[0, 1, 2, 3, 4, 5, 6].map(val => (
-              <View
-                key={`asd-${val}`}
-                style={{
+        </MapView.Animated>
+        <SliderBox
+          // value={this.state.date}
+          value={this.props.date}
+          onValueChange={this.setDate}
+        />
 
-                }}
-              >
-                <Text style={{
-                  color: this.state.date === val ? '#fff' : '#000',
-                }}>{moment().add(val, 'days').startOf('day').format('dd')}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
-        {isFetching &&
+        {loading &&
           <View style={styles.loading}>
             <ActivityIndicator
               color="rgb(68, 179, 55)"
@@ -182,31 +178,30 @@ class App extends Component {
             <Text>Error loading events :(</Text>
           </View>
         }
-      </View>
+        {this.state.marker && <View style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 64, backgroundColor: '#b5b5b5' }}>
+          <View>
+            <Text>{this.state.marker.title}</Text>
+          </View>
+        </View>}
+      </Base>
     );
   }
 }
 
-const getImagePath = (type) => {
-  const markerImages = [
-    { type: 'debug',
-      source: debugMarker,
-    },
-  ];
-
-  return markerImages.some((image) => image.type === type)
-  ?
-  markerImages.filter((image) => image.type === type)[0].source
-  :
-  defaultMarker;
-};
+// const getImagePath = (type) => {
+//   const markerImages = [
+//     { type: 'debug',
+//       source: debugMarker,
+//     },
+//   ];
+//
+//   return markerImages.some((image) => image.type === type)
+//   ? markerImages.filter((image) => image.type === type)[0].source
+//   : defaultMarker;
+// };
 
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#b5b5b5',
-  },
   mapView: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -220,23 +215,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  slider: {
-  },
-  sliderBox: {
-    marginHorizontal: 24,
-    marginTop: 8,
-    borderRadius: 2,
-    paddingHorizontal: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    flex: 0,
-  },
 });
 
 // This connects the state received from redux to the components props using a HOC
 export default connect(
   (props, ownProps) => ({
-    ...props.events,
+    ...props,
     ...ownProps,
   }),
-  { requestEvents }
+  { requestEvents, selectDate }
 )(App);

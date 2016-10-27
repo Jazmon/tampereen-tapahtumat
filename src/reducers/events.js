@@ -25,9 +25,17 @@ export const events = (state: EventsState = initialState, action: ActionType) =>
     };
 
   case ActionTypes.RECEIVE_EVENTS:
+    // filter events where there is no same id items in the arr already
+    console.log(action.payload.filter(event =>
+      !state.items.some(ev => ev.item_id === event.item_id)));
     return {
       ...state,
-      items: action.payload,
+      // items: [...state.items,
+      //   ...action.payload.filter(event =>
+      //     !state.items.some(ev => ev.item_id === event.item_id)),
+      items: [...state.items,
+        ...action.payload,
+      ],
       isFetching: false,
     };
 
@@ -45,6 +53,10 @@ export const events = (state: EventsState = initialState, action: ActionType) =>
 export const eventsByDate = (state: Object = {}, action: ActionType) => {
   switch (action.type) {
   case ActionTypes.RECEIVE_EVENTS:
+    return {
+      ...state,
+      [action.meta]: events(state[action.meta], action),
+    };
   case ActionTypes.REQUEST_EVENTS:
     return {
       ...state,

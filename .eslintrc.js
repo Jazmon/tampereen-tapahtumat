@@ -58,7 +58,7 @@ module.exports = {
     'react/no-unknown-property': 1,
     'react/prop-types': 1,
     'react/react-in-jsx-scope': 1,
-    'react/self-closing-comp': 1,
+    'react/self-closing-comp': 2,
     'sort-class-members/sort-class-members': [2, {
       'order': [
         '[static-properties]',
@@ -111,11 +111,11 @@ module.exports = {
     'babel/no-await-in-loop': 1,
     'arrow-parens': 0,
     'new-cap': [
-      'error',
+      'warn',
       { newIsCap: true, capIsNewExceptions: ['Color', 'TouchableNativeFeedback.SelectableBackground'] },
     ],
     indent: [
-      'error',
+      'warn',
       2
     ],
     'linebreak-style': [

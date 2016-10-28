@@ -1,4 +1,4 @@
-// flow-typed signature: 4ee29dd3ab3b061e88d9441d97df7950
+// flow-typed signature: e0c7cb48480cdbd06f5e799a1f3dff7a
 // flow-typed version: <<STUB>>/eslint_v^3.7.1/flow_v0.33.0
 
 /**
@@ -307,6 +307,10 @@ declare module 'eslint/lib/rules/eqeqeq' {
 }
 
 declare module 'eslint/lib/rules/func-call-spacing' {
+  declare module.exports: any;
+}
+
+declare module 'eslint/lib/rules/func-name-matching' {
   declare module.exports: any;
 }
 
@@ -1422,6 +1426,9 @@ declare module 'eslint/lib/rules/eqeqeq.js' {
 }
 declare module 'eslint/lib/rules/func-call-spacing.js' {
   declare module.exports: $Exports<'eslint/lib/rules/func-call-spacing'>;
+}
+declare module 'eslint/lib/rules/func-name-matching.js' {
+  declare module.exports: $Exports<'eslint/lib/rules/func-name-matching'>;
 }
 declare module 'eslint/lib/rules/func-names.js' {
   declare module.exports: $Exports<'eslint/lib/rules/func-names'>;

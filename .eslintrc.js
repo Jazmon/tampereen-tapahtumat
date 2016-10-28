@@ -56,7 +56,7 @@ module.exports = {
     'react/no-did-update-set-state': 1,
     'react/no-multi-comp': 1,
     'react/no-unknown-property': 1,
-    'react/prop-types': 1,
+    'react/prop-types': 0,
     'react/react-in-jsx-scope': 1,
     'react/self-closing-comp': 2,
     'sort-class-members/sort-class-members': [2, {

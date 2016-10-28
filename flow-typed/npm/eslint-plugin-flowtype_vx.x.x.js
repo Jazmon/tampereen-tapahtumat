@@ -1,4 +1,4 @@
-// flow-typed signature: 522e4cc230953d9fabb12a1f5783fa6f
+// flow-typed signature: 7f03cc8e6832f348f58ffd22478b443f
 // flow-typed version: <<STUB>>/eslint-plugin-flowtype_v^2.19.0/flow_v0.33.0
 
 /**
@@ -54,6 +54,10 @@ declare module 'eslint-plugin-flowtype/dist/rules/noWeakTypes' {
   declare module.exports: any;
 }
 
+declare module 'eslint-plugin-flowtype/dist/rules/objectTypeDelimiter' {
+  declare module.exports: any;
+}
+
 declare module 'eslint-plugin-flowtype/dist/rules/requireParameterType' {
   declare module.exports: any;
 }
@@ -86,6 +90,38 @@ declare module 'eslint-plugin-flowtype/dist/rules/spaceBeforeTypeColon' {
   declare module.exports: any;
 }
 
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateFunctions' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeIndexer' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeProperty' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateReturnType' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypeCastExpression' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypical' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/index' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/reporter' {
+  declare module.exports: any;
+}
+
 declare module 'eslint-plugin-flowtype/dist/rules/typeIdMatch' {
   declare module.exports: any;
 }
@@ -103,6 +139,14 @@ declare module 'eslint-plugin-flowtype/dist/rules/validSyntax' {
 }
 
 declare module 'eslint-plugin-flowtype/dist/utilities/getParameterName' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/utilities/getTokenAfterParens' {
+  declare module.exports: any;
+}
+
+declare module 'eslint-plugin-flowtype/dist/utilities/getTokenBeforeParens' {
   declare module.exports: any;
 }
 
@@ -155,6 +199,9 @@ declare module 'eslint-plugin-flowtype/dist/rules/noDupeKeys.js' {
 declare module 'eslint-plugin-flowtype/dist/rules/noWeakTypes.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/noWeakTypes'>;
 }
+declare module 'eslint-plugin-flowtype/dist/rules/objectTypeDelimiter.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/objectTypeDelimiter'>;
+}
 declare module 'eslint-plugin-flowtype/dist/rules/requireParameterType.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/requireParameterType'>;
 }
@@ -179,6 +226,30 @@ declare module 'eslint-plugin-flowtype/dist/rules/spaceBeforeGenericBracket.js' 
 declare module 'eslint-plugin-flowtype/dist/rules/spaceBeforeTypeColon.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/spaceBeforeTypeColon'>;
 }
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateFunctions.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateFunctions'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeIndexer.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeIndexer'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeProperty.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateObjectTypeProperty'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateReturnType.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateReturnType'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypeCastExpression.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypeCastExpression'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypical.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/evaluateTypical'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/index.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/index'>;
+}
+declare module 'eslint-plugin-flowtype/dist/rules/typeColonSpacing/reporter.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeColonSpacing/reporter'>;
+}
 declare module 'eslint-plugin-flowtype/dist/rules/typeIdMatch.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/rules/typeIdMatch'>;
 }
@@ -193,6 +264,12 @@ declare module 'eslint-plugin-flowtype/dist/rules/validSyntax.js' {
 }
 declare module 'eslint-plugin-flowtype/dist/utilities/getParameterName.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/utilities/getParameterName'>;
+}
+declare module 'eslint-plugin-flowtype/dist/utilities/getTokenAfterParens.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/utilities/getTokenAfterParens'>;
+}
+declare module 'eslint-plugin-flowtype/dist/utilities/getTokenBeforeParens.js' {
+  declare module.exports: $Exports<'eslint-plugin-flowtype/dist/utilities/getTokenBeforeParens'>;
 }
 declare module 'eslint-plugin-flowtype/dist/utilities/index.js' {
   declare module.exports: $Exports<'eslint-plugin-flowtype/dist/utilities/index'>;

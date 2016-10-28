@@ -25,6 +25,7 @@ import {
 import {
   getAddressFromEvent,
 } from './utils';
+import Base from './components/Base';
 // import {
 //   requestEvents,
 // } from './actions';
@@ -112,6 +113,7 @@ class App extends Component {
     const url = `${apiUrl}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
     fetchEvents({ url }).then(events => {
       const promises = [];
+      if (!events) return;
       const markers = events.map((event, i) => {
         const marker: Object = {
           id: event.item_id,
@@ -125,6 +127,7 @@ class App extends Component {
         return marker;
       });
       Promise.all(promises).then(locations => {
+        /* eslint-disable no-param-reassign */
         markers.forEach((marker, i) => {
           if (locations[i]) {
             marker.latlng = locations[i];
@@ -135,6 +138,7 @@ class App extends Component {
             };
           }
         });
+        /* eslint-enable no-param-reassign */
         const nonNullMarkers = markers.filter((m) => m !== null);
         this.setMarkers(nonNullMarkers);
         this.setState({ loading: false });
@@ -154,9 +158,9 @@ class App extends Component {
     // }
   }
 
-  onRegionChange = (region) => {
-    if (ANDROID) this.state.region.setValue(region);
-  }
+  // onRegionChange = (region: Object) => {
+  //   if (ANDROID) this.state.region.setValue(region);
+  // }
 
   getCurrentMarkers = (): Array<Marker> => {
     return this.state.markers.filter(marker => {

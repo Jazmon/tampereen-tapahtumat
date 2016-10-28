@@ -11,12 +11,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import Slider from 'react-native-slider';
 import locale from 'react-native-locale-detector';
 import moment from 'moment';
 
-import defaultMarker from './assets/default-marker.png';
-import debugMarker from './assets/debug-marker.png';
 
 import {
   fetchEvents,
@@ -25,20 +22,14 @@ import {
 import {
   getAddressFromEvent,
 } from './utils';
+
+import Marker from './components/Marker';
 import Base from './components/Base';
+import Slider from './components/Slider';
 // import {
 //   requestEvents,
 // } from './actions';
 
-// This loads moment locales for the language based on the locale.
-// Yes, it's ugly but it's the only way :(
-/* eslint-disable global-require */
-if (locale.startsWith('fi')) {
-  require('moment/locale/fi');
-} else if (locale.startsWith('se')) {
-  require('moment/locale/se');
-}
-/* eslint-enable global-require */
 
 const { width, height } = Dimensions.get('window');
 const IOS = Platform.OS === 'ios';
@@ -202,17 +193,13 @@ class App extends Component {
     // const { events, isFetching, error } = this.props;
 
     // const currentMarkers = this.getCurrentMarkers();
-    const { region } = this.state;
+    // const { region } = this.state;
     const currentMarkers = this.getCurrentMarkers();
-    const eventCount = currentMarkers.length;
+    // const eventCount = currentMarkers.length;
     return (
-      <View style={styles.container}>
-        <StatusBar
-          barStyle="default"
-          backgroundColor="#cb47f2"
-          // translucent
-          animated
-        />
+      <Base
+        systemBarColor="hsl(116, 70%, 54%)"
+      >
         <MapView
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
@@ -227,75 +214,25 @@ class App extends Component {
           // onRegionChange={this.onRegionChange}
         >
           {currentMarkers.map(event => (
-            <MapView.Marker
-              key={`marker-${event.id}`}
-              coordinate={event.latlng}
-              title={event.title}
-              description={event.description}
-              image={getImagePath(event.type)}
-            />
+            <Marker {...event} key={`marker-${event.id}`} />
           ))}
         </MapView>
-        <View style={styles.sliderBox}>
-          <Slider
-            style={styles.slider}
-            minimumValue={0}
-            maximumValue={6}
-            onValueChange={this.setDate}
-            thumbTintColor="#304FFE"
-            minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
-            maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
-            step={1}
-            value={this.state.date}
-          />
-          <View style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginHorizontal: 6,
-          }}
-          >
-            {[0, 1, 2, 3, 4, 5, 6].map(val => (
-              <View
-                key={`asd-${val}`}
-                style={{
-
-                }}
-              >
-                <Text style={{
-                  color: this.state.date === val ? '#fff' : '#000',
-                }}
-                >{moment().add(val, 'days').startOf('day').format('dd')}</Text>
-              </View>
-            ))}
-          </View>
+        <Slider
+          date={this.state.date}
+          onValueChange={this.setDate}
+        />
+        <View style={styles.tabBar}>
+          <Text>Foo</Text>
         </View>
+
         {/* {isFetching && this.renderLoading }
         {error && this.renderError} */}
-      </View>
+      </Base>
     );
   }
 }
 
-const getImagePath = (type) => {
-  const markerImages = [
-    { type: 'debug',
-      source: debugMarker,
-    },
-  ];
-
-  return markerImages.some((image) => image.type === type)
-  ?
-  markerImages.filter((image) => image.type === type)[0].source
-  :
-  defaultMarker;
-};
-
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#b5b5b5',
-  },
   mapView: {
     ...StyleSheet.absoluteFillObject,
   },
@@ -309,15 +246,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  slider: {
-  },
-  sliderBox: {
-    marginHorizontal: 24,
-    marginTop: 8,
-    borderRadius: 2,
-    paddingHorizontal: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    flex: 0,
+  tabBar: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0,
+    width: Dimensions.get('window').width,
+    height: 48,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

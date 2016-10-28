@@ -33,6 +33,7 @@ const Base = (props: Props = defaultProps) => (
     <NavigationBar
       backgroundColor={props.systemBarColor}
       animated={props.animated}
+      // translucent={true}
     />
     <View style={styles.contentWrapper}>
       {props.children}

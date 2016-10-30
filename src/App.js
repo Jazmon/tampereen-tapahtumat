@@ -6,10 +6,13 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  TouchableNativeFeedback,
   Text,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import MapView from 'react-native-maps';
+import moment from 'moment';
 
 import {
   getEvents,
@@ -52,6 +55,8 @@ type State = {
   loading: boolean;
   region: Object;
   activeEvent: ?Event;
+  toolbarExpanded: boolean;
+  // toolbarHeight: number;
 };
 
 class App extends Component {
@@ -67,6 +72,8 @@ class App extends Component {
       activeEvent: null,
       events: [],
       loading: false,
+      // toolbarHeight: 48,
+      toolbarExpanded: false,
     };
   }
 
@@ -102,13 +109,37 @@ class App extends Component {
     }
   }
 
-  loadEvents = () => {
+  loadEvents = async() => {
+    const prefix = 'TampereenTapahtumat';
+    const key = `${prefix}:cache`;
     this.setState({ loading: true });
+    // load cached data
+    try {
+      const loadedCache = await AsyncStorage.getItem(key);
+      if (loadedCache !== null) {
+        const parsedCache = JSON.parse(loadedCache);
+        const oneDay = moment().add(1, 'days');
+        if (moment().isSameOrBefore(oneDay)) {
+          this.setState({
+            events: parsedCache.events,
+            loading: false,
+          });
+        }
+      }
+    } catch (e) {
+      console.error(e.message, e);
+    }
+    // load fresh data
     getEvents().then(events => {
       this.setState({
         events,
         loading: false,
       });
+      const cache = {
+        events,
+        time: Date.now(),
+      };
+      AsyncStorage.setItem(key, JSON.stringify(cache));
     });
   }
 
@@ -148,9 +179,35 @@ class App extends Component {
     </View>
   );
 
+  renderToolbar = (event: Event) => {
+    const toolbarHeight = this.state.toolbarExpanded ? height - 24 : 48;
+    return (
+      <TouchableNativeFeedback
+        onPress={() => {
+          const bool = !this.state.toolbarExpanded;
+          this.setState({
+            toolbarExpanded: bool,
+          });
+        }}
+        background={TouchableNativeFeedback.SelectableBackground()}
+      >
+        <View style={[styles.toolbar, { height: toolbarHeight }]}>
+          <View style={{ }}>
+            <Text>{event.title}</Text>
+          </View>
+          {this.state.toolbarExpanded &&
+            <View>
+              <Text>{event.description}</Text>
+            </View>
+          }
+        </View>
+      </TouchableNativeFeedback>
+    );
+  };
+
   render() {
     const loading: boolean = this.state.loading;
-    const showToolbar: boolean = !!this.state.activeEvent;
+    // const showToolbar: boolean = !!this.state.activeEvent;
     const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
     const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
     return (
@@ -183,10 +240,8 @@ class App extends Component {
           date={this.state.date}
           onValueChange={this.setDate}
         />
-        {showToolbar &&
-          <View style={styles.tabBar}>
-            <Text>{this.state.activeEvent.title}</Text>
-          </View>
+        {!!this.state.activeEvent &&
+          this.renderToolbar(this.state.activeEvent)
         }
         {loading && this.renderLoading()}
         {/* {isFetching && this.renderLoading() }
@@ -210,15 +265,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  tabBar: {
+  toolbar: {
     position: 'absolute',
     left: 0,
     bottom: 0,
     width: Dimensions.get('window').width,
     height: 48,
     backgroundColor: '#fff',
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
 });
 

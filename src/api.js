@@ -97,10 +97,7 @@ const getSingleDateEvents = (events: Array<VTEvent>): Array<SingleTimeVTEvent> =
 
 // returns all events from this day up to a week
 export const getEvents = async() => {
-  // array containing the events
-  // const events: Array<Event> = [];
   const url: string = getUrl();
-  // eslint-disable-next-line consistent-return
   const rawEvents: ?Array<VTEvent> = await fetchJson({ url });
   if (!rawEvents) { return []; }
 
@@ -127,41 +124,9 @@ export const getEvents = async() => {
       latlng,
     };
     return event;
-    // const promise: Promise<Event> = new Promise((resolve) => {
-    //   const event: Event = {
-    //     id: `event-${rawEvent.item_id}`,
-    //     title: rawEvent.title,
-    //     description: rawEvent.description,
-    //     start: rawEvent.start_datetime,
-    //     end: rawEvent.end_datetime,
-    //     // vtEvent: rawEvent,
-    //     latlng,
-    //   };
-    //   return resolve(event);
-    // });
-    // return await promise;
-    // return new Promise((resolve) => resolve({
-    //   id: `event-${rawEvent.item_id}`,
-    //   title: rawEvent.title,
-    //   description: rawEvent.description,
-    //   vtEvent: rawEvent,
-    //   latlng,
-    // }));
-    // const event: Event = await {
-    //   d: `event-${rawEvent.item_id}`,
-    //   title: rawEvent.title,
-    //   description: rawEvent.description,
-    //   vtEvent: rawEvent,
-    //   latlng,
-    // };
-    // return event;
   });
 
   const events: Array<Event> = await Promise.all(geocodedEventPromises);
-  // const events: Array<Event> = geocodedEventPromises.map(async promise => {
-  //   const event: Event = await promise;
-  //   return event;
-  // });
   return events;
 
   // fetchJson({ url }).then(events => {

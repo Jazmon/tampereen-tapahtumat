@@ -33,6 +33,7 @@ flow/
 flow/*.js
 types/api.js
 types/map.js
+types/app.js
 
 [options]
 module.system=haste

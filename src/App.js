@@ -6,7 +6,6 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  TouchableNativeFeedback,
   Text,
   ActivityIndicator,
   AsyncStorage,
@@ -25,8 +24,8 @@ import {
 
 import Marker from './components/Marker';
 import Base from './components/Base';
+import Toolbar from './components/Toolbar';
 import Slider from './components/Slider';
-
 
 const { width, height } = Dimensions.get('window');
 // const IOS = Platform.OS === 'ios';
@@ -55,8 +54,6 @@ type State = {
   loading: boolean;
   region: Object;
   activeEvent: ?Event;
-  toolbarExpanded: boolean;
-  // toolbarHeight: number;
 };
 
 class App extends Component {
@@ -72,8 +69,6 @@ class App extends Component {
       activeEvent: null,
       events: [],
       loading: false,
-      // toolbarHeight: 48,
-      toolbarExpanded: false,
     };
   }
 
@@ -122,7 +117,7 @@ class App extends Component {
         if (moment().isSameOrBefore(oneDay)) {
           this.setState({
             events: parsedCache.events,
-            loading: false,
+            // loading: false,
           });
         }
       }
@@ -179,35 +174,8 @@ class App extends Component {
     </View>
   );
 
-  renderToolbar = (event: Event) => {
-    const toolbarHeight = this.state.toolbarExpanded ? height - 24 : 48;
-    return (
-      <TouchableNativeFeedback
-        onPress={() => {
-          const bool = !this.state.toolbarExpanded;
-          this.setState({
-            toolbarExpanded: bool,
-          });
-        }}
-        background={TouchableNativeFeedback.SelectableBackground()}
-      >
-        <View style={[styles.toolbar, { height: toolbarHeight }]}>
-          <View style={{ }}>
-            <Text>{event.title}</Text>
-          </View>
-          {this.state.toolbarExpanded &&
-            <View>
-              <Text>{event.description}</Text>
-            </View>
-          }
-        </View>
-      </TouchableNativeFeedback>
-    );
-  };
-
   render() {
     const loading: boolean = this.state.loading;
-    // const showToolbar: boolean = !!this.state.activeEvent;
     const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
     const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
     return (
@@ -240,9 +208,7 @@ class App extends Component {
           date={this.state.date}
           onValueChange={this.setDate}
         />
-        {!!this.state.activeEvent &&
-          this.renderToolbar(this.state.activeEvent)
-        }
+        {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />}
         {loading && this.renderLoading()}
         {/* {isFetching && this.renderLoading() }
         {error && this.renderError()} */}
@@ -264,16 +230,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  toolbar: {
-    position: 'absolute',
-    left: 0,
-    bottom: 0,
-    width: Dimensions.get('window').width,
-    height: 48,
-    backgroundColor: '#fff',
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
 });
 

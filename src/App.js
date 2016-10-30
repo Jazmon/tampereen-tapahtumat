@@ -10,12 +10,15 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
-import moment from 'moment';
-
 
 import {
   getEvents,
 } from './api';
+
+import {
+  eventsToMarkers,
+  getCurrentEvents,
+} from './utils';
 
 import Marker from './components/Marker';
 import Base from './components/Base';
@@ -48,6 +51,7 @@ type State = {
   date: number;
   loading: boolean;
   region: Object;
+  activeEvent: ?Event;
 };
 
 class App extends Component {
@@ -60,6 +64,7 @@ class App extends Component {
     this.state = {
       region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
       date: 0,
+      activeEvent: null,
       events: [],
       loading: false,
     };
@@ -74,15 +79,26 @@ class App extends Component {
     this.loadEvents();
   }
 
-  componentDidUpdate() {
-    const coords: Array<LatLng> = this.getCurrentEvents()
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    // if (prevState.events !== this.state.events) {
+    //
+    // }
+    const edgePadding: EdgePadding = {
+      top: 40,
+      right: 40,
+      bottom: 40,
+      left: 40,
+    };
+    const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
       // .filter(event => !!event)
       .map(event => event.latlng);
+    // TODO check the delta between events and if less than reasonable amount,
+    // use padding to compensate
+    // and if only one event, use some other value
     if (coords.length > 0) {
-      this.map.fitToCoordinates(coords, {
-        edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
-        animated: true,
-      });
+      this.map.fitToCoordinates(coords, edgePadding,
+        true,
+      );
     }
   }
 
@@ -95,51 +111,23 @@ class App extends Component {
       });
     });
   }
+
   onRegionChange = (region: Object) => {
     if (ANDROID) this.state.region.setValue(region);
   }
 
-  getCurrentEvents = (): Array<Event> =>
-    this.state.events.filter(event => {
-      const selectedDate = moment().add(this.state.date, 'days').startOf('day');
-      return selectedDate.isSame(event.start, 'day');
-      // if (event.single_datetime) {
-      //   return selectedDate.isSame(marker.event.start_datetime, 'day');
-      // } else {
-      //   marker.event.times.forEach(time => {
-      //     return selectedDate.isSame(time.start_datetime, 'day');
-      //   });
-      // }
-    });
-
-  eventsToMarkers = (events: Array<Event>): Array<MapMarker> => {
-    const getMarker = (event: Event): MapMarker => ({
-      id: event.id,
-      title: event.title,
-      description: event.description,
-      latlng: event.latlng,
-    });
-    return events.map(getMarker);
-  };
-
-  // getCurrentMarkers = (): Array<Marker> => {
-  //   return this.state.markers.filter(marker => {
-  //     const selectedDate = moment().add(this.state.date, 'days').startOf('day');
-  //     if (marker.event.single_datetime) {
-  //       return selectedDate.isSame(marker.event.start_datetime, 'day');
-  //     } else {
-  //       marker.event.times.forEach(time => {
-  //         return selectedDate.isSame(time.start_datetime, 'day');
-  //       });
-  //     }
-  //   });
-  // };
-
-  setDate = (value: number): void => {
+  setDate = (value: number) => {
     if (value !== this.state.date) {
-      this.setState({ date: value });
+      this.setState({ date: value, activeEvent: null });
     }
   };
+
+  markerPressed = (marker: MapMarker) => {
+    const event: ?Event = this.state.events
+      .filter(e => e.id === marker.id)[0];
+    // if (!event) { return; }
+    this.setState({ activeEvent: event });
+  }
 
   // setMarkers = (markers: Array<Marker>): void => {
   //   this.setState({ markers });
@@ -161,17 +149,10 @@ class App extends Component {
   );
 
   render() {
-    // const { events, isFetching, error } = this.props;
-    const loading = this.state.loading;
-
-    // const currentMarkers = this.getCurrentMarkers();
-    // const { region } = this.state;
-    // const currentMarkers = this.getCurrentMarkers();
-    // console.log('events', events);
-    // const currentMarkers = this.getCurrentEvents().map(this.eventsToMarkers);
-    const events = this.getCurrentEvents();
-    const currentMarkers = this.eventsToMarkers(events);
-    // const eventCount = currentMarkers.length;
+    const loading: boolean = this.state.loading;
+    const showToolbar: boolean = !!this.state.activeEvent;
+    const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
+    const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
     return (
       <Base
         systemBarColor="hsl(116, 70%, 54%)"
@@ -189,17 +170,24 @@ class App extends Component {
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
-          {currentMarkers.map(marker => (
-            <Marker {...marker} key={`marker-${marker.id}`} />
+          {currentMarkers.map((marker, i) => (
+            <Marker
+              {...marker}
+              key={`marker-${marker.id}`}
+              type={i % 2 === 0 ? 'debug' : 'default'}
+              onPress={() => this.markerPressed(marker)}
+            />
           ))}
         </MapView>
         <Slider
           date={this.state.date}
           onValueChange={this.setDate}
         />
-        <View style={styles.tabBar}>
-          <Text>Foo</Text>
-        </View>
+        {showToolbar &&
+          <View style={styles.tabBar}>
+            <Text>{this.state.activeEvent.title}</Text>
+          </View>
+        }
         {loading && this.renderLoading()}
         {/* {isFetching && this.renderLoading() }
         {error && this.renderError()} */}

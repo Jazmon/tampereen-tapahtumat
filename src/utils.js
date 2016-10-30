@@ -1,4 +1,21 @@
 // @flow
+import moment from 'moment';
+
+export const eventsToMarkers = (events: Array<Event>): Array<MapMarker> => {
+  const getMarker = (event: Event): MapMarker => ({
+    id: event.id,
+    title: event.title,
+    description: event.description,
+    latlng: event.latlng,
+  });
+  return events.map(getMarker);
+};
+
+export const getCurrentEvents = (events: Array<Event>, date: number): Array<Event> =>
+  events.filter(event => {
+    const selectedDate = moment().add(date, 'days').startOf('day');
+    return selectedDate.isSame(event.start, 'day');
+  });
 
 type AIEType = {
   obj: Object;

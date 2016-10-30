@@ -109,9 +109,10 @@ export const getEvents = async() => {
   const geocodedEventPromises: Array<Promise<Event>> = singleDateEvents.map(async (rawEvent, i) => {
     const address: string = getAddressFromEvent(rawEvent);
     // console.log('address', address);
+    const DELTA = 100000;
     const latlng: LatLng = await geocodeAddress(address) || {
-      latitude: 61.497421 + i % 2 === 0 ? i / 100 : -i / 100,
-      longitude: 23.757292 + i % 2 === 0 ? i / 100 : -i / 100,
+      latitude: 61.497421 + (i % 2 === 0 ? i / DELTA : -i / DELTA),
+      longitude: 23.757292 + (i % 3 === 0 ? i / DELTA : -i / DELTA),
     };
     // console.log('latlng', latlng);
 

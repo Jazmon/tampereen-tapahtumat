@@ -5,36 +5,26 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  // StatusBar,
-  // Platform,
+  Platform,
   Text,
   ActivityIndicator,
 } from 'react-native';
 import MapView from 'react-native-maps';
-// import locale from 'react-native-locale-detector';
 import moment from 'moment';
 
 
 import {
-  // fetchEvents,
-  // getLocation,
   getEvents,
 } from './api';
-// import {
-//   getAddressFromEvent,
-// } from './utils';
 
 import Marker from './components/Marker';
 import Base from './components/Base';
 import Slider from './components/Slider';
-// import {
-//   requestEvents,
-// } from './actions';
 
 
 const { width, height } = Dimensions.get('window');
 // const IOS = Platform.OS === 'ios';
-// const ANDROID = Platform.OS === 'android';
+const ANDROID = Platform.OS === 'android';
 const ASPECT_RATIO = width / height;
 const LATITUDE = 61.497421;
 const LONGITUDE = 23.757292;
@@ -48,30 +38,16 @@ const REGION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-// const getApiLocale = (locale_: ?string): ?string => {
-//   if (!locale_) return null;
-//   return locale_.split('-')[0];
-// };
-//
-// const apiLocale = getApiLocale(locale) || 'en';
-//
-// const apiUrl = 'http://visittampere.fi/api/search?type=event';
 // const log = __DEV__ ? console.log.bind(null, '[EventMap]') : () => {};
 
 type Props = {
-  // events: Array<Marker>;
-  // isFetching: boolean;
-  // error: ?Object;
-  // requestEvents: Function;
 };
 
 type State = {
-  // region: Object;
-  // date: number;
-  // markers: Array<Marker>;
   events: Array<Event>;
   date: number;
   loading: boolean;
+  region: Object;
 };
 
 class App extends Component {
@@ -82,10 +58,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      // region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
-      // date: 0,
+      region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
       date: 0,
-      // markers: [],
       events: [],
       loading: false,
     };
@@ -93,63 +67,23 @@ class App extends Component {
 
   state: State;
 
-  // componentWillMount() {
-  //   this.props.requestEvents();
-  // }
+  componentWillMount() {
+  }
 
   componentDidMount() {
     this.loadEvents();
-
-    // const start = moment().startOf('day').valueOf();
-    // const end = moment().add(6, 'days').endOf('day').valueOf();
-    // const lang = locale ? apiLocale : 'en';
-    // const url = `${apiUrl}&limit=20&start_datetime=${start}&end_datetime=${end}&lang=${lang}`;
-    // fetchEvents({ url }).then(events => {
-    //   const promises = [];
-    //   if (!events) return;
-    //   const markers = events.map((event, i) => {
-    //     const marker: Object = {
-    //       id: event.item_id,
-    //       title: event.title,
-    //       description: event.description,
-    //       event,
-    //     };
-    //     const address = getAddressFromEvent(event);
-    //     const promise = getLocation(address);
-    //     promises.push(promise);
-    //     return marker;
-    //   });
-    //   Promise.all(promises).then(locations => {
-    //     /* eslint-disable no-param-reassign */
-    //     markers.forEach((marker, i) => {
-    //       if (locations[i]) {
-    //         marker.latlng = locations[i];
-    //       } else {
-    //         marker.latlng = {
-    //           latitude: 61.497421,
-    //           longitude: 23.757292,
-    //         };
-    //       }
-    //     });
-    //     /* eslint-enable no-param-reassign */
-    //     const nonNullMarkers = markers.filter((m) => m !== null);
-    //     this.setMarkers(nonNullMarkers);
-
-      //   this.setState({ loading: false });
-      // });
-    // }).catch(err => console.error(err));
   }
 
   componentDidUpdate() {
-    // const coords: Array<LatLng> = this.props.events
-    //   // .filter(event => !!event)
-    //   .map(event => event.latlng);
-    // if (coords.length > 0) {
-    //   this.map.fitToCoordinates(coords, {
-    //     edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
-    //     animated: true,
-    //   });
-    // }
+    const coords: Array<LatLng> = this.getCurrentEvents()
+      // .filter(event => !!event)
+      .map(event => event.latlng);
+    if (coords.length > 0) {
+      this.map.fitToCoordinates(coords, {
+        edgePadding: { top: 40, right: 40, bottom: 40, left: 40 },
+        animated: true,
+      });
+    }
   }
 
   loadEvents = () => {
@@ -161,9 +95,9 @@ class App extends Component {
       });
     });
   }
-  // onRegionChange = (region: Object) => {
-  //   if (ANDROID) this.state.region.setValue(region);
-  // }
+  onRegionChange = (region: Object) => {
+    if (ANDROID) this.state.region.setValue(region);
+  }
 
   getCurrentEvents = (): Array<Event> =>
     this.state.events.filter(event => {

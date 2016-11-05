@@ -96,8 +96,8 @@ type State = {
 class App extends Component {
   props: Props;
   map: Object;
-  fab: ?Object;
-  bottomSheet: ?Object;
+  fab: Object;
+  bottomSheet: Object;
 
   constructor(props: Props) {
     super(props);
@@ -118,33 +118,29 @@ class App extends Component {
 
   state: State;
 
-  componentWillMount() {
-  }
-
   componentDidMount() {
     this.loadEvents();
-    this.setState({
-      lastState: BottomSheetBehavior.STATE_COLLAPSED,
-    });
+    // this.setState({
+    //   lastState: BottomSheetBehavior.STATE_COLLAPSED,
+    // });
 
-    if (this.fab && this.bottomSheet) {
-      this.fab.setAnchorId(this.bottomSheet);
-    }
+    // if (this.fab && this.bottomSheet) {
+    this.fab.setAnchorId(this.bottomSheet);
+    // }
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
+  // componentDidUpdate(prevProps: Props, prevState: State) {
     // if (prevState.events !== this.state.events) {
     //
     // }
-    const edgePadding: EdgePadding = {
-      top: 40,
-      right: 40,
-      bottom: 40,
-      left: 40,
-    };
-    const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
-      // .filter(event => !!event)
-      .map(event => event.latlng);
+    // const edgePadding: EdgePadding = {
+    //   top: 40,
+    //   right: 40,
+    //   bottom: 40,
+    //   left: 40,
+    // };
+    // const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
+    //   .map(event => event.latlng);
     // TODO check the delta between events and if less than reasonable amount,
     // use padding to compensate
     // and if only one event, use some other value
@@ -153,20 +149,20 @@ class App extends Component {
     //     true,
     //   );
     // }
-  }
+  // }
 
   handleFabPress = () => {
     ToastAndroid.show('Pressed', ToastAndroid.SHORT);
   }
 
-  handleBottomSheetOnPress = (e: Object) => {
-    console.log('bottom sheet pressed');
+  handleBottomSheetOnPress = (/* e: Object*/) => {
+    // console.log('bottom sheet pressed');
     if (this.state.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
       this.setState({ bottomSheetColor: 1 });
-      if (this.bottomSheet) this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
+      this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
     } else if (this.state.lastState === BottomSheetBehavior.STATE_EXPANDED) {
       this.setState({ bottomSheetColor: 0 });
-      if (this.bottomSheet) this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_STATE_COLLAPSED);
+      this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_STATE_COLLAPSED);
     }
   }
 
@@ -197,7 +193,8 @@ class App extends Component {
     if (offset === 0) {
       bottomSheetColor = 0;
       // this.setState({ bottomSheetColor: 0 });
-    } else if (this.state.bottomSheetColor !== 1 && this.state.lastState === BottomSheetBehavior.STATE_DRAGGING) {
+    } else if (this.state.bottomSheetColor !== 1 &&
+      this.state.lastState === BottomSheetBehavior.STATE_DRAGGING) {
       // this.setState({ bottomSheetColor: 1 });
       bottomSheetColor = 1;
     }
@@ -283,30 +280,44 @@ class App extends Component {
     const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
     const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
     return (
-      <MapView
-        ref={ref => { this.map = ref; }}
-        style={styles.mapView}
-        // region={region}
-        // cacheEnabled={true}
-        initialRegion={REGION}
-        showsScale={true}
-        loadingEnabled={false}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
-        // provider="google"
-        // onRegionChange={this.onRegionChange}
-      >
-        {currentMarkers.map((marker, i) => (
-          <Marker
-            {...marker}
-            key={`marker-${marker.id}`}
-            type={i % 2 === 0 ? 'debug' : 'default'}
-            onPress={() => this.markerPressed(marker)}
-          />
-        ))}
-      </MapView>
+      <View style={styles.mapContainer}>
+        <MapView
+          ref={ref => { this.map = ref; }}
+          style={styles.mapView}
+          // region={region}
+          // cacheEnabled={true}
+          onPress={() => this.setState({ activeEvent: null })}
+          initialRegion={REGION}
+          showsScale={true}
+          loadingEnabled={false}
+          showsUserLocation={true}
+          showsMyLocationButton={true}
+          // provider="google"
+          // onRegionChange={this.onRegionChange}
+        >
+          {currentMarkers.map((marker, i) => (
+            <Marker
+              {...marker}
+              key={`marker-${marker.id}`}
+              type={i % 2 === 0 ? 'debug' : 'default'}
+              onPress={() => this.markerPressed(marker)}
+            />
+          ))}
+        </MapView>
+      </View>
     );
   };
+
+  renderDetailItem = (icon: string, text: string) => (
+    <TouchableNativeFeedback delayPressIn={0} delayPressOut={0} background={RippleColor('#d1d1d1')}>
+      <View>
+        <View pointerEvents="none" style={styles.detailItem}>
+          <Icon name={icon} size={18} color={PRIMARY_COLOR} />
+          <Text pointerEvents="none" style={styles.detailText}>{text}</Text>
+        </View>
+      </View>
+    </TouchableNativeFeedback>
+  );
 
   renderBottomSheet = () => {
     const {
@@ -345,6 +356,11 @@ class App extends Component {
       }),
     };
 
+    const { activeEvent } = this.state;
+    const offsetY = activeEvent ? 0 : -90;
+
+    const title = activeEvent ? activeEvent.title : '';
+
     return (
       <BottomSheetBehavior
         ref={bs => { this.bottomSheet = bs; }}
@@ -354,14 +370,52 @@ class App extends Component {
         onStateChange={this.handleBottomSheetChange}
         peekHeight={90}
       >
-        <View style={styles.bottomSheet}>
+        <View style={[styles.bottomSheet, { transform: [{ translateY: offsetY }] }]}>
           <TouchableWithoutFeedback
             onPress={this.handleBottomSheetOnPress}
           >
             <Animated.View style={[styles.bottomSheetHeader, headerAnimated]}>
-              <Text>Peek a boo</Text>
+              <View style={styles.bottomSheetLeft}>
+                <Animated.Text style={[styles.bottomSheetTitle, textAnimated]}>
+                  {title}
+                </Animated.Text>
+                <View style={styles.starsContainer}>
+                  <Animated.Text style={[starsAnimated, { marginRight: 8 }]}>5.0</Animated.Text>
+                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
+                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
+                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
+                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
+                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
+                </View>
+              </View>
+              <View style={styles.bottomSheetRight}>
+                <Animated.Text style={[styles.routeLabel, routeTextAnimated]}>Route</Animated.Text>
+              </View>
             </Animated.View>
           </TouchableWithoutFeedback>
+          <View style={styles.bottomSheetContent}>
+            <View style={styles.sectionIcons}>
+              <View style={styles.iconBox}>
+                <Icon name="md-call" size={22} color={PRIMARY_COLOR} />
+                <Text style={styles.iconLabel}>CALL</Text>
+              </View>
+              <View style={styles.iconBox}>
+                <Icon name="md-star" size={22} color={PRIMARY_COLOR} />
+                <Text style={styles.iconLabel}>SAVE</Text>
+              </View>
+              <View style={styles.iconBox}>
+                <Icon name="md-globe" size={22} color={PRIMARY_COLOR} />
+                <Text style={styles.iconLabel}>WEBSITE</Text>
+              </View>
+            </View>
+            <View style={styles.detailListSection}>
+              {this.renderDetailItem('md-locate', 'Av. Lorem Ipsum dolor sit amet - consectetur adipising elit.')}
+              {this.renderDetailItem('md-timer', 'Open now: 06:22:00')}
+              {this.renderDetailItem('md-call', '(11) 9999-9999')}
+              {this.renderDetailItem('md-globe', 'https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior')}
+              {this.renderDetailItem('md-create', 'Suggest an edit')}
+            </View>
+          </View>
         </View>
       </BottomSheetBehavior>
     );
@@ -389,26 +443,24 @@ class App extends Component {
     const loading: boolean = this.state.loading;
 
     return (
-      <Base
-        systemBarColor="hsl(116, 70%, 54%)"
-      >
-        <CoordinatorLayout style={{ flex: 1 }}>
-          <View style={styles.content}>
-            {this.renderMap()}
-            <Slider
-              date={this.state.date}
-              onValueChange={this.setDate}
-            />
-          </View>
-          {this.renderBottomSheet()}
-          {this.renderFloatingActionButton()}
-        </CoordinatorLayout>
-
-        {/* {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />} */}
-        {/* {loading && this.renderLoading()} */}
-        {/* {isFetching && this.renderLoading() }
-        {error && this.renderError()} */}
-      </Base>
+      <CoordinatorLayout style={{ flex: 1 }}>
+        <Base
+          systemBarColor={PRIMARY_COLOR}
+          backgroundColor="transparent"
+        >
+          {this.renderMap()}
+          <Slider
+            date={this.state.date}
+            onValueChange={this.setDate}
+          />
+          {/* {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />} */}
+          {/* {loading && this.renderLoading()} */}
+          {/* {isFetching && this.renderLoading() }
+          {error && this.renderError()} */}
+        </Base>
+        {this.renderBottomSheet()}
+        {this.renderFloatingActionButton()}
+      </CoordinatorLayout>
     );
   }
 }
@@ -419,10 +471,21 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-end',
     // alignItems: 'center',
   },
-  content: {
-    backgroundColor: 'transparent',
-    flex: 1,
+  mapContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height,
+    width,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
+  // content: {
+  //   backgroundColor: 'transparent',
+  //   flex: 1,
+  // },
   error: {
     flex: 1,
     alignItems: 'center',
@@ -442,6 +505,65 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  bottomSheetLeft: {
+    flexDirection: 'column',
+  },
+  bottomSheetRight: {
+    flexDirection: 'column',
+  },
+  bottomSheetTitle: {
+    fontFamily: 'sans-serif-medium',
+    fontSize: 18,
+  },
+  bottomSheetContent: {
+    alignItems: 'center',
+    backgroundColor: WHITE,
+  },
+  starsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  star: {
+    marginHorizontal: 2,
+  },
+  routeLabel: {
+    marginTop: 32,
+    fontSize: 12,
+    color: PRIMARY_COLOR,
+  },
+  sectionIcons: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 18,
+    borderBottomWidth: 1,
+    borderColor: '#eee',
+  },
+  iconBox: {
+    flex: 1,
+    borderRadius: 50,
+    alignItems: 'center',
+    flexDirection: 'column',
+  },
+  iconLabel: {
+    fontSize: 14,
+    marginTop: 4,
+    color: PRIMARY_COLOR,
+  },
+  detailListSection: {
+    paddingTop: 4,
+  },
+  detailItem: {
+    height: 38,
+    alignItems: 'center',
+    flexDirection: 'row',
+    paddingHorizontal: 22,
+  },
+  detailText: {
+    color: '#333',
+    fontSize: 12,
+    marginLeft: 24,
   },
 });
 

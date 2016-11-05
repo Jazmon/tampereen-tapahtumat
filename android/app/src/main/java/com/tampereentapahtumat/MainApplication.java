@@ -8,6 +8,7 @@ import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
+import com.bottomsheetbehavior.BottomSheetBehaviorPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.attehuhtakangas.navigationbar.NavigationBarPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -35,7 +36,8 @@ public class MainApplication extends Application implements ReactApplication {
             new ReactNativeI18n(),
             new RNGeocoderPackage(),
             new BlurViewPackage(),
-            new NavigationBarPackage()
+            new NavigationBarPackage(),
+            new BottomSheetBehaviorPackage()
       );
     }
   };

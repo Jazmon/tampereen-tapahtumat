@@ -444,7 +444,7 @@ class App extends Component {
                 <Text style={styles.iconLabel}>WEBSITE</Text>
               </View>
             </View>
-            <View style={styles.detailListSection}>
+            {!!activeEvent && <View style={styles.detailListSection}>
               <View
                 style={{
                   alignItems: 'center',
@@ -454,12 +454,28 @@ class App extends Component {
               >
                 <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
               </View>
-              {this.renderDetailItem('md-locate', 'Hämeenkatu 10')}
-              {this.renderDetailItem('md-timer', '12:00 - 14:00')}
-              {this.renderDetailItem('md-email', 'info@tapahtuma.fi')}
-              {this.renderDetailItem('md-globe', 'https://www.tampere.fi')}
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingHorizontal: 22,
+                  marginVertical: 4,
+                }}
+              >
+                <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 8 }} />
+                {activeEvent.tags.map(tag => (
+                  <View key={`tag-${tag}`} style={{ backgroundColor: '#3159b3', borderRadius: 6, marginLeft: 4, paddingVertical: 2, paddingHorizontal: 4 }}>
+                    <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif-light', fontSize: 10 }}>{tag}</Text>
+                  </View>
+                ))}
+              </View>
+              {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address)}
+              {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
+              {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
+              {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
+              {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link)}
               {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
-            </View>
+            </View>}
           </View>
         </View>
       </BottomSheetBehavior>
@@ -499,7 +515,7 @@ class App extends Component {
         ref={fab => { this.fab = fab; }}
         elevation={18}
         rippleEffect={true}
-        icon="calendar"
+        icon="event"
         iconProvider={IconMDI}
         iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
@@ -547,7 +563,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height,
+    height: height - 24,
     width,
     justifyContent: 'flex-end',
     alignItems: 'center',

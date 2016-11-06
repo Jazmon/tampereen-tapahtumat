@@ -116,9 +116,9 @@ class App extends Component {
       loading: false,
       bottomSheetColor: 0,
       bottomSheetColorAnimated: new Animated.Value(0),
-      lastState: BottomSheetBehavior.STATE_COLLAPSED,
-      offset: 0,
-      settlingExpanded: false,
+      // lastState: BottomSheetBehavior.STATE_COLLAPSED,
+      // offset: 0,
+      // settlingExpanded: false,
     };
   }
 
@@ -170,7 +170,7 @@ class App extends Component {
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
     } else if (this.lastState === BottomSheetBehavior.STATE_EXPANDED) {
       this.setState({ bottomSheetColor: 0 });
-      this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_STATE_COLLAPSED);
+      this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_COLLAPSED);
     }
   }
 
@@ -406,7 +406,7 @@ class App extends Component {
         elevation={16}
         onSlide={this.handleSlide}
         onStateChange={this.handleBottomSheetChange}
-        peekHeight={90}
+        peekHeight={70}
         {...activeEvent ? active.props : inactive.props}
       >
         <View style={[styles.bottomSheet, activeEvent ? active.style : inactive.style]}>
@@ -415,80 +415,82 @@ class App extends Component {
           >
             <Animated.View style={[styles.bottomSheetHeader, headerAnimated]}>
               <View style={styles.bottomSheetLeft}>
-                <Animated.Text numberOfLines={1} style={[styles.bottomSheetTitle, textAnimated]}>
+                <Animated.Text numberOfLines={2} style={[styles.bottomSheetTitle, textAnimated]}>
                   {title}
                 </Animated.Text>
-                <View style={styles.starsContainer}>
+                {/* <View style={styles.starsContainer}>
                   <Animated.Text style={[starsAnimated, { marginRight: 8 }]}>5.0</Animated.Text>
                   <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
                   <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
                   <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
                   <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
                   <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                </View>
+                </View> */}
               </View>
-              <View style={styles.bottomSheetRight}>
+              {/* <View style={styles.bottomSheetRight}>
                 <Animated.Text style={[styles.routeLabel, routeTextAnimated]}>Route</Animated.Text>
-              </View>
+              </View> */}
             </Animated.View>
           </TouchableWithoutFeedback>
           <View style={styles.bottomSheetContent}>
-            <View style={styles.sectionIcons}>
-              <View style={styles.iconBox}>
-                <Icon name="md-call" size={22} color={PRIMARY_COLOR} />
-                <Text style={styles.iconLabel}>CALL</Text>
+            <NestedScrollView style={{ width }}>
+              <View style={styles.sectionIcons}>
+                {/* <View style={styles.iconBox}>
+                  <Icon name="md-call" size={22} color={PRIMARY_COLOR} />
+                  <Text style={styles.iconLabel}>CALL</Text>
+                </View>
+                <View style={styles.iconBox}>
+                  <Icon name="md-star" size={22} color={PRIMARY_COLOR} />
+                  <Text style={styles.iconLabel}>SAVE</Text>
+                </View>
+                <View style={styles.iconBox}>
+                  <Icon name="md-globe" size={22} color={PRIMARY_COLOR} />
+                  <Text style={styles.iconLabel}>WEBSITE</Text>
+                </View> */}
               </View>
-              <View style={styles.iconBox}>
-                <Icon name="md-star" size={22} color={PRIMARY_COLOR} />
-                <Text style={styles.iconLabel}>SAVE</Text>
-              </View>
-              <View style={styles.iconBox}>
-                <Icon name="md-globe" size={22} color={PRIMARY_COLOR} />
-                <Text style={styles.iconLabel}>WEBSITE</Text>
-              </View>
-            </View>
-            {!!activeEvent && <View style={styles.detailListSection}>
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  paddingHorizontal: 22,
-                }}
-              >
-                <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  paddingHorizontal: 22,
-                  paddingVertical: 6,
-                }}
-              >
-                <Image source={activeEvent.image} resizeMode="contain" style={{ width: width - 32, height: 160 }} />
-              </View>
-              <View
-                style={{
-                  alignItems: 'center',
-                  flexDirection: 'row',
-                  paddingHorizontal: 22,
-                  marginVertical: 4,
-                }}
-              >
-                <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 8 }} />
-                {activeEvent.tags.map(tag => (
-                  <View key={`tag-${tag}`} style={{ backgroundColor: '#3159b3', borderRadius: 6, marginLeft: 4, paddingVertical: 2, paddingHorizontal: 4 }}>
-                    <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif-light', fontSize: 10 }}>{tag}</Text>
-                  </View>
-                ))}
-              </View>
-              {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address)}
-              {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
-              {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
-              {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
-              {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link)}
-              {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
-            </View>}
+              {!!activeEvent && <View style={styles.detailListSection}>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingHorizontal: 22,
+                  }}
+                >
+                  <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingHorizontal: 22,
+                    paddingVertical: 6,
+                  }}
+                >
+                  <Image source={activeEvent.image} resizeMode="contain" style={{ width: width - 32, height: 160 }} />
+                </View>
+                <View
+                  style={{
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                    paddingHorizontal: 22,
+                    marginVertical: 4,
+                  }}
+                >
+                  <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 8 }} />
+                  {activeEvent.tags.map(tag => (
+                    <View key={`tag-${tag}`} style={{ backgroundColor: '#3159b3', borderRadius: 6, marginLeft: 4, paddingVertical: 2, paddingHorizontal: 4 }}>
+                      <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif-light', fontSize: 10 }}>{tag}</Text>
+                    </View>
+                  ))}
+                </View>
+                {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address)}
+                {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
+                {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
+                {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
+                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link)}
+                {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
+                </View>}
+            </NestedScrollView>
           </View>
         </View>
       </BottomSheetBehavior>
@@ -530,7 +532,8 @@ class App extends Component {
         rippleEffect={true}
         icon="event"
         iconProvider={IconMDI}
-        iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
+        iconColor="#fff"
+        // iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
         backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
         {...activeEvent ? active : inactive}

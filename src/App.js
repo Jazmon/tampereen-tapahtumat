@@ -12,15 +12,18 @@ import {
   Text,
   ToastAndroid,
   Keyboard,
+  StatusBar,
   TouchableWithoutFeedback,
   TouchableNativeFeedback,
   ActivityIndicator,
   AsyncStorage,
+  Image,
 } from 'react-native';
 /* eslint-enable no-unused-vars */
 
 import MapView from 'react-native-maps';
 import moment from 'moment';
+import NavigationBar from 'react-native-onscreen-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMDI from 'react-native-vector-icons/MaterialIcons';
 import {
@@ -74,7 +77,7 @@ const REGION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-// const log = __DEV__ ? console.log.bind(null, '[EventMap]') : () => {};
+// const log = __DEV__ ? // console.log.bind(null, '[EventMap]') : () => {};
 
 type Props = {
 };
@@ -161,7 +164,7 @@ class App extends Component {
   }
 
   handleBottomSheetOnPress = (/* e: Object*/) => {
-    console.log('bottom sheet pressed');
+    // console.log('bottom sheet pressed');
     if (this.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
       this.setState({ bottomSheetColor: 1 });
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
@@ -173,7 +176,7 @@ class App extends Component {
 
   handleBottomSheetChange = (e: Object) => {
     const newState = e.nativeEvent.state;
-    console.log('handle bottom sheet change', newState);
+    // console.log('handle bottom sheet change', newState);
 
     if (this.offset > 0.1 &&
       newState === BottomSheetBehavior.STATE_DRAGGING ||
@@ -196,7 +199,7 @@ class App extends Component {
     this.offset = offset;
 
     // let bottomSheetColor = 0;
-    console.log('handle slide', offset);
+    // console.log('handle slide', offset);
 
     if (offset === 0) {
       // bottomSheetColor = 0;
@@ -249,19 +252,19 @@ class App extends Component {
   }
 
   onRegionChange = (region: Object) => {
-    console.log('on region change');
+    // console.log('on region change');
     // if (ANDROID) this.state.region.setValue(region);
   }
 
   setDate = (value: number) => {
-    console.log('set date');
+    // console.log('set date');
     if (value !== this.state.date) {
       this.setState({ date: value, activeEvent: null });
     }
   };
 
   markerPressed = (marker: MapMarker) => {
-    console.log('marker pressed');
+    // console.log('marker pressed');
     const event: ?Event = this.state.events
       .filter(e => e.id === marker.id)[0];
     // if (!event) { return; }
@@ -459,6 +462,16 @@ class App extends Component {
                   alignItems: 'center',
                   flexDirection: 'row',
                   paddingHorizontal: 22,
+                  paddingVertical: 6,
+                }}
+              >
+                <Image source={activeEvent.image} resizeMode="contain" style={{ width: width - 32, height: 160 }} />
+              </View>
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingHorizontal: 22,
                   marginVertical: 4,
                 }}
               >
@@ -529,11 +542,18 @@ class App extends Component {
     const loading: boolean = this.state.loading;
 
     return (
-      <CoordinatorLayout style={{ flex: 1 }}>
-        <Base
-          systemBarColor={PRIMARY_COLOR}
-          backgroundColor="transparent"
-        >
+      <CoordinatorLayout style={styles.container}>
+        <StatusBar
+          backgroundColor={PRIMARY_COLOR}
+          animated={true}
+          barStyle="default"
+        />
+        <NavigationBar
+          backgroundColor={PRIMARY_COLOR}
+          animated={true}
+          // translucent={true}
+        />
+        <View style={styles.content}>
           {this.renderMap()}
           <Slider
             date={this.state.date}
@@ -542,7 +562,27 @@ class App extends Component {
           {/* {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />} */}
           {/* {isFetching && this.renderLoading() }
           {error && this.renderError()} */}
-        </Base>
+        </View>
+        {false && this.state.activeEvent &&
+          <Animated.View
+            style={{
+              width,
+              bottom: 0,
+              position: 'absolute',
+              height: 200,
+              left: 0,
+              right: 0,
+              // alignSelf: 'flex-end',
+              transform: [{ translateY: -this.offset * 200 }]
+            }}
+          >
+            <Image
+              source={this.state.activeEvent.image}
+              resizeMode="cover"
+              style={{ flex: 1 }}
+            />
+          </Animated.View>
+        }
         {this.renderBottomSheet()}
         {this.renderFloatingActionButton()}
         {loading && this.renderLoading()}
@@ -552,6 +592,13 @@ class App extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F5FCFF',
+  },
+  content: {
+    backgroundColor: 'transparent',
+  },
   mapView: {
     ...StyleSheet.absoluteFillObject,
     // justifyContent: 'flex-end',
@@ -568,10 +615,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  // content: {
-  //   backgroundColor: 'transparent',
-  //   flex: 1,
-  // },
   error: {
     flex: 1,
     alignItems: 'center',

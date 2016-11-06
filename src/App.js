@@ -22,10 +22,13 @@ import {
 /* eslint-enable no-unused-vars */
 
 import MapView from 'react-native-maps';
+import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
+import Spinner from 'react-native-spinkit';
 import NavigationBar from 'react-native-onscreen-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMDI from 'react-native-vector-icons/MaterialIcons';
+import _ from 'lodash';
 import {
   NestedScrollView,
   CoordinatorLayout,
@@ -43,11 +46,11 @@ import {
 } from './utils';
 
 import Marker from './components/Marker';
-import Base from './components/Base';
-import Toolbar from './components/Toolbar';
+// import Base from './components/Base';
+// import Toolbar from './components/Toolbar';
 import Slider from './components/Slider';
 
-const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+// const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 const duration = 120;
 
@@ -66,9 +69,12 @@ const LATITUDE_DELTA = 0.0322;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 const WHITE = '#FFF';
-const PRIMARY_COLOR = '#4589f2';
-const TEXT_BASE_COLOR = '#333';
-const SECONDARY_COLOR = '#ff5722';
+const PRIMARY_COLOR = '#2196F3';
+const DARK_PRIMARY_COLOR = '#1976D2';
+const LIGHT_PRIMARY_COLOR = '#BBDEFB';
+const TEXT_BASE_COLOR = '#212121';
+const SECONDARY_TEXT_COLOR = '#757575';
+const SECONDARY_COLOR = '#FFC107';
 
 const REGION = {
   latitude: LATITUDE,
@@ -104,6 +110,7 @@ class App extends Component {
   lastState: number;
   settlingExpanded: boolean;
   offset: number;
+  loadingView: Object;
 
   constructor(props: Props) {
     super(props);
@@ -135,6 +142,35 @@ class App extends Component {
     // if (this.fab && this.bottomSheet) {
     this.fab.setAnchorId(this.bottomSheet);
     // }
+  }
+
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (prevState.loading && !this.state.loading) {
+      this.loadingView.fadeOut(400)
+        .then((/* endState*/) => {
+          // console.log('loading faded');
+        });
+    }
+
+    if (!_.isEqual(prevState.date, this.state.date)) {
+      const edgePadding: EdgePadding = {
+        top: 40,
+        right: 40,
+        bottom: 40,
+        left: 40,
+      };
+      const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
+        .map(event => event.latlng);
+      // TODO check the delta between events and if less than reasonable amount,
+      // use padding to compensate
+      // and if only one event, use some other value
+      if (!!this.map && coords && coords.length > 1) {
+        this.map.fitToCoordinates(coords, edgePadding,
+          true,
+        );
+      }
+    }
+
   }
 
   // componentDidUpdate(prevProps: Props, prevState: State) {
@@ -251,10 +287,10 @@ class App extends Component {
     });
   }
 
-  onRegionChange = (region: Object) => {
+  // onRegionChange = (region: Object) => {
     // console.log('on region change');
     // if (ANDROID) this.state.region.setValue(region);
-  }
+  // }
 
   setDate = (value: number) => {
     // console.log('set date');
@@ -276,12 +312,16 @@ class App extends Component {
   // };
 
   renderLoading = () => (
-    <View style={styles.loading}>
-      <ActivityIndicator
+    <Animatable.View style={styles.loading} pointerEvents="none" ref={view => { this.loadingView = view; }}>
+      <Spinner
+        type="9CubeGrid"
+        size={60}
         color="#fff"
-        size="large"
       />
-    </View>
+      <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}>
+        Looking up events nearby...
+      </Animatable.Text>
+    </Animatable.View>
   );
 
   renderError = () => (
@@ -302,10 +342,10 @@ class App extends Component {
           // cacheEnabled={true}
           onPress={() => this.setState({ activeEvent: null })}
           initialRegion={REGION}
-          showsScale={true}
+          // showsScale={true}
           loadingEnabled={false}
           showsUserLocation={true}
-          showsMyLocationButton={true}
+          // showsMyLocationButton={true}
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
@@ -357,21 +397,21 @@ class App extends Component {
         outputRange: [TEXT_BASE_COLOR, WHITE],
       }),
     };
-    const starsAnimated = {
-      color: bottomSheetColorAnimated.interpolate({
-        inputRange: [0, 1],
-        outputRange: [SECONDARY_COLOR, WHITE],
-      }),
-    };
-    const routeTextAnimated = {
-      color: bottomSheetColorAnimated.interpolate({
-        inputRange: [0, 1],
-        outputRange: [PRIMARY_COLOR, WHITE],
-      }),
-    };
+    // const starsAnimated = {
+    //   color: bottomSheetColorAnimated.interpolate({
+    //     inputRange: [0, 1],
+    //     outputRange: [SECONDARY_COLOR, WHITE],
+    //   }),
+    // };
+    // const routeTextAnimated = {
+    //   color: bottomSheetColorAnimated.interpolate({
+    //     inputRange: [0, 1],
+    //     outputRange: [PRIMARY_COLOR, WHITE],
+    //   }),
+    // };
 
     const { activeEvent } = this.state;
-    const offsetY = activeEvent ? 0 : -90;
+    // const offsetY = activeEvent ? 0 : -90;
 
     const inactive = {
       // transform: [{ translateY: -offsetY }]
@@ -533,6 +573,7 @@ class App extends Component {
         icon="event"
         iconProvider={IconMDI}
         iconColor="#fff"
+
         // iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
         backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
@@ -542,12 +583,12 @@ class App extends Component {
   }
 
   render() {
-    const loading: boolean = this.state.loading;
+    // const loading: boolean = this.state.loading;
 
     return (
       <CoordinatorLayout style={styles.container}>
         <StatusBar
-          backgroundColor={PRIMARY_COLOR}
+          backgroundColor={DARK_PRIMARY_COLOR}
           animated={true}
           barStyle="default"
         />
@@ -576,7 +617,7 @@ class App extends Component {
               left: 0,
               right: 0,
               // alignSelf: 'flex-end',
-              transform: [{ translateY: -this.offset * 200 }]
+              transform: [{ translateY: -this.offset * 200 }],
             }}
           >
             <Image
@@ -588,7 +629,7 @@ class App extends Component {
         }
         {this.renderBottomSheet()}
         {this.renderFloatingActionButton()}
-        {loading && this.renderLoading()}
+        {this.renderLoading()}
       </CoordinatorLayout>
     );
   }
@@ -627,7 +668,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     backgroundColor: PRIMARY_COLOR,
   },
   bottomSheet: {
@@ -643,30 +684,30 @@ const styles = StyleSheet.create({
   bottomSheetLeft: {
     flexDirection: 'column',
   },
-  bottomSheetRight: {
-    flexDirection: 'column',
-  },
+  // bottomSheetRight: {
+  //   flexDirection: 'column',
+  // },
   bottomSheetTitle: {
     fontFamily: 'sans-serif-medium',
     fontSize: 18,
   },
   bottomSheetContent: {
     alignItems: 'center',
-    height: 200,
+    height: height * 3 / 5,
     backgroundColor: WHITE,
   },
-  starsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  star: {
-    marginHorizontal: 2,
-  },
-  routeLabel: {
-    marginTop: 32,
-    fontSize: 12,
-    color: PRIMARY_COLOR,
-  },
+  // starsContainer: {
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  // },
+  // star: {
+  //   marginHorizontal: 2,
+  // },
+  // routeLabel: {
+  //   marginTop: 32,
+  //   fontSize: 12,
+  //   color: PRIMARY_COLOR,
+  // },
   sectionIcons: {
     flex: 1,
     flexDirection: 'row',
@@ -675,17 +716,17 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#eee',
   },
-  iconBox: {
-    flex: 1,
-    borderRadius: 50,
-    alignItems: 'center',
-    flexDirection: 'column',
-  },
-  iconLabel: {
-    fontSize: 14,
-    marginTop: 4,
-    color: PRIMARY_COLOR,
-  },
+  // iconBox: {
+  //   flex: 1,
+  //   borderRadius: 50,
+  //   alignItems: 'center',
+  //   flexDirection: 'column',
+  // },
+  // iconLabel: {
+  //   fontSize: 14,
+  //   marginTop: 4,
+  //   color: PRIMARY_COLOR,
+  // },
   detailListSection: {
     paddingTop: 4,
   },

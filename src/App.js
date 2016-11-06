@@ -359,6 +359,29 @@ class App extends Component {
     const { activeEvent } = this.state;
     const offsetY = activeEvent ? 0 : -90;
 
+    const inactive = {
+      // transform: [{ translateY: -offsetY }]
+      // marginTop: offsetY,
+      // zIndex: -1,
+      style: {
+        opacity: 0,
+      },
+      props: {
+        elevation: 0,
+      },
+    };
+    const active = {
+      // transform: [{ translateY: -offsetY }]
+      // marginTop: 0,
+      // zIndex: 5,
+      style: {
+        opacity: 1,
+      },
+      props: {
+        elevation: 16,
+      },
+    };
+
     const title = activeEvent ? activeEvent.title : '';
 
     return (
@@ -369,8 +392,9 @@ class App extends Component {
         onSlide={this.handleSlide}
         onStateChange={this.handleBottomSheetChange}
         peekHeight={90}
+        {...activeEvent ? active.props : inactive.props}
       >
-        <View style={[styles.bottomSheet, { transform: [{ translateY: offsetY }] }]}>
+        <View style={[styles.bottomSheet, activeEvent ? active.style : inactive.style]}>
           <TouchableWithoutFeedback
             onPress={this.handleBottomSheetOnPress}
           >
@@ -424,6 +448,30 @@ class App extends Component {
   renderFloatingActionButton = () => {
     const { bottomSheetColor } = this.state;
     const isExpanded = bottomSheetColor === 1;
+    const { activeEvent } = this.state;
+    const inactive = {
+      // transform: [{ translateY: -offsetY }]
+      // marginTop: offsetY,
+      // zIndex: -1,
+      style: {
+        opacity: 0,
+      },
+      props: {
+        elevation: 0,
+      },
+    };
+    const active = {
+      // transform: [{ translateY: -offsetY }]
+      // marginTop: 0,
+      // zIndex: 5,
+      style: {
+        opacity: 1,
+      },
+      props: {
+        elevation: 18,
+      },
+    };
+
     return (
       <FloatingActionButton
         // ref="fab"
@@ -435,6 +483,7 @@ class App extends Component {
         iconColor={!isExpanded ? WHITE : PRIMARY_COLOR}
         onPress={this.handleFabPress}
         backgroundColor={isExpanded ? WHITE : PRIMARY_COLOR}
+        {...activeEvent ? active : inactive}
       />
     );
   }

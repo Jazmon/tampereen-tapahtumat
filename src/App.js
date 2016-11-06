@@ -406,7 +406,7 @@ class App extends Component {
         elevation={16}
         onSlide={this.handleSlide}
         onStateChange={this.handleBottomSheetChange}
-        peekHeight={70}
+        peekHeight={76}
         {...activeEvent ? active.props : inactive.props}
       >
         <View style={[styles.bottomSheet, activeEvent ? active.style : inactive.style]}>
@@ -652,6 +652,7 @@ const styles = StyleSheet.create({
   },
   bottomSheetContent: {
     alignItems: 'center',
+    height: 200,
     backgroundColor: WHITE,
   },
   starsContainer: {

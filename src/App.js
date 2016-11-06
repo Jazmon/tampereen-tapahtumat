@@ -156,7 +156,7 @@ class App extends Component {
   }
 
   handleBottomSheetOnPress = (/* e: Object*/) => {
-    // console.log('bottom sheet pressed');
+    console.log('bottom sheet pressed');
     if (this.state.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
       this.setState({ bottomSheetColor: 1 });
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
@@ -168,6 +168,7 @@ class App extends Component {
 
   handleBottomSheetChange = (e: Object) => {
     const newState = e.nativeEvent.state;
+    console.log('handle bottom sheet change', newState);
 
     if (this.state.offset > 0.1 &&
       newState === BottomSheetBehavior.STATE_DRAGGING ||
@@ -189,6 +190,7 @@ class App extends Component {
     // this.offset = offset;
 
     let bottomSheetColor = 0;
+    console.log('handle slide', offset);
 
     if (offset === 0) {
       bottomSheetColor = 0;
@@ -241,16 +243,19 @@ class App extends Component {
   }
 
   onRegionChange = (region: Object) => {
-    if (ANDROID) this.state.region.setValue(region);
+    console.log('on region change');
+    // if (ANDROID) this.state.region.setValue(region);
   }
 
   setDate = (value: number) => {
+    console.log('set date');
     if (value !== this.state.date) {
       this.setState({ date: value, activeEvent: null });
     }
   };
 
   markerPressed = (marker: MapMarker) => {
+    console.log('marker pressed');
     const event: ?Event = this.state.events
       .filter(e => e.id === marker.id)[0];
     // if (!event) { return; }
@@ -264,7 +269,7 @@ class App extends Component {
   renderLoading = () => (
     <View style={styles.loading}>
       <ActivityIndicator
-        color="rgb(68, 179, 55)"
+        color="#fff"
         size="large"
       />
     </View>
@@ -383,6 +388,7 @@ class App extends Component {
     };
 
     const title = activeEvent ? activeEvent.title : '';
+    const description = activeEvent ? activeEvent.description : '';
 
     return (
       <BottomSheetBehavior
@@ -400,7 +406,7 @@ class App extends Component {
           >
             <Animated.View style={[styles.bottomSheetHeader, headerAnimated]}>
               <View style={styles.bottomSheetLeft}>
-                <Animated.Text style={[styles.bottomSheetTitle, textAnimated]}>
+                <Animated.Text numberOfLines={1} style={[styles.bottomSheetTitle, textAnimated]}>
                   {title}
                 </Animated.Text>
                 <View style={styles.starsContainer}>
@@ -433,11 +439,20 @@ class App extends Component {
               </View>
             </View>
             <View style={styles.detailListSection}>
-              {this.renderDetailItem('md-locate', 'Av. Lorem Ipsum dolor sit amet - consectetur adipising elit.')}
-              {this.renderDetailItem('md-timer', 'Open now: 06:22:00')}
-              {this.renderDetailItem('md-call', '(11) 9999-9999')}
-              {this.renderDetailItem('md-globe', 'https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior')}
-              {this.renderDetailItem('md-create', 'Suggest an edit')}
+              <View
+                style={{
+                  alignItems: 'center',
+                  flexDirection: 'row',
+                  paddingHorizontal: 22,
+                }}
+              >
+                <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
+              </View>
+              {this.renderDetailItem('md-locate', 'Hämeenkatu 10')}
+              {this.renderDetailItem('md-timer', '12:00 - 14:00')}
+              {this.renderDetailItem('md-email', 'info@tapahtuma.fi')}
+              {this.renderDetailItem('md-globe', 'https://www.tampere.fi')}
+              {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
             </View>
           </View>
         </View>
@@ -478,11 +493,11 @@ class App extends Component {
         ref={fab => { this.fab = fab; }}
         elevation={18}
         rippleEffect={true}
-        icon="directions"
+        icon="calendar"
         iconProvider={IconMDI}
-        iconColor={!isExpanded ? WHITE : PRIMARY_COLOR}
+        iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
-        backgroundColor={isExpanded ? WHITE : PRIMARY_COLOR}
+        backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
         {...activeEvent ? active : inactive}
       />
     );
@@ -503,12 +518,12 @@ class App extends Component {
             onValueChange={this.setDate}
           />
           {/* {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />} */}
-          {/* {loading && this.renderLoading()} */}
           {/* {isFetching && this.renderLoading() }
           {error && this.renderError()} */}
         </Base>
         {this.renderBottomSheet()}
         {this.renderFloatingActionButton()}
+        {loading && this.renderLoading()}
       </CoordinatorLayout>
     );
   }
@@ -541,9 +556,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   loading: {
+    ...StyleSheet.absoluteFillObject,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: PRIMARY_COLOR,
   },
   bottomSheet: {
     zIndex: 5,

@@ -88,9 +88,9 @@ type State = {
 
   bottomSheetColor: number;
   bottomSheetColorAnimated: Object;
-  lastState: number;
-  offset: number;
-  settlingExpanded: boolean;
+  // lastState: number;
+  // offset: number;
+  // settlingExpanded: boolean;
 };
 
 class App extends Component {
@@ -98,6 +98,9 @@ class App extends Component {
   map: Object;
   fab: Object;
   bottomSheet: Object;
+  lastState: number;
+  settlingExpanded: boolean;
+  offset: number;
 
   constructor(props: Props) {
     super(props);
@@ -120,6 +123,8 @@ class App extends Component {
 
   componentDidMount() {
     this.loadEvents();
+
+    this.lastState = BottomSheetBehavior.STATE_COLLAPSED;
     // this.setState({
     //   lastState: BottomSheetBehavior.STATE_COLLAPSED,
     // });
@@ -157,10 +162,10 @@ class App extends Component {
 
   handleBottomSheetOnPress = (/* e: Object*/) => {
     console.log('bottom sheet pressed');
-    if (this.state.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
+    if (this.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
       this.setState({ bottomSheetColor: 1 });
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
-    } else if (this.state.lastState === BottomSheetBehavior.STATE_EXPANDED) {
+    } else if (this.lastState === BottomSheetBehavior.STATE_EXPANDED) {
       this.setState({ bottomSheetColor: 0 });
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_STATE_COLLAPSED);
     }
@@ -170,42 +175,43 @@ class App extends Component {
     const newState = e.nativeEvent.state;
     console.log('handle bottom sheet change', newState);
 
-    if (this.state.offset > 0.1 &&
+    if (this.offset > 0.1 &&
       newState === BottomSheetBehavior.STATE_DRAGGING ||
       newState === BottomSheetBehavior.STATE_EXPANDED) {
       this.setState({ bottomSheetColor: 1 });
     }
-    if (newState === BottomSheetBehavior.STATE_SETTLING && !this.state.settlingExpanded) {
+    if (newState === BottomSheetBehavior.STATE_SETTLING && !this.settlingExpanded) {
       this.setState({ bottomSheetColor: 0 });
     }
 
-    this.setState({ lastState: newState });
+    // this.setState({ lastState: newState });
+    this.lastState = newState;
   }
 
   handleSlide = (e: Object) => {
-    // const { bottomSheetColor } = this.state;
+    const { bottomSheetColor } = this.state;
     const offset = parseFloat(e.nativeEvent.offset.toFixed(2));
 
-    // this.settlingExpanded = offset >= this.offset;
-    // this.offset = offset;
+    this.settlingExpanded = offset >= this.offset;
+    this.offset = offset;
 
-    let bottomSheetColor = 0;
+    // let bottomSheetColor = 0;
     console.log('handle slide', offset);
 
     if (offset === 0) {
-      bottomSheetColor = 0;
-      // this.setState({ bottomSheetColor: 0 });
-    } else if (this.state.bottomSheetColor !== 1 &&
-      this.state.lastState === BottomSheetBehavior.STATE_DRAGGING) {
-      // this.setState({ bottomSheetColor: 1 });
-      bottomSheetColor = 1;
+      // bottomSheetColor = 0;
+      this.setState({ bottomSheetColor: 0 });
+    } else if (bottomSheetColor !== 1 &&
+      this.lastState === BottomSheetBehavior.STATE_DRAGGING) {
+      this.setState({ bottomSheetColor: 1 });
+      // bottomSheetColor = 1;
     }
 
-    this.setState({
-      bottomSheetColor,
-      settlingExpanded: offset >= this.state.offset,
-      offset,
-    });
+    // this.setState({
+    //   bottomSheetColor,
+    //   settlingExpanded: offset >= this.state.offset,
+    //   offset,
+    // });
   }
 
   loadEvents = async() => {

@@ -26,7 +26,7 @@ type Props = {
 };
 
 const Slider = (props: Props) => (
-  <View style={styles.sliderBox}>
+  <View style={styles.sliderBox} elevation={4}>
     <SliderComponent
       style={styles.slider}
       minimumValue={0}
@@ -43,7 +43,8 @@ const Slider = (props: Props) => (
         <View key={`date-${val}`}>
           <Text
             style={{
-              color: props.date === val ? '#fff' : '#000',
+              color: props.date === val ? '#000' : '#454545',
+              fontWeight: props.date === val ? 'bold' : 'normal',
             }}
           >
             {moment().add(val, 'days').startOf('day').format('dd')}
@@ -63,13 +64,15 @@ const styles = StyleSheet.create({
     marginTop: 8,
     borderRadius: 2,
     paddingHorizontal: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    // backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#fff',
     flex: 0,
   },
   datesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginHorizontal: 6,
+    paddingBottom: 4,
   },
 });
 

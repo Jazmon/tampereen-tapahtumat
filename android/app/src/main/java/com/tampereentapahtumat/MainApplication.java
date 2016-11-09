@@ -4,10 +4,12 @@ import android.app.Application;
 import android.util.Log;
 
 import com.facebook.react.ReactApplication;
+import com.react.rnspinkit.RNSpinkitPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.i18n.reactnativei18n.ReactNativeI18n;
 import com.devfd.RNGeocoder.RNGeocoderPackage;
+import com.bottomsheetbehavior.BottomSheetBehaviorPackage;
 import com.cmcewen.blurview.BlurViewPackage;
 import com.attehuhtakangas.navigationbar.NavigationBarPackage;
 import com.facebook.react.ReactInstanceManager;
@@ -30,12 +32,14 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNSpinkitPackage(),
             new VectorIconsPackage(),
             new MapsPackage(),
             new ReactNativeI18n(),
             new RNGeocoderPackage(),
             new BlurViewPackage(),
-            new NavigationBarPackage()
+            new NavigationBarPackage(),
+            new BottomSheetBehaviorPackage()
       );
     }
   };

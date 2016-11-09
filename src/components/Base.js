@@ -51,7 +51,7 @@ const styles: Style = StyleSheet.create({
   },
   contentWrapper: {
     flex: 1,
-    flexDirection: 'column',
+    // flexDirection: 'column',
   },
 });
 

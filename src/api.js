@@ -2,6 +2,7 @@
 import Geocoder from 'react-native-geocoder';
 import moment from 'moment';
 import locale from 'react-native-locale-detector';
+import _ from 'lodash';
 
 import config from '../config.json';
 import { getAddressFromEvent } from './utils';
@@ -120,6 +121,24 @@ export const getEvents = async() => {
       description: rawEvent.description,
       start: rawEvent.start_datetime || 0,
       end: rawEvent.end_datetime || 0,
+      free: rawEvent.is_free,
+      contactInfo: {
+        address: rawEvent.contact_info.address,
+        email: rawEvent.contact_info.email,
+        phone: rawEvent.contact_info.phone,
+        link: rawEvent.contact_info.link,
+      },
+      formContactInfo: {
+        email: _.get(rawEvent, 'form_contact_info.email', null),
+        phone: _.get(rawEvent, 'form_contact_info.phone', null),
+        name: _.get(rawEvent, 'form_contact_info.name', null),
+        jobTitle: _.get(rawEvent, 'form_contact_info.jobTitle', null),
+      },
+      tags: rawEvent.tags,
+      image: {
+        title: _.get(rawEvent, 'image.title', null),
+        uri: _.get(rawEvent, 'image.src', null),
+      },
       // vtEvent: rawEvent,
       latlng,
     };

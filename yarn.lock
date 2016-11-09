@@ -382,6 +382,13 @@ babel-plugin-external-helpers@^6.8.0:
   dependencies:
     babel-runtime "^6.0.0"
 
+babel-plugin-lodash:
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/babel-plugin-lodash/-/babel-plugin-lodash-3.2.9.tgz#062f85aa7810fbb4374a1a7372ecc44b09168760"
+  dependencies:
+    glob "^7.0.6"
+    lodash "^4.15.0"
+
 babel-plugin-react-transform@2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/babel-plugin-react-transform/-/babel-plugin-react-transform-2.0.2.tgz#515bbfa996893981142d90b1f9b1635de2995109"
@@ -2427,7 +2434,7 @@ glob@^6.0.1:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-glob@^7.0.3, glob@^7.0.5:
+glob@^7.0.3, glob@^7.0.5, glob@^7.0.6:
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/glob/-/glob-7.1.1.tgz#805211df04faaf1c63a3600306cdf5ade50b2ec8"
   dependencies:
@@ -2671,11 +2678,6 @@ http-signature@~1.1.0:
     assert-plus "^0.2.0"
     jsprim "^1.2.2"
     sshpk "^1.7.0"
-
-"https://github.com/Jazmon/react-native-onscreen-navbar.git#develop":
-  name react-native-onscreen-navbar
-  version "1.0.0"
-  resolved "https://github.com/Jazmon/react-native-onscreen-navbar.git#e6200f884c7b0260b7710ad5696964e77e6e10a7"
 
 iconv-lite@^0.4.5, iconv-lite@~0.4.13, iconv-lite@0.4.13:
   version "0.4.13"
@@ -3989,9 +3991,17 @@ react-deep-force-update@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-1.0.1.tgz#f911b5be1d2a6fe387507dd6e9a767aa2924b4c7"
 
+react-native-animatable:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/react-native-animatable/-/react-native-animatable-0.6.1.tgz#bd85023d42ad0ceb3cc98d7b490f7d6dd6ba11b0"
+
 react-native-blur@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-1.0.1.tgz#c81e48f631489a87a86a0c58674f6283d7dc15a7"
+
+react-native-bottom-sheet-behavior:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/react-native-bottom-sheet-behavior/-/react-native-bottom-sheet-behavior-0.0.10.tgz#f4182d28d0edd373a40a9490989da311437b3d30"
 
 react-native-geocoder@^0.4.5:
   version "0.4.5"
@@ -4005,12 +4015,20 @@ react-native-maps@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/react-native-maps/-/react-native-maps-0.11.0.tgz#8baa56eef83e9f2f04a70b192624b7bc9c56289d"
 
+"react-native-onscreen-navbar@https://github.com/Jazmon/react-native-onscreen-navbar.git#develop":
+  version "1.0.0"
+  resolved "https://github.com/Jazmon/react-native-onscreen-navbar.git#e6200f884c7b0260b7710ad5696964e77e6e10a7"
+
 react-native-slider@^0.9.1:
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/react-native-slider/-/react-native-slider-0.9.1.tgz#f8ea5e3c48aa3577656719b911fd7dd4c62bf81a"
   dependencies:
     react-addons-shallow-compare "^15.0.2"
     style-equal "^1.0.0"
+
+react-native-spinkit:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/react-native-spinkit/-/react-native-spinkit-0.1.3.tgz#6d33b41ab3c3062d5e2fdb1c5df0fa6af1e067f3"
 
 react-native-vector-icons@^2.1.0:
   version "2.1.0"

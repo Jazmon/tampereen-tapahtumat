@@ -18,6 +18,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
   Image,
+  Linking,
 } from 'react-native';
 /* eslint-enable no-unused-vars */
 
@@ -253,6 +254,17 @@ class App extends Component {
     // });
   }
 
+  handleOpenUrl = () => {
+    const url: ?string = _.get(this.state, 'activeEvent.contactInfo.link');
+    if (url) {
+      Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+          Linking.openURL(url);
+        }
+      });
+    }
+  }
+
   loadEvents = async() => {
     const prefix = 'TampereenTapahtumat';
     const key = `${prefix}:cache`;
@@ -362,8 +374,8 @@ class App extends Component {
     );
   };
 
-  renderDetailItem = (icon: string, text: string) => (
-    <TouchableNativeFeedback delayPressIn={0} delayPressOut={0} background={RippleColor('#d1d1d1')}>
+  renderDetailItem = (icon: string, text: string, callback: any = () => {}) => (
+    <TouchableNativeFeedback onPress={callback} delayPressIn={0} delayPressOut={0} background={RippleColor('#d1d1d1')}>
       <View>
         <View pointerEvents="none" style={styles.detailItem}>
           <Icon name={icon} size={18} color={PRIMARY_COLOR} />
@@ -527,7 +539,7 @@ class App extends Component {
                 {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
                 {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
                 {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
-                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link)}
+                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link, this.handleOpenUrl)}
                 {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
                 </View>}
             </NestedScrollView>

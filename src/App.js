@@ -171,7 +171,6 @@ class App extends Component {
         );
       }
     }
-
   }
 
   // componentDidUpdate(prevProps: Props, prevState: State) {
@@ -262,6 +261,23 @@ class App extends Component {
           Linking.openURL(url);
         }
       });
+    }
+  }
+
+  handleOpenNavigation = () => {
+    const lat: ?number = _.get(this.state, 'activeEvent.latlng.latitude');
+    const long: ?number = _.get(this.state, 'activeEvent.latlng.longitude');
+    if (lat && long) {
+      const url: string = `http://maps.google.com/maps?daddr=${lat},${long}&amp;ll=`;
+      Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          ToastAndroid.show('Cannot open navigation for this event', ToastAndroid.SHORT);
+        }
+      });
+    } else {
+      ToastAndroid.show('Cannot open navigation for this event', ToastAndroid.SHORT);
     }
   }
 
@@ -535,7 +551,7 @@ class App extends Component {
                     </View>
                   ))}
                 </View>
-                {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address)}
+                {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address, this.handleOpenNavigation)}
                 {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
                 {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
                 {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}

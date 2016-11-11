@@ -69,14 +69,13 @@ const LONGITUDE = 23.757292;
 const LATITUDE_DELTA = 0.0322;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const WHITE = '#FFF';
+const WHITE = '#FFFFFF';
 const PRIMARY_COLOR = '#2196F3';
 const DARK_PRIMARY_COLOR = '#1976D2';
 const LIGHT_PRIMARY_COLOR = '#BBDEFB';
 const TEXT_BASE_COLOR = '#212121';
 const SECONDARY_TEXT_COLOR = '#757575';
 const SECONDARY_COLOR = '#FFC107';
-
 const REGION = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
@@ -600,11 +599,12 @@ class App extends Component {
         rippleEffect={true}
         icon="event"
         iconProvider={IconMDI}
-        iconColor="#fff"
+        iconColor={isExpanded ? DARK_PRIMARY_COLOR : WHITE}
 
         // iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
-        backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
+        // backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
+        backgroundColor={isExpanded ? WHITE : DARK_PRIMARY_COLOR}
         {...activeEvent ? active : inactive}
       />
     );

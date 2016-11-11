@@ -22,30 +22,31 @@ import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    protected boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
-    }
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        protected boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new RNSpinkitPackage(),
+                    new VectorIconsPackage(),
+                    new MapsPackage(),
+                    new ReactNativeI18n(),
+                    new RNGeocoderPackage(),
+                    new BlurViewPackage(),
+                    new NavigationBarPackage(),
+                    new BottomSheetBehaviorPackage(),
+                    new RNCalendarPackage()
+            );
+        }
+    };
 
     @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-            new MainReactPackage(),
-            new RNSpinkitPackage(),
-            new VectorIconsPackage(),
-            new MapsPackage(),
-            new ReactNativeI18n(),
-            new RNGeocoderPackage(),
-            new BlurViewPackage(),
-            new NavigationBarPackage(),
-            new BottomSheetBehaviorPackage()
-      );
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
-  };
-
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-      return mReactNativeHost;
-  }
 }

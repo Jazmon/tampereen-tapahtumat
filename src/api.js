@@ -123,7 +123,7 @@ export const getEvents = async() => {
       end: rawEvent.end_datetime || 0,
       free: rawEvent.is_free,
       contactInfo: {
-        address: rawEvent.contact_info.address,
+        address,
         email: rawEvent.contact_info.email,
         phone: rawEvent.contact_info.phone,
         link: rawEvent.contact_info.link,

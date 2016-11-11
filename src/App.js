@@ -18,6 +18,7 @@ import {
   ActivityIndicator,
   AsyncStorage,
   Image,
+  NativeModules,
   Linking,
 } from 'react-native';
 /* eslint-enable no-unused-vars */
@@ -54,6 +55,8 @@ import Slider from './components/Slider';
 // const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 const duration = 120;
+
+const { Calendar } = NativeModules;
 
 const RippleColor = (...args) =>
   Platform.Version >= 21
@@ -196,6 +199,16 @@ class App extends Component {
 
   handleFabPress = () => {
     ToastAndroid.show('Pressed', ToastAndroid.SHORT);
+    const { activeEvent } = this.state;
+    if (activeEvent) {
+      Calendar.insertEvent({
+        startMillis: activeEvent.start / 1000,
+        endMillis: activeEvent.end / 1000,
+        title: activeEvent.title,
+        description: activeEvent.description,
+        location: activeEvent.contactInfo.address,
+      });
+    }
   }
 
   handleBottomSheetOnPress = (/* e: Object*/) => {

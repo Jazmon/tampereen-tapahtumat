@@ -543,10 +543,10 @@ class App extends Component {
                     marginVertical: 4,
                   }}
                 >
-                  <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 8 }} />
+                  <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
                   {activeEvent.tags.map(tag => (
-                    <View key={`tag-${tag}`} style={{ backgroundColor: '#3159b3', borderRadius: 6, marginLeft: 4, paddingVertical: 2, paddingHorizontal: 4 }}>
-                      <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif-light', fontSize: 10 }}>{tag}</Text>
+                    <View key={`tag-${tag}`} style={{ backgroundColor: this.getTagColor(tag), borderRadius: 6, marginLeft: 4, paddingVertical: 5, paddingHorizontal: 8 }}>
+                      <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif', fontSize: 12 }}>{tag}</Text>
                     </View>
                   ))}
                 </View>
@@ -563,6 +563,31 @@ class App extends Component {
       </BottomSheetBehavior>
     );
   }
+
+  getTagColor = (tag: string) => {
+    type TagColor = {tag: string; color: string};
+    const tagColors: Array<TagColor> = [
+      { tag: 'other-event',
+        color: '#F2F613' },
+      { tag: 'music',
+        color: LIGHT_PRIMARY_COLOR },
+      { tag: 'dance',
+        color: DARK_PRIMARY_COLOR },
+      { tag: 'for-children',
+        color: PRIMARY_COLOR },
+      { tag: 'festival',
+        color: WHITE },
+      { tag: 'market',
+        color: '#F10101F' },
+      { tag: 'sports',
+        color: '#A56409' },
+    ];
+    const defaultColor: string = '#F943F3';
+
+    const correctTag: TagColor = tagColors.filter(tagColor => tagColor.tag === tag)[0];
+
+    return correctTag ? correctTag.color : defaultColor;
+  };
 
   renderFloatingActionButton = () => {
     const { bottomSheetColor } = this.state;

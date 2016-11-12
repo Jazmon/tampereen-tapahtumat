@@ -7,7 +7,6 @@ import android.provider.CalendarContract;
 import com.facebook.common.references.SharedReference;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
@@ -20,39 +19,38 @@ import java.util.Calendar;
 
 public class RNCalendar extends ReactContextBaseJavaModule {
     private static final String NAME = "Calendar";
-    private ReactApplicationContext mReactApplicationContext;
 
     public RNCalendar(ReactApplicationContext reactContext) {
         super(reactContext);
-        this.mReactApplicationContext = reactContext;
     }
 
     @ReactMethod
     public void insertEvent(ReadableMap map, Promise promise) {
-        /*
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2016, 11, 13, 12, 0);
-
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2016, 11, 13, 14, 0);
-        */
 
         final Activity activity = getCurrentActivity();
 
         try {
-            int start = map.getInt("startMillis");
-            int end = map.getInt("endMillis");
+            double start = map.getDouble("start");
+            double end = map.getDouble("end");
             String title = map.getString("title");
             String description = map.getString("description");
             String location = map.getString("location");
-        /* TODO: check if the props are given and are not null
-         * and decide which are optional
-         */
+
+            Calendar beginTime = Calendar.getInstance();
+            beginTime.setTimeInMillis((long) start);
+
+            Calendar endTime = Calendar.getInstance();
+            endTime.setTimeInMillis((long) end);
+
+            /*
+             * TODO: check if the props are given and are not null
+             * and decide which are optional
+             */
 
             Intent intent = new Intent(Intent.ACTION_INSERT)
                     .setData(CalendarContract.Events.CONTENT_URI)
-                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, start)
-                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, end)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, beginTime.getTimeInMillis())
+                    .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime.getTimeInMillis())
                     .putExtra(CalendarContract.Events.TITLE, title)
                     .putExtra(CalendarContract.Events.DESCRIPTION, description)
                     .putExtra(CalendarContract.Events.EVENT_LOCATION, location)

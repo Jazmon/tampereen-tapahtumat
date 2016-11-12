@@ -198,12 +198,11 @@ class App extends Component {
   // }
 
   handleFabPress = () => {
-    ToastAndroid.show('Pressed', ToastAndroid.SHORT);
     const { activeEvent } = this.state;
     if (activeEvent) {
       Calendar.insertEvent({
-        startMillis: activeEvent.start / 1000,
-        endMillis: activeEvent.end / 1000,
+        start: activeEvent.start,
+        end: activeEvent.end,
         title: activeEvent.title,
         description: activeEvent.description,
         location: activeEvent.contactInfo.address,

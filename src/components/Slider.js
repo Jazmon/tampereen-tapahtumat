@@ -32,7 +32,7 @@ const Slider = (props: Props) => (
       minimumValue={0}
       maximumValue={6}
       onValueChange={props.onValueChange}
-      thumbTintColor="#304FFE"
+      thumbTintColor="#FF3F80"
       minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
       maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
       step={1}

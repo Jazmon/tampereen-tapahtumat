@@ -58,10 +58,10 @@ const duration = 120;
 
 const { Calendar } = NativeModules;
 
-const RippleColor = (...args) =>
-  Platform.Version >= 21
-    ? TouchableNativeFeedback.Ripple(...args)
-    : null;
+const rippleColor = (...args) =>
+  Platform.Version >= 21 &&
+    TouchableNativeFeedback.Ripple(...args)
+    || null;
 
 const { width, height } = Dimensions.get('window');
 // const IOS = Platform.OS === 'ios';
@@ -76,9 +76,9 @@ const WHITE = '#FFFFFF';
 const PRIMARY_COLOR = '#2196F3';
 const DARK_PRIMARY_COLOR = '#1976D2';
 const LIGHT_PRIMARY_COLOR = '#BBDEFB';
-const TEXT_BASE_COLOR = '#212121';
-const SECONDARY_TEXT_COLOR = '#757575';
-const SECONDARY_COLOR = '#FFC107';
+const TEXT_BASE_COLOR = 'rgba(0, 0, 0, 0.87)';
+const SECONDARY_TEXT_COLOR = 'rgba(0, 0, 0, 0.54)';
+const SECONDARY_COLOR = '#FF3F80';
 const REGION = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
@@ -402,7 +402,7 @@ class App extends Component {
   };
 
   renderDetailItem = (icon: string, text: string, callback: any = () => {}) => (
-    <TouchableNativeFeedback onPress={callback} delayPressIn={0} delayPressOut={0} background={RippleColor('#d1d1d1')}>
+    <TouchableNativeFeedback onPress={callback} delayPressIn={0} delayPressOut={0} background={rippleColor('#d1d1d1')}>
       <View>
         <View pointerEvents="none" style={styles.detailItem}>
           <Icon name={icon} size={18} color={PRIMARY_COLOR} />
@@ -636,12 +636,10 @@ class App extends Component {
         rippleEffect={true}
         icon="event"
         iconProvider={IconMDI}
-        iconColor={isExpanded ? DARK_PRIMARY_COLOR : WHITE}
 
-        // iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
+        iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
-        // backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
-        backgroundColor={isExpanded ? WHITE : DARK_PRIMARY_COLOR}
+        backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
         {...activeEvent ? active : inactive}
       />
     );

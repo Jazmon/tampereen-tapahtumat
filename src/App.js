@@ -512,6 +512,7 @@ class App extends Component {
             </Animated.View>
           </TouchableWithoutFeedback>
           <View style={styles.bottomSheetContent}>
+            {this.renderPoweredBy()}
             <NestedScrollView style={{ width }}>
               <View style={styles.sectionIcons}>
                 {/* <View style={styles.iconBox}>
@@ -645,6 +646,12 @@ class App extends Component {
     );
   }
 
+  renderPoweredBy = () => (
+      <Text style={styles.poweredBy}>
+        Powered by VisitTampere
+      </Text>
+  )
+
   render() {
     // const loading: boolean = this.state.loading;
 
@@ -693,6 +700,7 @@ class App extends Component {
         {this.renderBottomSheet()}
         {this.renderFloatingActionButton()}
         {this.renderLoading()}
+        {}
       </CoordinatorLayout>
     );
   }
@@ -775,7 +783,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 18,
+    paddingTop: -2,
+    paddingLeft: 18,
+    paddingRight: 18,
     borderBottomWidth: 1,
     borderColor: '#eee',
   },
@@ -803,6 +813,12 @@ const styles = StyleSheet.create({
     color: '#333',
     fontSize: 12,
     marginLeft: 24,
+  },
+  poweredBy: {
+    borderRadius: 5,
+    backgroundColor: '#fff',
+    textAlign: 'center',
+    paddingVertical: 2,
   },
 });
 

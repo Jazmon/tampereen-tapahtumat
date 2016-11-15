@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 24,
     marginTop: 8,
     borderRadius: 2,
-    paddingHorizontal: 8,
+    paddingHorizontal: 20,
     // backgroundColor: 'rgba(0, 0, 0, 0.1)',
     backgroundColor: '#fff',
     flex: 0,
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   datesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginHorizontal: 6,
+    marginHorizontal: 0,
     paddingBottom: 4,
   },
 });

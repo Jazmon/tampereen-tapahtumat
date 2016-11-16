@@ -7,8 +7,27 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 
-import defaultMarker from '../assets/default-marker.png';
-import debugMarker from '../assets/debug-marker.png';
+import defaultMarker from '../assets/markers/muut.png';
+import movieMarker from '../assets/markers/elokuva.png';
+import festivalMarker from '../assets/markers/festivaali.png';
+import speakMarker from '../assets/markers/info.png';
+import congressMarker from '../assets/markers/kongressi.png';
+import childrenMarker from '../assets/markers/lapset.png';
+import natureMarker from '../assets/markers/luonto.png';
+import fairMarker from '../assets/markers/messu.png';
+import musicMarker from '../assets/markers/musiikki.png';
+import exhibitionMarker from '../assets/markers/nayttely.png';
+import locationInfoMarker from '../assets/markers/opastettu.png';
+import professionalMarker from '../assets/markers/pro.png';
+import foodMarker from '../assets/markers/ruoka.png';
+import literatureMarker from '../assets/markers/sanataide.png';
+import artMarker from '../assets/markers/taide.png';
+import danceMarker from '../assets/markers/tanssi.png';
+import theatreMarker from '../assets/markers/teatteri.png';
+import marketMarker from '../assets/markers/tori.png';
+import sportsMarker from '../assets/markers/urheilu.png';
+import entertainmentMarker from '../assets/markers/viihde.png';
+
 
 type Props = {
   // id: string;
@@ -43,11 +62,41 @@ const Marker = (props: Props) => (
   </MapView.Marker>
 );
 
-
 const getImagePath = (type: string) => {
+  console.log(type);
   const markerImages = [
-    { type: 'debug',
-      source: debugMarker,
+    { type: 'dance',
+      source: danceMarker,
+    },
+    { type: 'other-event',
+      source: defaultMarker,
+    },
+    { type: 'for-children',
+      source: childrenMarker,
+    },
+    { type: 'festival',
+      source: festivalMarker,
+    },
+    { type: 'music',
+      source: musicMarker,
+    },
+    { type: 'market',
+      source: marketMarker,
+    },
+    { type: 'sports',
+      source: sportsMarker,
+    },
+    { type: 'movie',
+      source: movieMarker,
+    },
+    { type: 'entertainment',
+      source: entertainmentMarker,
+    },
+    { type: 'trade-fair',
+      source: fairMarker,
+    },
+    { type: 'theatre',
+      source: theatreMarker,
     },
   ];
 

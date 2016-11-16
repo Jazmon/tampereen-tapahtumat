@@ -7,6 +7,7 @@ export const eventsToMarkers = (events: Array<Event>): Array<MapMarker> => {
     title: event.title,
     description: event.description,
     latlng: event.latlng,
+    type: event.tags[0],
   });
   return events.map(getMarker);
 };

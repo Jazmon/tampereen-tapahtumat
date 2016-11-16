@@ -392,7 +392,7 @@ class App extends Component {
             <Marker
               {...marker}
               key={`marker-${marker.id}`}
-              type={i % 2 === 0 ? 'debug' : 'default'}
+              type={marker.type}
               onPress={() => this.markerPressed(marker)}
             />
           ))}

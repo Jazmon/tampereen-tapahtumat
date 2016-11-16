@@ -70,7 +70,8 @@
     "eslint-plugin-react": "^6.3.0",
     "eslint-plugin-react-native": "^2.0.0",
     "eslint-plugin-sort-class-members": "^1.1.1",
-    "flow-bin": "^0.33.0"
+    "flow-bin": "^0.33.0",
+    "node-fetch": "^1.6.3"
   },
   "main": "index.js"
 }

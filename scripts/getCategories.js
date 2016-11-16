@@ -25,9 +25,7 @@ function parseTags(data) {
   return new Promise((resolve) => {
     const tags = [];
 
-    data.forEach((event, i) => {
-      console.log('event', event.title);
-      console.log('event tags', event.tags.length);
+    data.forEach((event) => {
       tags.push(
         ...event.tags
           .filter(tag => !tags.includes(tag))

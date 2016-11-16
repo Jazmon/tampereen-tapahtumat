@@ -77,7 +77,7 @@ const PRIMARY_COLOR = '#2196F3';
 const DARK_PRIMARY_COLOR = '#1976D2';
 const LIGHT_PRIMARY_COLOR = '#BBDEFB';
 const TEXT_BASE_COLOR = 'rgba(0, 0, 0, 0.87)';
-const SECONDARY_TEXT_COLOR = 'rgba(0, 0, 0, 0.54)';
+// const SECONDARY_TEXT_COLOR = 'rgba(0, 0, 0, 0.54)';
 const SECONDARY_COLOR = '#FF3F80';
 const REGION = {
   latitude: LATITUDE,
@@ -388,7 +388,7 @@ class App extends Component {
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
-          {currentMarkers.map((marker, i) => (
+          {currentMarkers.map((marker) => (
             <Marker
               {...marker}
               key={`marker-${marker.id}`}
@@ -647,9 +647,9 @@ class App extends Component {
   }
 
   renderPoweredBy = () => (
-      <Text style={styles.poweredBy}>
-        Powered by VisitTampere
-      </Text>
+    <Text style={styles.poweredBy}>
+      Powered by VisitTampere
+    </Text>
   )
 
   render() {

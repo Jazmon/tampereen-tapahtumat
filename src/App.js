@@ -591,7 +591,7 @@ class App extends Component {
       { tag: 'festival',
         color: WHITE },
       { tag: 'market',
-        color: '#F10101F' },
+        color: '#F10101' },
       { tag: 'sports',
         color: '#A56409' },
     ];

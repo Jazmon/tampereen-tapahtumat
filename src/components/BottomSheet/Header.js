@@ -60,6 +60,7 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
   bottomSheetHeader: {
     padding: 24,
+    height: 80,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',

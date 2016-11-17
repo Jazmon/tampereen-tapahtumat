@@ -19,34 +19,23 @@ type Props = {
   onPress?: Function;
 };
 
-type DefaultProps = {
-  text: string;
-  onPress: Function;
-  icon: string;
-};
-
-const defaultProps: DefaultProps = {
-  text: '',
-  icon: 'error',
-  onPress: () => {},
-};
-
 const rippleColor = (...args) =>
   Platform.Version >= 21 &&
     TouchableNativeFeedback.Ripple(...args)
     || null;
 
-
-const DetailItem = ({ icon, text, onPress }: Props = defaultProps) => (
+const DetailItem = ({ icon, text, onPress }: Props) => (
   <TouchableNativeFeedback
     onPress={onPress}
     delayPressIn={0}
     delayPressOut={0}
     background={rippleColor('#d1d1d1')}
   >
-    <View pointerEvents="none" style={styles.container}>
-      <Icon name={icon} size={18} color={PRIMARY_COLOR} />
-      <Text pointerEvents="none" style={styles.text}>{text}</Text>
+    <View>
+      <View pointerEvents="none" style={styles.container}>
+        <Icon name={icon} size={18} color={PRIMARY_COLOR} />
+        <Text pointerEvents="none" style={styles.text}>{text}</Text>
+      </View>
     </View>
   </TouchableNativeFeedback>
 );

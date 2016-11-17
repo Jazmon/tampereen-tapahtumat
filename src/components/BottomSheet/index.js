@@ -16,6 +16,7 @@ type Props = {
   bottomSheetColorAnimated: Object;
 };
 
+// eslint-disable-next-line react/prefer-stateless-function
 class BottomSheet extends React.Component {
   props: Props;
 
@@ -28,36 +29,27 @@ class BottomSheet extends React.Component {
       openUrl,
       openNavigation,
     } = this.props;
+
+    if (!activeEvent) {
+      return null;
+    }
     return (
-      <View style={[styles.bottomSheet, activeEvent ? active.style : inactive.style]}>
+      <View style={styles.bottomSheet}>
         <Header
           onPress={onPress}
-          title={activeEvent ? activeEvent.title : ''}
+          title={activeEvent.title}
           bottomSheetColorAnimated={bottomSheetColorAnimated}
           bottomSheetColor={bottomSheetColor}
         />
-        {activeEvent &&
-          <Content
-            event={activeEvent}
-            openUrl={openUrl}
-            openNavigation={openNavigation}
-          />
-        }
+        <Content
+          event={activeEvent}
+          openUrl={openUrl}
+          openNavigation={openNavigation}
+        />
       </View>
     );
   }
 }
-
-const inactive = {
-  style: {
-    opacity: 0,
-  },
-};
-const active = {
-  style: {
-    opacity: 1,
-  },
-};
 
 const styles = StyleSheet.create({
   bottomSheet: {

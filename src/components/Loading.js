@@ -46,6 +46,7 @@ class Loading extends React.Component {
         <Animatable.Text
           animation="pulse"
           easing="ease-out"
+          direction="alternate"
           iterationCount="infinite"
           style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}
         >

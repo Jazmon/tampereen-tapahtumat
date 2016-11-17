@@ -581,19 +581,33 @@ class App extends Component {
     type TagColor = {tag: string; color: string};
     const tagColors: Array<TagColor> = [
       { tag: 'other-event',
-        color: '#F2F613' },
-      { tag: 'music',
-        color: LIGHT_PRIMARY_COLOR },
-      { tag: 'dance',
-        color: DARK_PRIMARY_COLOR },
+        color: '#7AA9FF' },
       { tag: 'for-children',
-        color: PRIMARY_COLOR },
+        color: '#017CBD' },
       { tag: 'festival',
-        color: WHITE },
+        color: '#6C0171' },
+      { tag: 'music',
+        color: '#F07000' },
       { tag: 'market',
+<<<<<<< HEAD
         color: '#F10101' },
+=======
+        color: '#81164F' },
+>>>>>>> Implement tag color change, add 2 marker types
       { tag: 'sports',
-        color: '#A56409' },
+        color: '#32196B' },
+      { tag: 'movie',
+        color: '#C50C30' },
+      { tag: 'entertainment',
+        color: '#FF4AAB' },
+      { tag: 'trade-fair',
+        color: '#158072' },
+      { tag: 'theatre',
+        color: '#81164F' },
+      { tag: 'dance',
+        color: '#4E3C4D' },
+      { tag: 'exhibition',
+        color: '#F7BF0B' },
     ];
     const defaultColor: string = '#F943F3';
 

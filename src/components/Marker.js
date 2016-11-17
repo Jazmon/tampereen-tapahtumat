@@ -95,6 +95,9 @@ const getImagePath = (type: string) => {
     { type: 'theatre',
       source: theatreMarker,
     },
+    { type: 'exhibition',
+      source: exhibitionMarker,
+    },
   ];
 
   return markerImages.some((image) => image.type === type)

@@ -50,7 +50,7 @@ const Marker = (props: Props) => (
       title={props.title}
       description={props.description}
       resizeMode="cover"
-      style={{ width: 30, height: 30 }}
+      style={{ width: 40, height: 40 }}
     />
     {/* <MapView.Callout>
       <View>

@@ -565,11 +565,12 @@ class App extends Component {
                     </View>
                   ))}
                 </View>
+                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', 'Website', this.handleOpenUrl)}
                 {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address, this.handleOpenNavigation)}
                 {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
-                {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
                 {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
-                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', activeEvent.contactInfo.link, this.handleOpenUrl)}
+                {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
+
                 {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
                 </View>}
             </NestedScrollView>

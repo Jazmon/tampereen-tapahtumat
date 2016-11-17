@@ -1,27 +1,20 @@
 // @flow
 import React, { Component } from 'react';
-// import { connect } from 'react-redux';
-/* eslint-disable no-unused-vars */
 import {
   View,
   StyleSheet,
   Dimensions,
   Platform,
   Animated,
-  Easing,
   Text,
   ToastAndroid,
-  Keyboard,
   StatusBar,
   TouchableWithoutFeedback,
-  TouchableNativeFeedback,
-  ActivityIndicator,
   AsyncStorage,
   Image,
   NativeModules,
   Linking,
 } from 'react-native';
-/* eslint-enable no-unused-vars */
 
 import MapView from 'react-native-maps';
 // import * as Animatable from 'react-native-animatable';
@@ -29,7 +22,6 @@ import moment from 'moment';
 // import Spinner from 'react-native-spinkit';
 import NavigationBar from 'react-native-onscreen-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
-import IconMDI from 'react-native-vector-icons/MaterialIcons';
 import _ from 'lodash';
 import {
   NestedScrollView,
@@ -51,26 +43,19 @@ import {
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,
   TEXT_BASE_COLOR,
-  SECONDARY_COLOR,
 } from './theme';
 
 import Marker from './components/Marker';
 // import Base from './components/Base';
-// import Toolbar from './components/Toolbar';
 import Loading from './components/Loading';
+import Tag from './components/Tag';
 import Slider from './components/Slider';
+import DetailItem from './components/DetailItem';
 import FloatingActionButton from './components/FloatingActionButton';
-
-// const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 const duration = 120;
 
 const { Calendar } = NativeModules;
-
-const rippleColor = (...args) =>
-  Platform.Version >= 21 &&
-    TouchableNativeFeedback.Ripple(...args)
-    || null;
 
 const { width, height } = Dimensions.get('window');
 // const IOS = Platform.OS === 'ios';
@@ -88,8 +73,6 @@ const REGION = {
   longitudeDelta: LONGITUDE_DELTA,
 };
 
-// const log = __DEV__ ? // console.log.bind(null, '[EventMap]') : () => {};
-
 type Props = {
 };
 
@@ -102,9 +85,6 @@ type State = {
 
   bottomSheetColor: number;
   bottomSheetColorAnimated: Object;
-  // lastState: number;
-  // offset: number;
-  // settlingExpanded: boolean;
 };
 
 class App extends Component {
@@ -128,9 +108,6 @@ class App extends Component {
       loading: false,
       bottomSheetColor: 0,
       bottomSheetColorAnimated: new Animated.Value(0),
-      // lastState: BottomSheetBehavior.STATE_COLLAPSED,
-      // offset: 0,
-      // settlingExpanded: false,
     };
   }
 
@@ -140,13 +117,7 @@ class App extends Component {
     this.loadEvents();
 
     this.lastState = BottomSheetBehavior.STATE_COLLAPSED;
-    // this.setState({
-    //   lastState: BottomSheetBehavior.STATE_COLLAPSED,
-    // });
-
-    // if (this.fab && this.bottomSheet) {
     this.fab.setAnchor(this.bottomSheet);
-    // }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -174,28 +145,6 @@ class App extends Component {
     }
   }
 
-  // componentDidUpdate(prevProps: Props, prevState: State) {
-    // if (prevState.events !== this.state.events) {
-    //
-    // }
-    // const edgePadding: EdgePadding = {
-    //   top: 40,
-    //   right: 40,
-    //   bottom: 40,
-    //   left: 40,
-    // };
-    // const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
-    //   .map(event => event.latlng);
-    // TODO check the delta between events and if less than reasonable amount,
-    // use padding to compensate
-    // and if only one event, use some other value
-    // if (!!this.map && coords && coords.length > 1) {
-    //   this.map.fitToCoordinates(coords, edgePadding,
-    //     true,
-    //   );
-    // }
-  // }
-
   handleFabPress = () => {
     const { activeEvent } = this.state;
     if (activeEvent) {
@@ -209,8 +158,7 @@ class App extends Component {
     }
   }
 
-  handleBottomSheetOnPress = (/* e: Object*/) => {
-    // console.log('bottom sheet pressed');
+  handleBottomSheetOnPress = () => {
     if (this.lastState === BottomSheetBehavior.STATE_COLLAPSED) {
       this.setState({ bottomSheetColor: 1 });
       this.bottomSheet.setBottomSheetState(BottomSheetBehavior.STATE_EXPANDED);
@@ -222,7 +170,6 @@ class App extends Component {
 
   handleBottomSheetChange = (e: Object) => {
     const newState = e.nativeEvent.state;
-    // console.log('handle bottom sheet change', newState);
 
     if (this.offset > 0.1 &&
       newState === BottomSheetBehavior.STATE_DRAGGING ||
@@ -233,7 +180,6 @@ class App extends Component {
       this.setState({ bottomSheetColor: 0 });
     }
 
-    // this.setState({ lastState: newState });
     this.lastState = newState;
   }
 
@@ -244,23 +190,12 @@ class App extends Component {
     this.settlingExpanded = offset >= this.offset;
     this.offset = offset;
 
-    // let bottomSheetColor = 0;
-    // console.log('handle slide', offset);
-
     if (offset === 0) {
-      // bottomSheetColor = 0;
       this.setState({ bottomSheetColor: 0 });
     } else if (bottomSheetColor !== 1 &&
       this.lastState === BottomSheetBehavior.STATE_DRAGGING) {
       this.setState({ bottomSheetColor: 1 });
-      // bottomSheetColor = 1;
     }
-
-    // this.setState({
-    //   bottomSheetColor,
-    //   settlingExpanded: offset >= this.state.offset,
-    //   offset,
-    // });
   }
 
   handleOpenUrl = () => {
@@ -304,7 +239,6 @@ class App extends Component {
         if (moment().isSameOrBefore(oneDay)) {
           this.setState({
             events: parsedCache.events,
-            // loading: false,
           });
         }
       }
@@ -325,29 +259,17 @@ class App extends Component {
     });
   }
 
-  // onRegionChange = (region: Object) => {
-    // console.log('on region change');
-    // if (ANDROID) this.state.region.setValue(region);
-  // }
-
   setDate = (value: number) => {
-    // console.log('set date');
     if (value !== this.state.date) {
       this.setState({ date: value, activeEvent: null });
     }
   };
 
   markerPressed = (marker: MapMarker) => {
-    // console.log('marker pressed');
     const event: ?Event = this.state.events
       .filter(e => e.id === marker.id)[0];
-    // if (!event) { return; }
     this.setState({ activeEvent: event });
   }
-
-  // setMarkers = (markers: Array<Marker>): void => {
-  //   this.setState({ markers });
-  // };
 
   renderError = () => (
     <View style={styles.error}>
@@ -387,17 +309,6 @@ class App extends Component {
     );
   };
 
-  renderDetailItem = (icon: string, text: string, callback: any = () => {}) => (
-    <TouchableNativeFeedback onPress={callback} delayPressIn={0} delayPressOut={0} background={rippleColor('#d1d1d1')}>
-      <View>
-        <View pointerEvents="none" style={styles.detailItem}>
-          <Icon name={icon} size={18} color={PRIMARY_COLOR} />
-          <Text pointerEvents="none" style={styles.detailText}>{text}</Text>
-        </View>
-      </View>
-    </TouchableNativeFeedback>
-  );
-
   renderBottomSheet = () => {
     const {
       bottomSheetColor,
@@ -422,26 +333,9 @@ class App extends Component {
         outputRange: [TEXT_BASE_COLOR, WHITE],
       }),
     };
-    // const starsAnimated = {
-    //   color: bottomSheetColorAnimated.interpolate({
-    //     inputRange: [0, 1],
-    //     outputRange: [SECONDARY_COLOR, WHITE],
-    //   }),
-    // };
-    // const routeTextAnimated = {
-    //   color: bottomSheetColorAnimated.interpolate({
-    //     inputRange: [0, 1],
-    //     outputRange: [PRIMARY_COLOR, WHITE],
-    //   }),
-    // };
 
     const { activeEvent } = this.state;
-    // const offsetY = activeEvent ? 0 : -90;
-
     const inactive = {
-      // transform: [{ translateY: -offsetY }]
-      // marginTop: offsetY,
-      // zIndex: -1,
       style: {
         opacity: 0,
       },
@@ -450,9 +344,6 @@ class App extends Component {
       },
     };
     const active = {
-      // transform: [{ translateY: -offsetY }]
-      // marginTop: 0,
-      // zIndex: 5,
       style: {
         opacity: 1,
       },
@@ -467,7 +358,6 @@ class App extends Component {
     return (
       <BottomSheetBehavior
         ref={bs => { this.bottomSheet = bs; }}
-        // ref="bottomSheet"
         elevation={16}
         onSlide={this.handleSlide}
         onStateChange={this.handleBottomSheetChange}
@@ -483,36 +373,11 @@ class App extends Component {
                 <Animated.Text numberOfLines={2} style={[styles.bottomSheetTitle, textAnimated]}>
                   {title}
                 </Animated.Text>
-                {/* <View style={styles.starsContainer}>
-                  <Animated.Text style={[starsAnimated, { marginRight: 8 }]}>5.0</Animated.Text>
-                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                  <AnimatedIcon name="md-star" size={16} style={[styles.star, starsAnimated]} />
-                </View> */}
               </View>
-              {/* <View style={styles.bottomSheetRight}>
-                <Animated.Text style={[styles.routeLabel, routeTextAnimated]}>Route</Animated.Text>
-              </View> */}
             </Animated.View>
           </TouchableWithoutFeedback>
           <View style={styles.bottomSheetContent}>
             <NestedScrollView style={{ width }}>
-              <View style={styles.sectionIcons}>
-                {/* <View style={styles.iconBox}>
-                  <Icon name="md-call" size={22} color={PRIMARY_COLOR} />
-                  <Text style={styles.iconLabel}>CALL</Text>
-                </View>
-                <View style={styles.iconBox}>
-                  <Icon name="md-star" size={22} color={PRIMARY_COLOR} />
-                  <Text style={styles.iconLabel}>SAVE</Text>
-                </View>
-                <View style={styles.iconBox}>
-                  <Icon name="md-globe" size={22} color={PRIMARY_COLOR} />
-                  <Text style={styles.iconLabel}>WEBSITE</Text>
-                </View> */}
-              </View>
               {!!activeEvent &&
               <View style={styles.detailListSection}>
                 <Text style={styles.poweredBy}>Powered by VisitTampere</Text>
@@ -546,70 +411,29 @@ class App extends Component {
                 >
                   <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
                   {activeEvent.tags.map(tag => (
-                    <View key={`tag-${tag}`} style={{ backgroundColor: this.getTagColor(tag), borderRadius: 10, marginLeft: 4, paddingVertical: 5, paddingHorizontal: 8 }}>
-                      <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif', fontSize: 12 }}>{tag}</Text>
-                    </View>
+                    <Tag
+                      tag={tag}
+                      key={`tag-${tag}`}
+                    />
                   ))}
                 </View>
-                {!!activeEvent.contactInfo.link && this.renderDetailItem('md-globe', 'Website', this.handleOpenUrl)}
-                {!!activeEvent.contactInfo.address && this.renderDetailItem('md-locate', activeEvent.contactInfo.address, this.handleOpenNavigation)}
-                {this.renderDetailItem('md-timer', `${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`)}
-                {this.renderDetailItem('logo-euro', activeEvent.free ? 'Free' : 'Non-Free')}
-                {!!activeEvent.contactInfo.email && this.renderDetailItem('md-mail', activeEvent.contactInfo.email)}
-
-                {/* {this.renderDetailItem('md-create', 'Suggest an edit')} */}
-                </View>}
+                {!!activeEvent.contactInfo.link &&
+                  <DetailItem icon="md-globe" text={activeEvent.contactInfo.link} onPress={this.handleOpenUrl} />
+                }
+                {!!activeEvent.contactInfo.address &&
+                  <DetailItem icon="md-locate" text={activeEvent.contactInfo.address} onPress={this.handleOpenNavigation} />
+                }
+                <DetailItem icon="md-timer" text={`${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`} />
+                <DetailItem icon="logo-euro" text={activeEvent.free ? 'Free' : 'Paid'} />
+                {!!activeEvent.contactInfo.email &&
+                  <DetailItem icon="md-mail" text={activeEvent.contactInfo.email} />
+                }
+                </View>
+              }
             </NestedScrollView>
           </View>
         </View>
       </BottomSheetBehavior>
-    );
-  }
-
-  getTagColor = (tag: string) => {
-    type TagColor = {tag: string; color: string};
-    const tagColors: Array<TagColor> = [
-      { tag: 'other-event',
-        color: '#7AA9FF' },
-      { tag: 'for-children',
-        color: '#017CBD' },
-      { tag: 'festival',
-        color: '#6C0171' },
-      { tag: 'music',
-        color: '#F07000' },
-      { tag: 'market',
-        color: '#81164F' },
-      { tag: 'sports',
-        color: '#32196B' },
-      { tag: 'movie',
-        color: '#C50C30' },
-      { tag: 'entertainment',
-        color: '#FF4AAB' },
-      { tag: 'trade-fair',
-        color: '#158072' },
-      { tag: 'theatre',
-        color: '#81164F' },
-      { tag: 'dance',
-        color: '#4E3C4D' },
-      { tag: 'exhibition',
-        color: '#F7BF0B' },
-    ];
-    const defaultColor: string = '#F943F3';
-
-    const correctTag: TagColor = tagColors.filter(tagColor => tagColor.tag === tag)[0];
-
-    return correctTag ? correctTag.color : defaultColor;
-  };
-
-  renderFloatingActionButton = () => {
-    const { bottomSheetColor, activeEvent } = this.state;
-    return (
-      <FloatingActionButton
-        ref={fab => { this.fab = fab; }}
-        onPress={this.handleFabPress}
-        active={!!activeEvent}
-        expanded={bottomSheetColor === 1}
-      />
     );
   }
 
@@ -626,7 +450,6 @@ class App extends Component {
         <NavigationBar
           backgroundColor={PRIMARY_COLOR}
           animated={true}
-          // translucent={true}
         />
         <View style={styles.content}>
           {this.renderMap()}
@@ -658,8 +481,6 @@ const styles = StyleSheet.create({
   },
   mapView: {
     ...StyleSheet.absoluteFillObject,
-    // justifyContent: 'flex-end',
-    // alignItems: 'center',
   },
   mapContainer: {
     position: 'absolute',
@@ -677,13 +498,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // loading: {
-  //   ...StyleSheet.absoluteFillObject,
-  //   flex: 1,
-  //   alignItems: 'center',
-  //   justifyContent: 'space-around',
-  //   backgroundColor: PRIMARY_COLOR,
-  // },
   bottomSheet: {
     zIndex: 5,
     backgroundColor: 'transparent',
@@ -697,9 +511,6 @@ const styles = StyleSheet.create({
   bottomSheetLeft: {
     flexDirection: 'column',
   },
-  // bottomSheetRight: {
-  //   flexDirection: 'column',
-  // },
   bottomSheetTitle: {
     fontFamily: 'sans-serif-medium',
     fontSize: 18,
@@ -709,52 +520,8 @@ const styles = StyleSheet.create({
     height: height * 3 / 5,
     backgroundColor: WHITE,
   },
-  // starsContainer: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  // },
-  // star: {
-  //   marginHorizontal: 2,
-  // },
-  // routeLabel: {
-  //   marginTop: 32,
-  //   fontSize: 12,
-  //   color: PRIMARY_COLOR,
-  // },
-  sectionIcons: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingTop: -2,
-    paddingLeft: 18,
-    paddingRight: 18,
-    borderBottomWidth: 1,
-    borderColor: '#eee',
-  },
-  // iconBox: {
-  //   flex: 1,
-  //   borderRadius: 50,
-  //   alignItems: 'center',
-  //   flexDirection: 'column',
-  // },
-  // iconLabel: {
-  //   fontSize: 14,
-  //   marginTop: 4,
-  //   color: PRIMARY_COLOR,
-  // },
   detailListSection: {
     paddingBottom: 12,
-  },
-  detailItem: {
-    height: 50,
-    alignItems: 'center',
-    flexDirection: 'row',
-    paddingHorizontal: 22,
-  },
-  detailText: {
-    color: '#333',
-    fontSize: 12,
-    marginLeft: 24,
   },
   poweredBy: {
     borderRadius: 5,

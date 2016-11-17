@@ -9,9 +9,7 @@ import {
   Text,
   ToastAndroid,
   StatusBar,
-  TouchableWithoutFeedback,
   AsyncStorage,
-  Image,
   NativeModules,
   Linking,
 } from 'react-native';
@@ -21,10 +19,8 @@ import MapView from 'react-native-maps';
 import moment from 'moment';
 // import Spinner from 'react-native-spinkit';
 import NavigationBar from 'react-native-onscreen-navbar';
-import Icon from 'react-native-vector-icons/Ionicons';
 import _ from 'lodash';
 import {
-  NestedScrollView,
   CoordinatorLayout,
   BottomSheetBehavior,
 } from 'react-native-bottom-sheet-behavior';
@@ -39,18 +35,15 @@ import {
 } from './utils';
 
 import {
-  WHITE,
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,
-  TEXT_BASE_COLOR,
 } from './theme';
 
 import Marker from './components/Marker';
 // import Base from './components/Base';
 import Loading from './components/Loading';
-import Tag from './components/Tag';
+import BottomSheet from './components/BottomSheet';
 import Slider from './components/Slider';
-import DetailItem from './components/DetailItem';
 import FloatingActionButton from './components/FloatingActionButton';
 
 const duration = 120;
@@ -320,119 +313,23 @@ class App extends Component {
       toValue: bottomSheetColor,
     }).start();
 
-    const headerAnimated = {
-      backgroundColor: bottomSheetColorAnimated.interpolate({
-        inputRange: [0, 1],
-        outputRange: [WHITE, PRIMARY_COLOR],
-      }),
-    };
-
-    const textAnimated = {
-      color: bottomSheetColorAnimated.interpolate({
-        inputRange: [0, 1],
-        outputRange: [TEXT_BASE_COLOR, WHITE],
-      }),
-    };
-
     const { activeEvent } = this.state;
-    const inactive = {
-      style: {
-        opacity: 0,
-      },
-      props: {
-        elevation: 0,
-      },
-    };
-    const active = {
-      style: {
-        opacity: 1,
-      },
-      props: {
-        elevation: 16,
-      },
-    };
-
-    const title = activeEvent ? activeEvent.title : '';
-    const description = activeEvent ? activeEvent.description : '';
-
     return (
       <BottomSheetBehavior
         ref={bs => { this.bottomSheet = bs; }}
-        elevation={16}
+        elevation={activeEvent ? 16 : 0}
         onSlide={this.handleSlide}
         onStateChange={this.handleBottomSheetChange}
-        peekHeight={76}
-        {...activeEvent ? active.props : inactive.props}
+        peekHeight={80}
       >
-        <View style={[styles.bottomSheet, activeEvent ? active.style : inactive.style]}>
-          <TouchableWithoutFeedback
-            onPress={this.handleBottomSheetOnPress}
-          >
-            <Animated.View style={[styles.bottomSheetHeader, headerAnimated]}>
-              <View style={styles.bottomSheetLeft}>
-                <Animated.Text numberOfLines={2} style={[styles.bottomSheetTitle, textAnimated]}>
-                  {title}
-                </Animated.Text>
-              </View>
-            </Animated.View>
-          </TouchableWithoutFeedback>
-          <View style={styles.bottomSheetContent}>
-            <NestedScrollView style={{ width }}>
-              {!!activeEvent &&
-              <View style={styles.detailListSection}>
-                <Text style={styles.poweredBy}>Powered by VisitTampere</Text>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    paddingHorizontal: 22,
-                    paddingTop: 15,
-                  }}
-                >
-                  <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
-                </View>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    paddingHorizontal: 22,
-                    paddingVertical: 22,
-                  }}
-                >
-                  <Image source={activeEvent.image} resizeMode="contain" style={{ width: width - 32, height: 160 }} />
-                </View>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    flexDirection: 'row',
-                    paddingHorizontal: 22,
-                    marginVertical: 4,
-                  }}
-                >
-                  <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
-                  {activeEvent.tags.map(tag => (
-                    <Tag
-                      tag={tag}
-                      key={`tag-${tag}`}
-                    />
-                  ))}
-                </View>
-                {!!activeEvent.contactInfo.link &&
-                  <DetailItem icon="md-globe" text={activeEvent.contactInfo.link} onPress={this.handleOpenUrl} />
-                }
-                {!!activeEvent.contactInfo.address &&
-                  <DetailItem icon="md-locate" text={activeEvent.contactInfo.address} onPress={this.handleOpenNavigation} />
-                }
-                <DetailItem icon="md-timer" text={`${moment(activeEvent.start).format('LT')} - ${moment(activeEvent.end).format('LT')}`} />
-                <DetailItem icon="logo-euro" text={activeEvent.free ? 'Free' : 'Paid'} />
-                {!!activeEvent.contactInfo.email &&
-                  <DetailItem icon="md-mail" text={activeEvent.contactInfo.email} />
-                }
-                </View>
-              }
-            </NestedScrollView>
-          </View>
-        </View>
+        <BottomSheet
+          activeEvent={activeEvent}
+          openUrl={this.handleOpenUrl}
+          openNavigation={this.handleOpenNavigation}
+          bottomSheetColorAnimated={bottomSheetColorAnimated}
+          bottomSheetColor={bottomSheetColor}
+          onPress={this.handleBottomSheetOnPress}
+        />
       </BottomSheetBehavior>
     );
   }
@@ -498,47 +395,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  bottomSheet: {
-    zIndex: 5,
-    backgroundColor: 'transparent',
-  },
-  bottomSheetHeader: {
-    padding: 24,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  bottomSheetLeft: {
-    flexDirection: 'column',
-  },
-  bottomSheetTitle: {
-    fontFamily: 'sans-serif-medium',
-    fontSize: 18,
-  },
-  bottomSheetContent: {
-    alignItems: 'center',
-    height: height * 3 / 5,
-    backgroundColor: WHITE,
-  },
-  detailListSection: {
-    paddingBottom: 12,
-  },
-  poweredBy: {
-    borderRadius: 5,
-    backgroundColor: '#fff',
-    textAlign: 'center',
-    paddingTop: 20,
-  },
 });
 
-
 export default App;
-
-// This connects the state received from redux to the components props using a HOC
-// export default connect(
-//   (props, ownProps) => ({
-//     ...props.events,
-//     ...ownProps,
-//   }),
-//   { requestEvents }
-// )(App);

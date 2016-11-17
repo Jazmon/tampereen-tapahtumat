@@ -15,6 +15,7 @@ declare type MapMarker = {
   latlng: LatLng;
   id: number | string;
   title: string;
+  type: string;
   description: string;
 };
 

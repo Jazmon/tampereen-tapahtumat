@@ -59,7 +59,7 @@ const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
 };
 
 // Parses the address from the contact info.
-export const getAddressFromEvent = (event: Event): string => {
+export const getAddressFromEvent = (event: Object): string => {
   let address = '';
   const obj = event.contact_info;
 

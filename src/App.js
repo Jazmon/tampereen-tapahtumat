@@ -560,7 +560,7 @@ class App extends Component {
                 >
                   <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
                   {activeEvent.tags.map(tag => (
-                    <View key={`tag-${tag}`} style={{ backgroundColor: this.getTagColor(tag), borderRadius: 6, marginLeft: 4, paddingVertical: 5, paddingHorizontal: 8 }}>
+                    <View key={`tag-${tag}`} style={{ backgroundColor: this.getTagColor(tag), borderRadius: 10, marginLeft: 4, paddingVertical: 5, paddingHorizontal: 8 }}>
                       <Text style={{ color: '#f5f5f5', textAlign: 'center', fontFamily: 'sans-serif', fontSize: 12 }}>{tag}</Text>
                     </View>
                   ))}

@@ -33,13 +33,22 @@ class Loading extends React.Component {
       return null;
     }
     return (
-      <Animatable.View style={styles.loading} pointerEvents="none" ref={view => { this.loadingView = view; }}>
+      <Animatable.View
+        style={styles.loading}
+        pointerEvents="none"
+        ref={view => { this.loadingView = view; }}
+      >
         <Spinner
           type="9CubeGrid"
           size={60}
           color="#fff"
         />
-        <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}>
+        <Animatable.Text
+          animation="pulse"
+          easing="ease-out"
+          iterationCount="infinite"
+          style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}
+        >
           Looking up events nearby...
         </Animatable.Text>
       </Animatable.View>

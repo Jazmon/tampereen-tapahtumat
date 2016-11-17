@@ -21,7 +21,7 @@ if (locale.startsWith('fi')) {
 
 Geocoder.fallbackToGoogle(config.googleApiKey);
 
-export const getLocation = async(event: Object) => {
+export const getLocation = async (event: Object) => {
   try {
     const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(event.address);
     const geoCode: GeoCode = addresses[addresses.length - 1];

@@ -19,7 +19,7 @@ const API_URL_BASE: string = 'http://visittampere.fi/api/search?type=event';
 Geocoder.fallbackToGoogle(config.googleApiKey);
 
 // returns json from url
-export const fetchJson = async({ url }: { url: string }) => {
+export const fetchJson = async ({ url }: { url: string }) => {
   try {
     const response: Response = await fetch(url);
     const resJson: any = await response.json();
@@ -31,7 +31,7 @@ export const fetchJson = async({ url }: { url: string }) => {
 };
 
 // Geocodes the address, returning a latlng
-export const geocodeAddress = async(address: string) => {
+export const geocodeAddress = async (address: string) => {
   try {
     const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(address);
     const geoCode: GeoCode = addresses[addresses.length - 1];
@@ -97,7 +97,7 @@ const getSingleDateEvents = (events: Array<VTEvent>): Array<SingleTimeVTEvent> =
 };
 
 // returns all events from this day up to a week
-export const getEvents = async() => {
+export const getEvents = async () => {
   const url: string = getUrl();
   const rawEvents: ?Array<VTEvent> = await fetchJson({ url });
   if (!rawEvents) { return []; }

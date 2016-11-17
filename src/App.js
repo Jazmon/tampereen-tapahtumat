@@ -292,7 +292,7 @@ class App extends Component {
     }
   }
 
-  loadEvents = async() => {
+  loadEvents = async () => {
     const prefix = 'TampereenTapahtumat';
     const key = `${prefix}:cache`;
     this.setState({ loading: true });

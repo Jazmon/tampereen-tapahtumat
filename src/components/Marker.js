@@ -19,7 +19,7 @@ import entertainmentMarker from '../assets/markers/viihde.png';
 // import speakMarker from '../assets/markers/info.png';
 // import congressMarker from '../assets/markers/kongressi.png';
 // import natureMarker from '../assets/markers/luonto.png';
-// import exhibitionMarker from '../assets/markers/nayttely.png';
+import exhibitionMarker from '../assets/markers/nayttely.png';
 // import locationInfoMarker from '../assets/markers/opastettu.png';
 // import professionalMarker from '../assets/markers/pro.png';
 // import foodMarker from '../assets/markers/ruoka.png';

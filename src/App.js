@@ -512,7 +512,6 @@ class App extends Component {
             </Animated.View>
           </TouchableWithoutFeedback>
           <View style={styles.bottomSheetContent}>
-            {this.renderPoweredBy()}
             <NestedScrollView style={{ width }}>
               <View style={styles.sectionIcons}>
                 {/* <View style={styles.iconBox}>
@@ -528,12 +527,15 @@ class App extends Component {
                   <Text style={styles.iconLabel}>WEBSITE</Text>
                 </View> */}
               </View>
-              {!!activeEvent && <View style={styles.detailListSection}>
+              {!!activeEvent &&
+              <View style={styles.detailListSection}>
+                <Text style={styles.poweredBy}>Powered by VisitTampere</Text>
                 <View
                   style={{
                     alignItems: 'center',
                     flexDirection: 'row',
                     paddingHorizontal: 22,
+                    paddingTop: 15,
                   }}
                 >
                   <Text style={{ color: TEXT_BASE_COLOR }}>{description}</Text>
@@ -543,7 +545,7 @@ class App extends Component {
                     alignItems: 'center',
                     flexDirection: 'row',
                     paddingHorizontal: 22,
-                    paddingVertical: 6,
+                    paddingVertical: 22,
                   }}
                 >
                   <Image source={activeEvent.image} resizeMode="contain" style={{ width: width - 32, height: 160 }} />
@@ -589,11 +591,7 @@ class App extends Component {
       { tag: 'music',
         color: '#F07000' },
       { tag: 'market',
-<<<<<<< HEAD
-        color: '#F10101' },
-=======
         color: '#81164F' },
->>>>>>> Implement tag color change, add 2 marker types
       { tag: 'sports',
         color: '#32196B' },
       { tag: 'movie',
@@ -659,12 +657,6 @@ class App extends Component {
       />
     );
   }
-
-  renderPoweredBy = () => (
-    <Text style={styles.poweredBy}>
-      Powered by VisitTampere
-    </Text>
-  )
 
   render() {
     // const loading: boolean = this.state.loading;
@@ -815,10 +807,10 @@ const styles = StyleSheet.create({
   //   color: PRIMARY_COLOR,
   // },
   detailListSection: {
-    paddingTop: 4,
+    paddingBottom: 12,
   },
   detailItem: {
-    height: 38,
+    height: 50,
     alignItems: 'center',
     flexDirection: 'row',
     paddingHorizontal: 22,
@@ -832,7 +824,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: '#fff',
     textAlign: 'center',
-    paddingVertical: 2,
+    paddingTop: 20,
   },
 });
 

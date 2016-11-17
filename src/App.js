@@ -24,9 +24,9 @@ import {
 /* eslint-enable no-unused-vars */
 
 import MapView from 'react-native-maps';
-import * as Animatable from 'react-native-animatable';
+// import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
-import Spinner from 'react-native-spinkit';
+// import Spinner from 'react-native-spinkit';
 import NavigationBar from 'react-native-onscreen-navbar';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconMDI from 'react-native-vector-icons/MaterialIcons';
@@ -35,7 +35,6 @@ import {
   NestedScrollView,
   CoordinatorLayout,
   BottomSheetBehavior,
-  FloatingActionButton,
 } from 'react-native-bottom-sheet-behavior';
 
 import {
@@ -47,10 +46,20 @@ import {
   getCurrentEvents,
 } from './utils';
 
+import {
+  WHITE,
+  PRIMARY_COLOR,
+  DARK_PRIMARY_COLOR,
+  TEXT_BASE_COLOR,
+  SECONDARY_COLOR,
+} from './theme';
+
 import Marker from './components/Marker';
 // import Base from './components/Base';
 // import Toolbar from './components/Toolbar';
+import Loading from './components/Loading';
 import Slider from './components/Slider';
+import FloatingActionButton from './components/FloatingActionButton';
 
 // const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
@@ -72,13 +81,6 @@ const LONGITUDE = 23.757292;
 const LATITUDE_DELTA = 0.0322;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-const WHITE = '#FFFFFF';
-const PRIMARY_COLOR = '#2196F3';
-const DARK_PRIMARY_COLOR = '#1976D2';
-const LIGHT_PRIMARY_COLOR = '#BBDEFB';
-const TEXT_BASE_COLOR = 'rgba(0, 0, 0, 0.87)';
-// const SECONDARY_TEXT_COLOR = 'rgba(0, 0, 0, 0.54)';
-const SECONDARY_COLOR = '#FF3F80';
 const REGION = {
   latitude: LATITUDE,
   longitude: LONGITUDE,
@@ -143,16 +145,13 @@ class App extends Component {
     // });
 
     // if (this.fab && this.bottomSheet) {
-    this.fab.setAnchorId(this.bottomSheet);
+    this.fab.setAnchor(this.bottomSheet);
     // }
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (prevState.loading && !this.state.loading) {
-      this.loadingView.fadeOut(400)
-        .then((/* endState*/) => {
-          // console.log('loading faded');
-        });
+      this.loadingView.hide();
     }
 
     if (!_.isEqual(prevState.date, this.state.date)) {
@@ -349,19 +348,6 @@ class App extends Component {
   // setMarkers = (markers: Array<Marker>): void => {
   //   this.setState({ markers });
   // };
-
-  renderLoading = () => (
-    <Animatable.View style={styles.loading} pointerEvents="none" ref={view => { this.loadingView = view; }}>
-      <Spinner
-        type="9CubeGrid"
-        size={60}
-        color="#fff"
-      />
-      <Animatable.Text animation="pulse" easing="ease-out" iterationCount="infinite" style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}>
-        Looking up events nearby...
-      </Animatable.Text>
-    </Animatable.View>
-  );
 
   renderError = () => (
     <View style={styles.error}>
@@ -616,51 +602,19 @@ class App extends Component {
   };
 
   renderFloatingActionButton = () => {
-    const { bottomSheetColor } = this.state;
-    const isExpanded = bottomSheetColor === 1;
-    const { activeEvent } = this.state;
-    const inactive = {
-      // transform: [{ translateY: -offsetY }]
-      // marginTop: offsetY,
-      // zIndex: -1,
-      style: {
-        opacity: 0,
-      },
-      props: {
-        elevation: 0,
-      },
-    };
-    const active = {
-      // transform: [{ translateY: -offsetY }]
-      // marginTop: 0,
-      // zIndex: 5,
-      style: {
-        opacity: 1,
-      },
-      props: {
-        elevation: 18,
-      },
-    };
-
+    const { bottomSheetColor, activeEvent } = this.state;
     return (
       <FloatingActionButton
-        // ref="fab"
         ref={fab => { this.fab = fab; }}
-        elevation={18}
-        rippleEffect={true}
-        icon="event"
-        iconProvider={IconMDI}
-
-        iconColor={!isExpanded ? WHITE : SECONDARY_COLOR}
         onPress={this.handleFabPress}
-        backgroundColor={isExpanded ? WHITE : SECONDARY_COLOR}
-        {...activeEvent ? active : inactive}
+        active={!!activeEvent}
+        expanded={bottomSheetColor === 1}
       />
     );
   }
 
   render() {
-    // const loading: boolean = this.state.loading;
+    const { bottomSheetColor, activeEvent } = this.state;
 
     return (
       <CoordinatorLayout style={styles.container}>
@@ -680,34 +634,15 @@ class App extends Component {
             date={this.state.date}
             onValueChange={this.setDate}
           />
-          {/* {!!this.state.activeEvent && <Toolbar event={this.state.activeEvent} />} */}
-          {/* {isFetching && this.renderLoading() }
-          {error && this.renderError()} */}
         </View>
-        {false && this.state.activeEvent &&
-          <Animated.View
-            style={{
-              width,
-              bottom: 0,
-              position: 'absolute',
-              height: 200,
-              left: 0,
-              right: 0,
-              // alignSelf: 'flex-end',
-              transform: [{ translateY: -this.offset * 200 }],
-            }}
-          >
-            <Image
-              source={this.state.activeEvent.image}
-              resizeMode="cover"
-              style={{ flex: 1 }}
-            />
-          </Animated.View>
-        }
         {this.renderBottomSheet()}
-        {this.renderFloatingActionButton()}
-        {this.renderLoading()}
-        {}
+        <FloatingActionButton
+          ref={fab => { this.fab = fab; }}
+          onPress={this.handleFabPress}
+          active={!!activeEvent}
+          expanded={bottomSheetColor === 1}
+        />
+        <Loading ref={view => { this.loadingView = view; }} />
       </CoordinatorLayout>
     );
   }
@@ -742,13 +677,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  loading: {
-    ...StyleSheet.absoluteFillObject,
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-around',
-    backgroundColor: PRIMARY_COLOR,
-  },
+  // loading: {
+  //   ...StyleSheet.absoluteFillObject,
+  //   flex: 1,
+  //   alignItems: 'center',
+  //   justifyContent: 'space-around',
+  //   backgroundColor: PRIMARY_COLOR,
+  // },
   bottomSheet: {
     zIndex: 5,
     backgroundColor: 'transparent',

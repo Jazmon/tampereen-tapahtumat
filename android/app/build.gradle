@@ -96,6 +96,14 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
     }
+    signingConfigs {
+        release {
+            storeFile file(TAMPEREEN_TAPAHTUMAT_RELEASE_STORE_FILE)
+            storePassword TAMPEREEN_TAPAHTUMAT_RELEASE_STORE_PASSWORD
+            keyAlias TAMPEREEN_TAPAHTUMAT_RELEASE_KEY_ALIAS
+            keyPassword TAMPEREEN_TAPAHTUMAT_RELEASE_KEY_PASSWORD
+        }
+    }
     splits {
         abi {
             reset()
@@ -108,6 +116,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
     // applicationVariants are e.g. debug, release
@@ -126,13 +135,17 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-spinkit')
+    compile project(':react-native-onscreen-navbar')
     compile project(':react-native-vector-icons')
     compile project(':react-native-maps')
     compile project(':react-native-locale-detector')
     compile project(':react-native-geocoder')
     compile project(':react-native-blur')
+    compile project(':react-native-bottom-sheet-behavior')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
+    //noinspection GradleDynamicVersion
     compile "com.facebook.react:react-native:+"  // From node_modules
 }
 

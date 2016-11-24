@@ -21,7 +21,7 @@ if (locale.startsWith('fi')) {
 
 Geocoder.fallbackToGoogle(config.googleApiKey);
 
-export const getLocation = async(event: Object) => {
+export const getLocation = async (event: Object) => {
   try {
     const addresses: Array<GeoCode> = await Geocoder.geocodeAddress(event.address);
     const geoCode: GeoCode = addresses[addresses.length - 1];
@@ -59,7 +59,7 @@ const applyIfExist = ({ obj, prop, str = '', spacer = '' }) => {
 };
 
 // Parses the address from the contact info.
-export const getAddressFromEvent = (event: Event): string => {
+export const getAddressFromEvent = (event: Object): string => {
   let address = '';
   const obj = event.contact_info;
 

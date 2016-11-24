@@ -1,0 +1,12 @@
+festival
+music
+for-children
+other-event
+dance
+market
+sports
+entertainment
+theatre
+guided-tour
+trade-fair
+movie

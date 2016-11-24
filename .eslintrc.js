@@ -56,9 +56,9 @@ module.exports = {
     'react/no-did-update-set-state': 1,
     'react/no-multi-comp': 1,
     'react/no-unknown-property': 1,
-    'react/prop-types': 1,
+    'react/prop-types': 0,
     'react/react-in-jsx-scope': 1,
-    'react/self-closing-comp': 1,
+    'react/self-closing-comp': 2,
     'sort-class-members/sort-class-members': [2, {
       'order': [
         '[static-properties]',
@@ -111,11 +111,18 @@ module.exports = {
     'babel/no-await-in-loop': 1,
     'arrow-parens': 0,
     'new-cap': [
-      'error',
-      { newIsCap: true, capIsNewExceptions: ['Color', 'TouchableNativeFeedback.SelectableBackground'] },
+      'warn',
+      {
+        newIsCap: true,
+        capIsNewExceptions: [
+          'Color',
+          'TouchableNativeFeedback.SelectableBackground',
+          'TouchableNativeFeedback.Ripple'
+        ]
+      },
     ],
     indent: [
-      'error',
+      'warn',
       2
     ],
     'linebreak-style': [
@@ -141,7 +148,7 @@ module.exports = {
     ],
     'no-mixed-operators': 0,
     'class-methods-use-this': 0,
-    'react/forbid-prop-types': 0, // replace with 1 for very strict type checks
+    'react/forbid-prop-types': 1, // replace with 1 for very strict type checks
     'no-plusplus': ['error', { 'allowForLoopAfterthoughts': true }],
   }
 };

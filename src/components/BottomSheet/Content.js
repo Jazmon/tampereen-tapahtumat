@@ -23,7 +23,7 @@ import {
 } from '../../theme';
 
 type Props = {
-  event: Event;
+  event: ?Event;
   openUrl: Function;
   openNavigation: Function;
 };
@@ -33,7 +33,7 @@ const { width, height } = Dimensions.get('window');
 const Content = ({ event, openUrl, openNavigation }: Props) => (
   <View style={styles.bottomSheetContent}>
     <NestedScrollView style={{ width }}>
-      <View style={styles.detailListSection}>
+      {!!event && <View style={styles.detailListSection}>
         <Text style={styles.poweredBy}>Powered by VisitTampere</Text>
         <View
           style={{
@@ -69,7 +69,7 @@ const Content = ({ event, openUrl, openNavigation }: Props) => (
           ))}
         </View>
         <DetailItemList event={event} openUrl={openUrl} openNavigation={openNavigation} />
-      </View>
+      </View>}
     </NestedScrollView>
   </View>
 );

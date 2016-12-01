@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
+  findNodeHandle,
   Animated,
   Text,
   ToastAndroid,
@@ -38,10 +39,17 @@ import {
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,
 } from './theme';
-
 import mapStyle from './mapStyle.json';
+
+// import {
+//   // Base,
+//   Marker,
+//   Loading,
+//   BottomSheet,
+//   Slider,
+//   FloatingActionButton,
+// } from './components';
 import Marker from './components/Marker';
-// import Base from './components/Base';
 import Loading from './components/Loading';
 import BottomSheet from './components/BottomSheet';
 import Slider from './components/Slider';
@@ -111,7 +119,7 @@ class App extends Component {
     this.loadEvents();
 
     this.lastState = BottomSheetBehavior.STATE_COLLAPSED;
-    this.fab.setAnchor(this.bottomSheet);
+    this.fab.setAnchor(findNodeHandle(this.bottomSheet));
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -232,6 +240,7 @@ class App extends Component {
         if (moment().isSameOrBefore(oneDay)) {
           this.setState({
             events: parsedCache.events,
+            loading: false,
           });
         }
       }
@@ -239,17 +248,17 @@ class App extends Component {
       console.error(e.message, e);
     }
     // load fresh data
-    getEvents().then(events => {
-      this.setState({
-        events,
-        loading: false,
-      });
-      const cache = {
-        events,
-        time: Date.now(),
-      };
-      AsyncStorage.setItem(key, JSON.stringify(cache));
-    });
+    // getEvents().then(events => {
+    //   this.setState({
+    //     events,
+    //     loading: false,
+    //   });
+    //   const cache = {
+    //     events,
+    //     time: Date.now(),
+    //   };
+    //   AsyncStorage.setItem(key, JSON.stringify(cache));
+    // });
   }
 
   setDate = (value: number) => {
@@ -279,19 +288,15 @@ class App extends Component {
         <MapView
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
-          // region={region}
-          // cacheEnabled={true}
           onPress={() => this.setState({ activeEvent: null })}
           initialRegion={REGION}
           // showsScale={true}
           loadingEnabled={false}
           showsUserLocation={true}
-          showsMyLocationButton={false}
+          showsMyLocationButton={true}
           showsCompass={false}
           customMapStyle={mapStyle}
           toolbarEnabled={true}
-          // provider="google"
-          // onRegionChange={this.onRegionChange}
         >
           {currentMarkers.map((marker) =>
             <Marker {...marker} key={marker.id} onPress={this.markerPressed} />
@@ -316,8 +321,10 @@ class App extends Component {
     return (
       <BottomSheetBehavior
         ref={bs => { this.bottomSheet = bs; }}
+        // elevation={16}
         elevation={activeEvent ? 16 : 0}
         onSlide={this.handleSlide}
+        // hideable
         onStateChange={this.handleBottomSheetChange}
         peekHeight={80}
       >
@@ -342,10 +349,12 @@ class App extends Component {
           backgroundColor={DARK_PRIMARY_COLOR}
           animated={true}
           barStyle="default"
+          translucent={false}
         />
         <NavigationBar
           backgroundColor={PRIMARY_COLOR}
           animated={true}
+          translucent={false}
         />
         <View style={styles.content}>
           {this.renderMap()}
@@ -359,6 +368,7 @@ class App extends Component {
           ref={fab => { this.fab = fab; }}
           onPress={this.handleFabPress}
           active={!!activeEvent}
+          elevation={18}
           expanded={bottomSheetColor === 1}
         />
         <Loading ref={view => { this.loadingView = view; }} />
@@ -369,14 +379,37 @@ class App extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: '#F5FCFF',
+    // flex: 1,
+    // flexGrow: 1,
+
+    width,
+    height: height - 24,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
   },
   content: {
+    // borderColor: '#f00', borderWidth: 1,
+    // flex: 1,
+    // flexGrow: 1,
+    // paddingTop: 24,
+    // width,
+    // height,
     backgroundColor: 'transparent',
   },
   mapView: {
-    ...StyleSheet.absoluteFillObject,
+    // ...StyleSheet.absoluteFillObject,
+
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   mapContainer: {
     position: 'absolute',
@@ -384,10 +417,10 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: height - 24,
     width,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    height: height - StatusBar.currentHeight,
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
   error: {
     flex: 1,

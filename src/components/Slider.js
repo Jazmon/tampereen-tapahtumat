@@ -3,6 +3,7 @@ import React from 'react';
 import {
   View,
   StyleSheet,
+  Dimensions,
   Text,
 } from 'react-native';
 import SliderComponent from 'react-native-slider';
@@ -27,30 +28,32 @@ type Props = {
 
 const Slider = (props: Props) => (
   <View style={styles.sliderBox} elevation={4}>
-    <SliderComponent
-      style={styles.slider}
-      minimumValue={0}
-      maximumValue={6}
-      onValueChange={props.onValueChange}
-      thumbTintColor="#FF3F80"
-      minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
-      maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
-      step={1}
-      value={props.date}
-    />
-    <View style={styles.datesContainer}>
-      {[0, 1, 2, 3, 4, 5, 6].map(val => (
-        <View key={`date-${val}`}>
-          <Text
-            style={{
-              color: props.date === val ? '#000' : '#454545',
-              fontWeight: props.date === val ? 'bold' : 'normal',
-            }}
-          >
-            {moment().add(val, 'days').startOf('day').format('dd')}
-          </Text>
-        </View>
-      ))}
+    <View style={styles.sliderBoxInner}>
+      <SliderComponent
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={6}
+        onValueChange={props.onValueChange}
+        thumbTintColor="#FF3F80"
+        minimumTrackTintColor="rgba(0, 0, 0, 0.47)"
+        maximumTrackTintColor="rgba(0, 0, 0, 0.47)"
+        step={1}
+        value={props.date}
+      />
+      <View style={styles.datesContainer}>
+        {[0, 1, 2, 3, 4, 5, 6].map(val => (
+          <View key={`date-${val}`}>
+            <Text
+              style={{
+                color: props.date === val ? '#000' : '#454545',
+                fontWeight: props.date === val ? 'bold' : 'normal',
+              }}
+            >
+              {moment().add(val, 'days').startOf('day').format('dd')}
+            </Text>
+          </View>
+        ))}
+      </View>
     </View>
   </View>
 );
@@ -60,13 +63,22 @@ const styles = StyleSheet.create({
   slider: {
   },
   sliderBox: {
+    flexDirection: 'row',
     marginHorizontal: 24,
     marginTop: 8,
     borderRadius: 2,
     paddingHorizontal: 20,
     // backgroundColor: 'rgba(0, 0, 0, 0.1)',
     backgroundColor: '#fff',
-    flex: 0,
+    // flex: 0,
+    flexGrow: 0,
+    width: Dimensions.get('window').width - 24 * 2,
+
+  },
+  sliderBoxInner: {
+    flex: 1,
+    flexDirection: 'column',
+    flexGrow: 1,
   },
   datesContainer: {
     flexDirection: 'row',

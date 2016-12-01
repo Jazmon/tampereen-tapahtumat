@@ -30,14 +30,15 @@ class BottomSheet extends React.Component {
       openNavigation,
     } = this.props;
 
-    if (!activeEvent) {
-      return null;
-    }
+    // if (!activeEvent) {
+    //   return null;
+    // }
+
     return (
-      <View style={styles.bottomSheet}>
+      <View style={[styles.bottomSheet, { bottom: activeEvent ? 0 : -80 }]}>
         <Header
           onPress={onPress}
-          title={activeEvent.title}
+          title={activeEvent ? activeEvent.title : ''}
           bottomSheetColorAnimated={bottomSheetColorAnimated}
           bottomSheetColor={bottomSheetColor}
         />

@@ -36,29 +36,31 @@ type Props = {
   onPress: Function;
 };
 
-const Marker = (props: Props) => (
-  <MapView.Marker
-    // key={`marker-${props.id}`}
-    coordinate={props.latlng}
-    // title={props.title}
-    // description={props.description}
-    // image={getImagePath(props.type)}
-    onPress={props.onPress}
-  >
-    <Image
-      source={getImagePath(props.type)}
-      title={props.title}
-      description={props.description}
-      resizeMode="cover"
-      style={{ width: 40, height: 40 }}
-    />
-    {/* <MapView.Callout>
-      <View>
-        <Text>{props.title}</Text>
-      </View>
-    </MapView.Callout> */}
-  </MapView.Marker>
-);
+class Marker extends React.Component {
+  props: Props;
+
+  onPress = () => {
+    this.props.onPress(this.props);
+  }
+
+  render() {
+    const { type, description, title, latlng } = this.props;
+    return (
+      <MapView.Marker
+        coordinate={latlng}
+        onPress={this.onPress}
+      >
+        <Image
+          source={getImagePath(type)}
+          title={title}
+          description={description}
+          resizeMode="cover"
+          style={{ width: 40, height: 40 }}
+        />
+      </MapView.Marker>
+    );
+  }
+}
 
 const getImagePath = (type: string) => {
   const markerImages = [

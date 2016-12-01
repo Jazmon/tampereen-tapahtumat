@@ -1,16 +1,6 @@
-/**
- * @flow
- */
+// @flow
 
-import React from 'react';
-import {
-  AppRegistry,
-} from 'react-native';
+import { AppRegistry } from 'react-native';
+import App from './src/App';
 
-import Root from './src/Root';
-
-const TampereenTapahtumat = () => (
-  <Root />
-);
-
-AppRegistry.registerComponent('TampereenTapahtumat', () => TampereenTapahtumat);
+AppRegistry.registerComponent('TampereenTapahtumat', () => App);

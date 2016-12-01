@@ -35,6 +35,7 @@ class Loading extends React.Component {
     return (
       <Animatable.View
         style={styles.loading}
+        useNativeDriver
         pointerEvents="none"
         ref={view => { this.loadingView = view; }}
       >
@@ -47,6 +48,7 @@ class Loading extends React.Component {
           animation="pulse"
           easing="ease-out"
           direction="alternate"
+          useNativeDriver
           iterationCount="infinite"
           style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}
         >

@@ -299,7 +299,7 @@ class App extends Component {
               {...marker}
               key={`marker-${marker.id}`}
               type={marker.type}
-              onPress={() => this.markerPressed(marker)}
+              onPress={this.markerPressed}
             />
           ))}
         </MapView>

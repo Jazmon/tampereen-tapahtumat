@@ -120,21 +120,20 @@ class App extends Component {
     }
 
     if (!_.isEqual(prevState.date, this.state.date)) {
+      const PAD_AMOUNT = 60;
       const edgePadding: EdgePadding = {
-        top: 40,
-        right: 40,
-        bottom: 40,
-        left: 40,
+        top: PAD_AMOUNT,
+        right: PAD_AMOUNT,
+        bottom: PAD_AMOUNT,
+        left: PAD_AMOUNT,
       };
       const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
         .map(event => event.latlng);
       // TODO check the delta between events and if less than reasonable amount,
       // use padding to compensate
       // and if only one event, use some other value
-      if (!!this.map && coords && coords.length > 1) {
-        this.map.fitToCoordinates(coords, edgePadding,
-          true,
-        );
+      if (coords && coords.length > 1) {
+        this.map.fitToCoordinates(coords, { edgePadding, animated: true });
       }
     }
   }
@@ -294,14 +293,9 @@ class App extends Component {
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
-          {currentMarkers.map((marker) => (
-            <Marker
-              {...marker}
-              key={`marker-${marker.id}`}
-              type={marker.type}
-              onPress={this.markerPressed}
-            />
-          ))}
+          {currentMarkers.map((marker) =>
+            <Marker {...marker} key={marker.id} onPress={this.markerPressed} />
+          )}
         </MapView>
       </View>
     );

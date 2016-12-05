@@ -229,6 +229,17 @@ class App extends Component {
     }
   }
 
+  handleOpenTicketUrl = () => {
+    const url: ?string = _.get(this.state, 'activeEvent.ticketLink');
+    if (url) {
+      Linking.canOpenURL(url).then(supported => {
+        if (supported) {
+          Linking.openURL(url);
+        }
+      });
+    }
+  }
+
   handleOpenNavigation = () => {
     const lat: ?number = _.get(this.state, 'activeEvent.latlng.latitude');
     const long: ?number = _.get(this.state, 'activeEvent.latlng.longitude');
@@ -383,6 +394,7 @@ class App extends Component {
           bottomSheetColorAnimated={bottomSheetColorAnimated}
           bottomSheetColor={bottomSheetColor}
           onPress={this.handleBottomSheetOnPress}
+          openTicketUrl={this.handleOpenTicketUrl}
         />
       </BottomSheetBehavior>
     );

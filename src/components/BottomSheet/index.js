@@ -12,6 +12,7 @@ type Props = {
   onPress: Function;
   openNavigation: Function;
   openUrl: Function;
+  openTicketUrl: Function;
   bottomSheetColor: number;
   bottomSheetColorAnimated: Object;
 };
@@ -28,6 +29,7 @@ class BottomSheet extends React.Component {
       bottomSheetColorAnimated,
       openUrl,
       openNavigation,
+      openTicketUrl,
     } = this.props;
 
     if (!activeEvent) {
@@ -45,6 +47,7 @@ class BottomSheet extends React.Component {
           event={activeEvent}
           openUrl={openUrl}
           openNavigation={openNavigation}
+          openTicketUrl={openTicketUrl}
         />
       </View>
     );

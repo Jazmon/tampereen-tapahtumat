@@ -26,11 +26,12 @@ type Props = {
   event: ApiEvent;
   openUrl: Function;
   openNavigation: Function;
+  openTicketUrl: Function;
 };
 
 const { width, height } = Dimensions.get('window');
 
-const Content = ({ event, openUrl, openNavigation }: Props) => (
+const Content = ({ event, openUrl, openNavigation, openTicketUrl }: Props) => (
   <View style={styles.bottomSheetContent}>
     <NestedScrollView style={{ width }}>
       <View style={styles.detailListSection}>
@@ -66,7 +67,7 @@ const Content = ({ event, openUrl, openNavigation }: Props) => (
           <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
           <Tag tag={event.type} />
         </View>
-        <DetailItemList event={event} openUrl={openUrl} openNavigation={openNavigation} />
+        <DetailItemList event={event} openUrl={openUrl} openNavigation={openNavigation} openTicketUrl={openTicketUrl} />
       </View>
     </NestedScrollView>
   </View>

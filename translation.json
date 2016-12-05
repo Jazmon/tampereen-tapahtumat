@@ -3,14 +3,22 @@
     "common": {
       "loading": "Looking up events nearby...",
       "errorOpenNavigation": "Cannot open navigation for this event",
-      "errorLoadingEvents": "Error loading events"
+      "errorLoadingEvents": "Error loading events",
+      "free": "Free",
+      "paid": "Paid",
+      "ticket": "Get tickets here",
+      "website": "Website"
     }
   },
   "fi-FI": {
     "common": {
       "loading": "Ladataan tapahtumia...",
       "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
-      "errorLoadingEvents": "Virhe ladatessa tapahtumia"
+      "errorLoadingEvents": "Virhe ladatessa tapahtumia",
+      "free": "Ilmainen",
+      "paid": "Maksullinen",
+      "ticket": "Hanki liput täältä",
+      "website": "Sivusto"
     }
   }
 }

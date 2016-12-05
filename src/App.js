@@ -320,7 +320,7 @@ class App extends Component {
   );
 
   renderMap = () => {
-    const events = this.state.events
+    const markers = this.state.events
       .filter(event => {
         const length = event.times.length;
         for (let i = 0; i < length; i++) {
@@ -333,7 +333,14 @@ class App extends Component {
         }
         return false;
       })
-      .filter(event => !!event.latitude && !!event.longitude);
+      .filter(event => !!event.latitude && !!event.longitude)
+      .map(event => ({
+        ...event,
+        latlng: {
+          latitude: (event: any).latitude,
+          longitude: (event: any).longitude,
+        },
+      }));
     return (
       <View style={styles.mapContainer}>
         <MapView
@@ -345,14 +352,15 @@ class App extends Component {
           showsUserLocation={true}
           showsMyLocationButton={false}
         >
-          {events.map((event) =>
+          {markers.map((marker) =>
             <Marker
-              id={event.id}
-              latlng={{ latitude: (event: any).latitude, longitude: (event: any).longitude }}
-              title={event.title}
-              description={event.description}
-              type={event.type}
-              key={event.id}
+              {...marker}
+              // id={event.id}
+              // latlng={{ latitude: (event: any).latitude, longitude: (event: any).longitude }}
+              // title={event.title}
+              // description={event.description}
+              // type={event.type}
+              key={marker.id}
               onPress={this.markerPressed}
             />
           )}

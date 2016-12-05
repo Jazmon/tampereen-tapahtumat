@@ -5,6 +5,7 @@ import Spinner from 'react-native-spinkit';
 import {
   StyleSheet,
 } from 'react-native';
+import i18n from 'i18next';
 
 import {
   PRIMARY_COLOR,
@@ -52,7 +53,7 @@ class Loading extends React.Component {
           iterationCount="infinite"
           style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}
         >
-          Looking up events nearby...
+          {i18n.t('common:loading')}
         </Animatable.Text>
       </Animatable.View>
     );

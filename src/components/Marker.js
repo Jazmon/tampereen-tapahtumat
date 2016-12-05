@@ -43,7 +43,7 @@ const Marker = (props: Props) => (
     // title={props.title}
     // description={props.description}
     // image={getImagePath(props.type)}
-    onPress={props.onPress}
+    onPress={() => props.onPress(props)}
   >
     <Image
       source={getImagePath(props.type)}

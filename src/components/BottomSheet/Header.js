@@ -27,7 +27,7 @@ class Header extends React.Component {
   render() {
     const { bottomSheetColorAnimated, bottomSheetColor, title, onPress } = this.props;
     Animated.timing(bottomSheetColorAnimated, {
-      DURATION,
+      duration: DURATION,
       toValue: bottomSheetColor,
     }).start();
     const headerAnimated = {

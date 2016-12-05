@@ -8,7 +8,7 @@ import Header from './Header';
 import Content from './Content';
 
 type Props = {
-  activeEvent: ?Event;
+  activeEvent: ?ApiEvent;
   onPress: Function;
   openNavigation: Function;
   openUrl: Function;

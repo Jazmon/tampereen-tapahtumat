@@ -13,8 +13,9 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "lint": "node_modules/.bin/eslint -c .eslintrc.js src",
-    "lint:fix": "node_modules/.bin/eslint -c .eslintrc.js src --fix"
+    "lint": "eslint -c .eslintrc.js src",
+    "lint:fix": "eslint -c .eslintrc.js src --fix",
+    "flow": "flow"
   },
   "author": "Atte Huhtakangas <atte.huhtakangas@gmail.com>",
   "license": "ISC",

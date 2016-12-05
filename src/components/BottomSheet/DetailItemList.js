@@ -8,7 +8,7 @@ import moment from 'moment';
 import DetailItem from '../DetailItem';
 
 type Props = {
-  event: Event;
+  event: ApiEvent;
   openUrl: Function;
   openNavigation: Function;
 }
@@ -21,7 +21,7 @@ const DetailItemList = ({ event, openUrl, openNavigation }: Props) => (
     {!!event.contactInfo.address &&
       <DetailItem icon="md-locate" text={event.contactInfo.address} onPress={openNavigation} />
     }
-    <DetailItem icon="md-timer" text={`${moment(event.start).format('LT')} - ${moment(event.end).format('LT')}`} />
+    <DetailItem icon="md-timer" text={`${moment(event.times[0].start).format('LT')} - ${moment(event.times[0].end).format('LT')}`} />
     <DetailItem icon="logo-euro" text={event.free ? 'Free' : 'Paid'} />
     {!!event.contactInfo.email &&
       <DetailItem icon="md-mail" text={event.contactInfo.email} />

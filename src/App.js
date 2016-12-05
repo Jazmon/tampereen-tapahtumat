@@ -79,7 +79,7 @@ type State = {
   date: number;
   loading: boolean;
   region: Object;
-  activeEvent: ?Event;
+  activeEvent: ?ApiEvent;
 
   bottomSheetColor: number;
   bottomSheetColorAnimated: Object;
@@ -288,17 +288,17 @@ class App extends Component {
     //   console.error(e.message, e);
     // }
     // load fresh data
-    getEvents().then(events => {
-      this.setState({
-        events,
-        loading: false,
-      });
-      const cache = {
-        events,
-        time: Date.now(),
-      };
-      AsyncStorage.setItem(key, JSON.stringify(cache));
-    });
+    // getEvents().then(events => {
+    //   this.setState({
+    //     events,
+    //     loading: false,
+    //   });
+    //   const cache = {
+    //     events,
+    //     time: Date.now(),
+    //   };
+    //   AsyncStorage.setItem(key, JSON.stringify(cache));
+    // });
   }
 
   setDate = (value: number) => {
@@ -308,7 +308,7 @@ class App extends Component {
   };
 
   markerPressed = (marker: MapMarker) => {
-    const event: ?Event = this.state.events
+    const event: ?ApiEvent = this.state.events
       .filter(e => e.id === marker.id)[0];
     this.setState({ activeEvent: event });
   }

@@ -1,0 +1,5 @@
+{
+  "loading": "Ladataan tapahtumia...",
+  "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
+  "errorLoadingEvents": "Virhe ladatessa tapahtumia"
+}

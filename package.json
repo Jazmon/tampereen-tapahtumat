@@ -15,7 +15,8 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "lint": "eslint -c .eslintrc.js src",
     "lint:fix": "eslint -c .eslintrc.js src --fix",
-    "flow": "flow"
+    "flow": "flow",
+    "createTranslation": "node ./scripts/createTranslation.js"
   },
   "author": "Atte Huhtakangas <atte.huhtakangas@gmail.com>",
   "license": "ISC",
@@ -40,6 +41,8 @@
     "babel-preset-react-native": "^1.9.0",
     "babel-relay-plugin": "^0.9.3",
     "color": "0.11.4",
+    "i18next": "^4.1.1",
+    "i18next-react-native-language-detector": "^1.0.2",
     "immutable": "^3.8.1",
     "lodash": "4.17.2",
     "lokka": "^1.7.0",

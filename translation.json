@@ -1,0 +1,16 @@
+{
+  "en": {
+    "common": {
+      "loading": "Looking up events nearby...",
+      "errorOpenNavigation": "Cannot open navigation for this event",
+      "errorLoadingEvents": "Error loading events"
+    }
+  },
+  "fi-FI": {
+    "common": {
+      "loading": "Ladataan tapahtumia...",
+      "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
+      "errorLoadingEvents": "Virhe ladatessa tapahtumia"
+    }
+  }
+}

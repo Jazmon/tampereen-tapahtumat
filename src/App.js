@@ -13,7 +13,7 @@ import {
   NativeModules,
   Linking,
 } from 'react-native';
-
+import i18n from 'i18next';
 import MapView from 'react-native-maps';
 // import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
@@ -147,8 +147,8 @@ class App extends Component {
     const { activeEvent } = this.state;
     if (activeEvent) {
       Calendar.insertEvent({
-        start: activeEvent.start,
-        end: activeEvent.end,
+        start: activeEvent.times[0].start,
+        end: activeEvent.times[0].end,
         title: activeEvent.title,
         description: activeEvent.description,
         location: activeEvent.contactInfo.address,
@@ -216,11 +216,11 @@ class App extends Component {
         if (supported) {
           Linking.openURL(url);
         } else {
-          ToastAndroid.show('Cannot open navigation for this event', ToastAndroid.SHORT);
+          ToastAndroid.show(i18n.t('common:errorOpenNavigation'), ToastAndroid.SHORT);
         }
       });
     } else {
-      ToastAndroid.show('Cannot open navigation for this event', ToastAndroid.SHORT);
+      ToastAndroid.show(i18n.t('common:errorOpenNavigation'), ToastAndroid.SHORT);
     }
   }
 
@@ -315,12 +315,11 @@ class App extends Component {
 
   renderError = () => (
     <View style={styles.error}>
-      <Text>Error loading events</Text>
+      <Text>{i18n.t('common:erroLoadingEvents')}</Text>
     </View>
   );
 
   renderMap = () => {
-    // const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
     const events = this.state.events
       .filter(event => {
         const length = event.times.length;
@@ -329,36 +328,27 @@ class App extends Component {
           const selectedDate = moment().add(this.state.date, 'days').startOf('day');
           const sameDay = selectedDate.isSame(parseInt(time.start, 10), 'day');
           if (sameDay) {
-            console.log('same day');
             return true;
           }
         }
         return false;
       })
       .filter(event => !!event.latitude && !!event.longitude);
-    console.log('events.length', events.length);
-    // const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
-
     return (
       <View style={styles.mapContainer}>
         <MapView
           ref={ref => { this.map = ref; }}
           style={styles.mapView}
-          // region={region}
-          // cacheEnabled={true}
           onPress={() => this.setState({ activeEvent: null })}
           initialRegion={REGION}
-          // showsScale={true}
           loadingEnabled={false}
           showsUserLocation={true}
-          // showsMyLocationButton={true}
-          // provider="google"
-          // onRegionChange={this.onRegionChange}
+          showsMyLocationButton={false}
         >
           {events.map((event) =>
             <Marker
               id={event.id}
-              latlng={{ latitude: event.latitude, longitude: event.longitude }}
+              latlng={{ latitude: (event: any).latitude, longitude: (event: any).longitude }}
               title={event.title}
               description={event.description}
               type={event.type}

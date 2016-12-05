@@ -24,6 +24,8 @@ import {
   CoordinatorLayout,
   BottomSheetBehavior,
 } from 'react-native-bottom-sheet-behavior';
+import { Lokka } from 'lokka';
+import { Transport } from 'lokka-transport-http';
 
 import {
   getEvents,
@@ -47,7 +49,10 @@ import Slider from './components/Slider';
 import FloatingActionButton from './components/FloatingActionButton';
 
 const duration = 120;
-
+const DURATION = 120;
+const client = new Lokka({
+  transport: new Transport('https://vast-hollows-14109.herokuapp.com/graphql')
+});
 const { Calendar } = NativeModules;
 
 const { width, height } = Dimensions.get('window');
@@ -70,7 +75,7 @@ type Props = {
 };
 
 type State = {
-  events: Array<Event>;
+  events: Array<ApiEvent>;
   date: number;
   loading: boolean;
   region: Object;
@@ -220,24 +225,68 @@ class App extends Component {
   }
 
   loadEvents = async () => {
-    const prefix = 'TampereenTapahtumat';
-    const key = `${prefix}:cache`;
+    // const prefix = 'TampereenTapahtumat';
+    // const key = `${prefix}:cache`;
     this.setState({ loading: true });
-    // load cached data
-    try {
-      const loadedCache = await AsyncStorage.getItem(key);
-      if (loadedCache !== null) {
-        const parsedCache = JSON.parse(loadedCache);
-        const oneDay = moment().add(1, 'days');
-        if (moment().isSameOrBefore(oneDay)) {
-          this.setState({
-            events: parsedCache.events,
-          });
+
+    const imageFragment = client.createFragment(`
+      fragment on Event {
+        image {
+          uri
+          title
         }
       }
-    } catch (e) {
-      console.error(e.message, e);
-    }
+    `);
+
+    client.query(`
+      {
+        events {
+          id
+          title
+          description
+          latitude
+          longitude
+          type
+          free
+          ticketLink
+          times {
+            start
+            end
+          }
+          ...${imageFragment}
+          contactInfo {
+            address
+            link
+            email
+          }
+        }
+      }
+    `).then(result => {
+      const events = result.events.map(event => ({
+        ...event,
+        times: event.times.map(time => ({
+          start: parseInt(time.start, 10),
+          end: parseInt(time.end, 10),
+        })),
+      }));
+      this.setState({ events, loading: false });
+    });
+    // // load cached data
+    // try {
+    //   const loadedCache = await AsyncStorage.getItem(key);
+    //   if (loadedCache !== null) {
+    //     const parsedCache = JSON.parse(loadedCache);
+    //     const oneDay = moment().add(1, 'days');
+    //     if (moment().isSameOrBefore(oneDay)) {
+    //       this.setState({
+    //         events: parsedCache.events,
+    //         loading: false,
+    //       });
+    //     }
+    //   }
+    // } catch (e) {
+    //   console.error(e.message, e);
+    // }
     // load fresh data
     getEvents().then(events => {
       this.setState({
@@ -271,8 +320,25 @@ class App extends Component {
   );
 
   renderMap = () => {
-    const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
-    const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
+    // const events: Array<Event> = getCurrentEvents(this.state.events, this.state.date);
+    const events = this.state.events
+      .filter(event => {
+        const length = event.times.length;
+        for (let i = 0; i < length; i++) {
+          const time = event.times[i];
+          const selectedDate = moment().add(this.state.date, 'days').startOf('day');
+          const sameDay = selectedDate.isSame(parseInt(time.start, 10), 'day');
+          if (sameDay) {
+            console.log('same day');
+            return true;
+          }
+        }
+        return false;
+      })
+      .filter(event => !!event.latitude && !!event.longitude);
+    console.log('events.length', events.length);
+    // const currentMarkers: Array<MapMarker> = eventsToMarkers(events);
+
     return (
       <View style={styles.mapContainer}>
         <MapView
@@ -289,14 +355,17 @@ class App extends Component {
           // provider="google"
           // onRegionChange={this.onRegionChange}
         >
-          {currentMarkers.map((marker) => (
+          {events.map((event) =>
             <Marker
-              {...marker}
-              key={`marker-${marker.id}`}
-              type={marker.type}
-              onPress={() => this.markerPressed(marker)}
+              id={event.id}
+              latlng={{ latitude: event.latitude, longitude: event.longitude }}
+              title={event.title}
+              description={event.description}
+              type={event.type}
+              key={event.id}
+              onPress={this.markerPressed}
             />
-          ))}
+          )}
         </MapView>
       </View>
     );

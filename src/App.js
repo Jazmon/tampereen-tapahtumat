@@ -9,15 +9,12 @@ import {
   Text,
   ToastAndroid,
   StatusBar,
-  AsyncStorage,
   NativeModules,
   Linking,
 } from 'react-native';
 import i18n from 'i18next';
 import MapView from 'react-native-maps';
-// import * as Animatable from 'react-native-animatable';
 import moment from 'moment';
-// import Spinner from 'react-native-spinkit';
 import NavigationBar from 'react-native-onscreen-navbar';
 import _ from 'lodash';
 import {
@@ -26,15 +23,6 @@ import {
 } from 'react-native-bottom-sheet-behavior';
 import { Lokka } from 'lokka';
 import { Transport } from 'lokka-transport-http';
-
-import {
-  getEvents,
-} from './api';
-
-import {
-  eventsToMarkers,
-  getCurrentEvents,
-} from './utils';
 
 import {
   PRIMARY_COLOR,
@@ -48,10 +36,9 @@ import BottomSheet from './components/BottomSheet';
 import Slider from './components/Slider';
 import FloatingActionButton from './components/FloatingActionButton';
 
-const duration = 120;
 const DURATION = 120;
 const client = new Lokka({
-  transport: new Transport('https://vast-hollows-14109.herokuapp.com/graphql')
+  transport: new Transport('https://vast-hollows-14109.herokuapp.com/graphql'),
 });
 const { Calendar } = NativeModules;
 
@@ -130,15 +117,50 @@ class App extends Component {
         bottom: 40,
         left: 40,
       };
-      const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
-        .map(event => event.latlng);
+      const coords: Array<LatLng> = this.state.events
+        .filter(event => {
+          const length = event.times.length;
+          for (let i = 0; i < length; i++) {
+            const time = event.times[i];
+            const selectedDate = moment().add(this.state.date, 'days').startOf('day');
+            const sameDay = selectedDate.isSame(parseInt(time.start, 10), 'day');
+            if (sameDay) {
+              return true;
+            }
+          }
+          return false;
+        })
+        .filter(event => !!event.latitude && !!event.longitude)
+        .map(event => ({
+          latitude: (event: any).latitude,
+          longitude: (event: any).longitude,
+        }))
+        .filter(latlng => {
+          const center: LatLng = {
+            latitude: 61.497418,
+            longitude: 23.757059,
+          };
+          const MAX_DELTA_LONGITUDE = 0.2;
+          const MAX_DELTA_LATITUDE = 0.2;
+          const diff = {
+            latitude: center.latitude - latlng.latitude,
+            longitude: center.longitude - latlng.longitude,
+          };
+          const outside =
+            Math.abs(diff.longitude) > MAX_DELTA_LONGITUDE ||
+             Math.abs(diff.latitude) > MAX_DELTA_LATITUDE;
+          return !outside;
+        });
+      // console.log(coords);
+      // const coords: Array<LatLng> = getCurrentEvents(this.state.events, this.state.date)
+      //   .map(event => event.latlng);
       // TODO check the delta between events and if less than reasonable amount,
       // use padding to compensate
       // and if only one event, use some other value
       if (!!this.map && coords && coords.length > 1) {
-        this.map.fitToCoordinates(coords, edgePadding,
-          true,
-        );
+        this.map.fitToCoordinates(coords, { edgePadding,
+          animated: true,
+        });
       }
     }
   }
@@ -225,8 +247,6 @@ class App extends Component {
   }
 
   loadEvents = async () => {
-    // const prefix = 'TampereenTapahtumat';
-    // const key = `${prefix}:cache`;
     this.setState({ loading: true });
 
     const imageFragment = client.createFragment(`
@@ -271,34 +291,6 @@ class App extends Component {
       }));
       this.setState({ events, loading: false });
     });
-    // // load cached data
-    // try {
-    //   const loadedCache = await AsyncStorage.getItem(key);
-    //   if (loadedCache !== null) {
-    //     const parsedCache = JSON.parse(loadedCache);
-    //     const oneDay = moment().add(1, 'days');
-    //     if (moment().isSameOrBefore(oneDay)) {
-    //       this.setState({
-    //         events: parsedCache.events,
-    //         loading: false,
-    //       });
-    //     }
-    //   }
-    // } catch (e) {
-    //   console.error(e.message, e);
-    // }
-    // load fresh data
-    // getEvents().then(events => {
-    //   this.setState({
-    //     events,
-    //     loading: false,
-    //   });
-    //   const cache = {
-    //     events,
-    //     time: Date.now(),
-    //   };
-    //   AsyncStorage.setItem(key, JSON.stringify(cache));
-    // });
   }
 
   setDate = (value: number) => {
@@ -355,11 +347,6 @@ class App extends Component {
           {markers.map((marker) =>
             <Marker
               {...marker}
-              // id={event.id}
-              // latlng={{ latitude: (event: any).latitude, longitude: (event: any).longitude }}
-              // title={event.title}
-              // description={event.description}
-              // type={event.type}
               key={marker.id}
               onPress={this.markerPressed}
             />
@@ -376,7 +363,7 @@ class App extends Component {
     } = this.state;
 
     Animated.timing(bottomSheetColorAnimated, {
-      duration,
+      duration: DURATION,
       toValue: bottomSheetColor,
     }).start();
 

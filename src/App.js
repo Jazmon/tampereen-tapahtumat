@@ -123,7 +123,7 @@ class App extends Component {
           for (let i = 0; i < length; i++) {
             const time = event.times[i];
             const selectedDate = moment().add(this.state.date, 'days').startOf('day');
-            const sameDay = selectedDate.isSame(parseInt(time.start, 10), 'day');
+            const sameDay = selectedDate.isSame(time.start, 'day');
             if (sameDay) {
               return true;
             }
@@ -296,8 +296,8 @@ class App extends Component {
       const events = result.events.map(event => ({
         ...event,
         times: event.times.map(time => ({
-          start: parseInt(time.start, 10),
-          end: parseInt(time.end, 10),
+          start: new Date(time.start),
+          end: new Date(time.end),
         })),
       }));
       this.setState({ events, loading: false });
@@ -318,7 +318,7 @@ class App extends Component {
 
   renderError = () => (
     <View style={styles.error}>
-      <Text>{i18n.t('common:erroLoadingEvents')}</Text>
+      <Text>{i18n.t('common:errorLoadingEvents')}</Text>
     </View>
   );
 
@@ -329,7 +329,7 @@ class App extends Component {
         for (let i = 0; i < length; i++) {
           const time = event.times[i];
           const selectedDate = moment().add(this.state.date, 'days').startOf('day');
-          const sameDay = selectedDate.isSame(parseInt(time.start, 10), 'day');
+          const sameDay = selectedDate.isSame(time.start, 'day');
           if (sameDay) {
             return true;
           }
@@ -371,6 +371,8 @@ class App extends Component {
     const {
       bottomSheetColor,
       bottomSheetColorAnimated,
+      activeEvent,
+      date,
     } = this.state;
 
     Animated.timing(bottomSheetColorAnimated, {
@@ -378,7 +380,6 @@ class App extends Component {
       toValue: bottomSheetColor,
     }).start();
 
-    const { activeEvent } = this.state;
     return (
       <BottomSheetBehavior
         ref={bs => { this.bottomSheet = bs; }}
@@ -389,6 +390,7 @@ class App extends Component {
       >
         <BottomSheet
           activeEvent={activeEvent}
+          date={date}
           openUrl={this.handleOpenUrl}
           openNavigation={this.handleOpenNavigation}
           bottomSheetColorAnimated={bottomSheetColorAnimated}

@@ -9,6 +9,7 @@ import Content from './Content';
 
 type Props = {
   activeEvent: ?ApiEvent;
+  date: number;
   onPress: Function;
   openNavigation: Function;
   openUrl: Function;
@@ -24,6 +25,7 @@ class BottomSheet extends React.Component {
   render() {
     const {
       activeEvent,
+      date,
       onPress,
       bottomSheetColor,
       bottomSheetColorAnimated,
@@ -45,6 +47,7 @@ class BottomSheet extends React.Component {
         />
         <Content
           event={activeEvent}
+          date={date}
           openUrl={openUrl}
           openNavigation={openNavigation}
           openTicketUrl={openTicketUrl}

@@ -23,14 +23,16 @@ import {
 } from '../../theme';
 
 type Props = {
-  event: Event;
+  event: ApiEvent;
+  date: number;
   openUrl: Function;
   openNavigation: Function;
+  openTicketUrl: Function;
 };
 
 const { width, height } = Dimensions.get('window');
 
-const Content = ({ event, openUrl, openNavigation }: Props) => (
+const Content = ({ event, date, openUrl, openNavigation, openTicketUrl }: Props) => (
   <View style={styles.bottomSheetContent}>
     <NestedScrollView style={{ width }}>
       <View style={styles.detailListSection}>
@@ -64,11 +66,9 @@ const Content = ({ event, openUrl, openNavigation }: Props) => (
           }}
         >
           <Icon name="md-pricetags" size={18} color={PRIMARY_COLOR} style={{ marginRight: 18 }} />
-          {event.tags.map(tag => (
-            <Tag tag={tag} key={`tag-${tag}`} />
-          ))}
+          <Tag tag={event.type} />
         </View>
-        <DetailItemList event={event} openUrl={openUrl} openNavigation={openNavigation} />
+        <DetailItemList event={event} date={date} openUrl={openUrl} openNavigation={openNavigation} openTicketUrl={openTicketUrl} />
       </View>
     </NestedScrollView>
   </View>

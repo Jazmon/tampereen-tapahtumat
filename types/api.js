@@ -80,3 +80,61 @@ declare type VTEvent = {
   form_contact_info: ?VTFormContactInfo;
   is_in_moderation: boolean;
 };
+
+declare type ApiTime = {
+  id: number;
+  start: string;
+  end: string;
+  // createdAt: string;
+  // updatedAt: string;
+  EventId: number;
+}
+
+declare type ApiImage = {
+  id: number;
+  uri: string;
+  title: string;
+  EventId: number;
+
+};
+
+declare type ApiFormContactInfo = {
+  id: number;
+  name: ?string;
+  email: ?string;
+  phone: ?string;
+  jobTitle: ?string;
+  // createdAt: string;
+  // updatedAt: string;
+  EventId: number;
+};
+
+declare type ApiContactInfo = {
+  id: number;
+  address: string;
+  email: ?string;
+  phone: ?string;
+  link: ?string;
+  companyName: ?string;
+  // createdAt: string;
+  // updatedAt: string;
+  EventId: number;
+};
+
+declare type ApiEvent = {
+  id: number;
+  apiID: string;
+  title: string;
+  description: string;
+  latitude: ?number;
+  longitude: ?number;
+  type: string;
+  free: boolean;
+  ticketLink: ?string;
+  // createdAt: string;
+  // updatedAt: string;
+  times: Array<ApiTime>;
+  image: ApiImage;
+  contactInfo: ApiContactInfo;
+  formContactInfo: ApiFormContactInfo;
+}

@@ -5,6 +5,7 @@ import Spinner from 'react-native-spinkit';
 import {
   StyleSheet,
 } from 'react-native';
+import i18n from 'i18next';
 
 import {
   PRIMARY_COLOR,
@@ -36,6 +37,7 @@ class Loading extends React.Component {
       <Animatable.View
         style={styles.loading}
         pointerEvents="none"
+        useNativeDriver
         ref={view => { this.loadingView = view; }}
       >
         <Spinner
@@ -46,11 +48,12 @@ class Loading extends React.Component {
         <Animatable.Text
           animation="pulse"
           easing="ease-out"
+          useNativeDriver
           direction="alternate"
           iterationCount="infinite"
           style={{ color: '#fff', fontSize: 16, textAlign: 'center' }}
         >
-          Looking up events nearby...
+          {i18n.t('common:loading')}
         </Animatable.Text>
       </Animatable.View>
     );

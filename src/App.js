@@ -29,6 +29,8 @@ import {
   DARK_PRIMARY_COLOR,
 } from './theme';
 
+import config from '../config';
+
 import Marker from './components/Marker';
 // import Base from './components/Base';
 import Loading from './components/Loading';
@@ -38,7 +40,7 @@ import FloatingActionButton from './components/FloatingActionButton';
 
 const DURATION = 120;
 const client = new Lokka({
-  transport: new Transport('https://vast-hollows-14109.herokuapp.com/graphql'),
+  transport: new Transport(config.apiUrl),
 });
 const { Calendar } = NativeModules;
 
@@ -301,6 +303,10 @@ class App extends Component {
         })),
       }));
       this.setState({ events, loading: false });
+    })
+    .catch(err => {
+      console.error(err);
+      // TODO: handling
     });
   }
 

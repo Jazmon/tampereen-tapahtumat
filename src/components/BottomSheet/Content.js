@@ -69,7 +69,7 @@ const Content = ({ event, date, openUrl, openNavigation, openTicketUrl }: Props)
           <Tag tag={event.type} />
         </View>
         <DetailItemList event={event} date={date} openUrl={openUrl} openNavigation={openNavigation} openTicketUrl={openTicketUrl} />
-      </View>
+      </View>}
     </NestedScrollView>
   </View>
 );

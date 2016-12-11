@@ -1,8 +1,9 @@
 // @flow
 import React from 'react';
-// import {
-//   StyleSheet,
-// } from 'react-native';
+import {
+  StyleSheet,
+  findNodeHandle,
+} from 'react-native';
 import {
   // NestedScrollView,
   // CoordinatorLayout,
@@ -37,7 +38,7 @@ class FloatingActionButton extends React.Component {
   fab: Object;
 
   setAnchor(component: React$Element<*> | React$Component<*, *, *>) {
-    this.fab.setAnchorId(component);
+    this.fab.setAnchorId(findNodeHandle(component));
   }
 
   render() {

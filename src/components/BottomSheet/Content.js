@@ -23,7 +23,7 @@ import {
 } from '../../theme';
 
 type Props = {
-  event: ApiEvent;
+  event: ?ApiEvent;
   date: number;
   openUrl: Function;
   openNavigation: Function;

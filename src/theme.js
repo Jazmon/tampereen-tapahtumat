@@ -5,6 +5,7 @@ export const LIGHT_PRIMARY_COLOR = '#BBDEFB';
 export const TEXT_BASE_COLOR = 'rgba(0, 0, 0, 0.87)';
 export const SECONDARY_TEXT_COLOR = 'rgba(0, 0, 0, 0.54)';
 export const SECONDARY_COLOR = '#FF3F80';
+export const BOTTOM_SHEET_HEADER_HEIGHT = 90;
 
 export default {
   WHITE,
@@ -14,4 +15,5 @@ export default {
   TEXT_BASE_COLOR,
   SECONDARY_TEXT_COLOR,
   SECONDARY_COLOR,
+  BOTTOM_SHEET_HEADER_HEIGHT,
 };

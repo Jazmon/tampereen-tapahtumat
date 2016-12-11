@@ -10,6 +10,7 @@ import {
 import {
   PRIMARY_COLOR,
   WHITE,
+  BOTTOM_SHEET_HEADER_HEIGHT,
   TEXT_BASE_COLOR,
 } from '../../theme';
 
@@ -46,10 +47,22 @@ class Header extends React.Component {
     return (
       <TouchableWithoutFeedback onPress={onPress}>
         <Animated.View style={[styles.bottomSheetHeader, headerAnimated]}>
-          <View style={styles.bottomSheetLeft}>
-            <Animated.Text numberOfLines={2} style={[styles.bottomSheetTitle, textAnimated]}>
-              {title}
-            </Animated.Text>
+          <Animated.Text numberOfLines={2} style={[styles.bottomSheetTitle, textAnimated]}>
+            {title}
+          </Animated.Text>
+          <View
+            style={{
+              position: 'absolute',
+              right: 16,
+              width: 48,
+              height: 48,
+              borderRadius: 100,
+              backgroundColor: 'rgb(186, 31, 157)',
+              top: 0,
+              overflow: 'visible',
+            }}
+          >
+
           </View>
         </Animated.View>
       </TouchableWithoutFeedback>
@@ -60,10 +73,11 @@ class Header extends React.Component {
 const styles = StyleSheet.create({
   bottomSheetHeader: {
     padding: 24,
-    height: 80,
+    height: BOTTOM_SHEET_HEADER_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    overflow: 'visible',
   },
   bottomSheetLeft: {
     flexDirection: 'column',

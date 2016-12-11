@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Dimensions,
   Platform,
-  findNodeHandle,
   Animated,
   Text,
   ToastAndroid,
@@ -29,6 +28,7 @@ import './i18n';
 import {
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,
+  BOTTOM_SHEET_HEADER_HEIGHT,
 } from './theme';
 import mapStyle from './mapStyle.json';
 
@@ -106,7 +106,9 @@ class App extends Component {
     this.loadEvents();
 
     this.lastState = BottomSheetBehavior.STATE_COLLAPSED;
-    this.fab.setAnchor(findNodeHandle(this.bottomSheet));
+    this.fab.setAnchor(this.bottomSheet);
+    // this.fab.setAnchorId(this.bottomSheet);
+    // this.refs.fab.setAnchor(this.refs.bottomSheet);
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
@@ -400,7 +402,7 @@ class App extends Component {
         onSlide={this.handleSlide}
         // hideable
         onStateChange={this.handleBottomSheetChange}
-        peekHeight={80}
+        peekHeight={BOTTOM_SHEET_HEADER_HEIGHT}
       >
         <BottomSheet
           activeEvent={activeEvent}
@@ -425,7 +427,7 @@ class App extends Component {
           backgroundColor={DARK_PRIMARY_COLOR}
           animated={true}
           barStyle="default"
-          translucent={false}
+          translucent={true}
         />
         <NavigationBar
           backgroundColor={PRIMARY_COLOR}
@@ -456,24 +458,24 @@ class App extends Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#F5FCFF',
-    // flex: 1,
+    flex: 1,
     // flexGrow: 1,
-
-    width,
-    height: height - 24,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
+    //
+    // width,
+    // height: height - 24,
+    // position: 'absolute',
+    // top: 0,
+    // left: 0,
+    // right: 0,
+    // bottom: 0,
+    // justifyContent: 'flex-end',
+    // alignItems: 'center',
   },
   content: {
     // borderColor: '#f00', borderWidth: 1,
     // flex: 1,
     // flexGrow: 1,
-    // paddingTop: 24,
+    paddingTop: 24,
     // width,
     // height,
     backgroundColor: 'transparent',
@@ -486,6 +488,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+    height,
+    width,
   },
   mapContainer: {
     position: 'absolute',
@@ -494,9 +498,10 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     width,
-    height: height - StatusBar.currentHeight,
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    // height: height - StatusBar.currentHeight,
+    height,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   error: {
     flex: 1,

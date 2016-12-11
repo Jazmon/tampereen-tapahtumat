@@ -6,6 +6,9 @@ import {
 } from 'react-native';
 import Header from './Header';
 import Content from './Content';
+import {
+  BOTTOM_SHEET_HEADER_HEIGHT,
+} from '../../theme';
 
 type Props = {
   activeEvent: ?ApiEvent;
@@ -34,12 +37,12 @@ class BottomSheet extends React.Component {
       openTicketUrl,
     } = this.props;
 
-    // if (!activeEvent) {
-    //   return null;
-    // }
-
     return (
-      <View style={[styles.bottomSheet, { bottom: activeEvent ? 0 : -80 }]}>
+      <View
+        style={[styles.bottomSheet, {
+          bottom: activeEvent ? 0 : -BOTTOM_SHEET_HEADER_HEIGHT,
+        }]}
+      >
         <Header
           onPress={onPress}
           title={activeEvent ? activeEvent.title : ''}

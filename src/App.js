@@ -25,6 +25,7 @@ import {
 import { Lokka } from 'lokka';
 import { Transport } from 'lokka-transport-http';
 
+import './i18n';
 import {
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,

@@ -1,5 +1,7 @@
 // @flow
 import React from 'react';
+
+import './i18n';
 // import { Provider } from 'react-redux';
 // import configureStore from './configureStore';
 

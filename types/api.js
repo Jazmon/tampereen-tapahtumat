@@ -83,8 +83,8 @@ declare type VTEvent = {
 
 declare type ApiTime = {
   id: number;
-  start: number;
-  end: number;
+  start: string;
+  end: string;
   // createdAt: string;
   // updatedAt: string;
   EventId: number;

@@ -1,0 +1,9 @@
+{
+  "loading": "Ladataan tapahtumia...",
+  "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
+  "errorLoadingEvents": "Virhe ladatessa tapahtumia",
+  "free": "Ilmainen",
+  "paid": "Maksullinen",
+  "ticket": "Hanki liput täältä",
+  "website": "Sivusto"
+}

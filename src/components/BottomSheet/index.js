@@ -8,10 +8,12 @@ import Header from './Header';
 import Content from './Content';
 
 type Props = {
-  activeEvent: ?Event;
+  activeEvent: ?ApiEvent;
+  date: number;
   onPress: Function;
   openNavigation: Function;
   openUrl: Function;
+  openTicketUrl: Function;
   bottomSheetColor: number;
   bottomSheetColorAnimated: Object;
 };
@@ -23,11 +25,13 @@ class BottomSheet extends React.Component {
   render() {
     const {
       activeEvent,
+      date,
       onPress,
       bottomSheetColor,
       bottomSheetColorAnimated,
       openUrl,
       openNavigation,
+      openTicketUrl,
     } = this.props;
 
     // if (!activeEvent) {
@@ -44,8 +48,10 @@ class BottomSheet extends React.Component {
         />
         <Content
           event={activeEvent}
+          date={date}
           openUrl={openUrl}
           openNavigation={openNavigation}
+          openTicketUrl={openTicketUrl}
         />
       </View>
     );

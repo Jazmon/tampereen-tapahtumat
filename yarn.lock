@@ -3945,9 +3945,9 @@ react-native-blur@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/react-native-blur/-/react-native-blur-1.0.1.tgz#c81e48f631489a87a86a0c58674f6283d7dc15a7"
 
-"react-native-bottom-sheet-behavior@https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#2232c20efc9215689aa46d4bf7ee0298bf05b9ad":
-  version "0.0.11"
-  resolved "https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#2232c20efc9215689aa46d4bf7ee0298bf05b9ad"
+"react-native-bottom-sheet-behavior@https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#50cc565c9d3901f93f5a79abc0608af028fb46dd":
+  version "0.0.12"
+  resolved "https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#50cc565c9d3901f93f5a79abc0608af028fb46dd"
 
 react-native-geocoder@^0.4.5:
   version "0.4.5"

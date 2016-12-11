@@ -49,7 +49,7 @@
     "react-native": "0.38.0",
     "react-native-animatable": "^0.6.1",
     "react-native-blur": "^1.0.1",
-    "react-native-bottom-sheet-behavior": "https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#2232c20efc9215689aa46d4bf7ee0298bf05b9ad",
+    "react-native-bottom-sheet-behavior": "https://github.com/cesardeazevedo/react-native-bottom-sheet-behavior.git#50cc565c9d3901f93f5a79abc0608af028fb46dd",
     "react-native-geocoder": "^0.4.5",
     "react-native-locale-detector": "^1.0.1",
     "react-native-maps": "https://github.com/airbnb/react-native-maps.git#6a978b37dcf655c5cfe33b93c9d0df48f9979f1b",

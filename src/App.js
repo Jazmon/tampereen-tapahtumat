@@ -21,15 +21,12 @@ import {
   CoordinatorLayout,
   BottomSheetBehavior,
 } from 'react-native-bottom-sheet-behavior';
-import { Lokka } from 'lokka';
-import { Transport } from 'lokka-transport-http';
 
 import {
   PRIMARY_COLOR,
   DARK_PRIMARY_COLOR,
 } from './theme';
 
-import config from '../config';
 
 import Marker from './components/Marker';
 // import Base from './components/Base';
@@ -39,9 +36,6 @@ import Slider from './components/Slider';
 import FloatingActionButton from './components/FloatingActionButton';
 
 const DURATION = 120;
-const client = new Lokka({
-  transport: new Transport(config.apiUrl),
-});
 const { Calendar } = NativeModules;
 
 const { width, height } = Dimensions.get('window');
@@ -61,12 +55,12 @@ const REGION = {
 };
 
 type Props = {
+  events: Array<ApiEvent>;
+  loading: boolean;
 };
 
 type State = {
-  events: Array<ApiEvent>;
   date: number;
-  loading: boolean;
   region: Object;
   activeEvent: ?ApiEvent;
 
@@ -91,8 +85,6 @@ class App extends Component {
       region: ANDROID ? new MapView.AnimatedRegion(REGION) : REGION,
       date: 0,
       activeEvent: null,
-      events: [],
-      loading: false,
       bottomSheetColor: 0,
       bottomSheetColorAnimated: new Animated.Value(0),
     };
@@ -101,14 +93,12 @@ class App extends Component {
   state: State;
 
   componentDidMount() {
-    this.loadEvents();
-
     this.lastState = BottomSheetBehavior.STATE_COLLAPSED;
     this.fab.setAnchor(this.bottomSheet);
   }
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    if (prevState.loading && !this.state.loading) {
+    if (prevProps.loading && !this.props.loading) {
       this.loadingView.hide();
     }
 
@@ -119,7 +109,7 @@ class App extends Component {
         bottom: 40,
         left: 40,
       };
-      const coords: Array<LatLng> = this.state.events
+      const coords: Array<LatLng> = this.props.events
         .filter(event => {
           const length = event.times.length;
           for (let i = 0; i < length; i++) {
@@ -169,14 +159,31 @@ class App extends Component {
 
   handleFabPress = () => {
     const { activeEvent } = this.state;
-    if (activeEvent) {
+    if (activeEvent && !activeEvent.contactInfo) {
+      ToastAndroid.show(i18n.t('common:errorOpenCalendar'), ToastAndroid.SHORT);
+    } else if (activeEvent && activeEvent.contactInfo && activeEvent.contactInfo.address) {
+      // TODO figure out which date to add
+      let start = null;
+      let end = null;
+      if (activeEvent.times[0].start instanceof Date) {
+        start = activeEvent.times[0].start.getTime();
+      } else {
+        start = activeEvent.times[0].start;
+      }
+      if (activeEvent.times[0].end instanceof Date) {
+        end = activeEvent.times[0].end.getTime();
+      } else {
+        end = activeEvent.times[0].end;
+      }
       Calendar.insertEvent({
-        start: activeEvent.times[0].start,
-        end: activeEvent.times[0].end,
+        start,
+        end,
         title: activeEvent.title,
         description: activeEvent.description,
         location: activeEvent.contactInfo.address,
       });
+    } else {
+      ToastAndroid.show(i18n.t('common:errorOpenCalendar'), ToastAndroid.SHORT);
     }
   }
 
@@ -221,7 +228,8 @@ class App extends Component {
   }
 
   handleOpenUrl = () => {
-    const url: ?string = _.get(this.state, 'activeEvent.contactInfo.link');
+    if (!this.state.activeEvent || !this.state.activeEvent.contactInfo) { return; }
+    const url: ?string = this.state.activeEvent.contactInfo.link;
     if (url) {
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
@@ -232,7 +240,8 @@ class App extends Component {
   }
 
   handleOpenTicketUrl = () => {
-    const url: ?string = _.get(this.state, 'activeEvent.ticketLink');
+    if (!this.state.activeEvent) { return; }
+    const url: ?string = this.state.activeEvent.ticketLink;
     if (url) {
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
@@ -243,8 +252,10 @@ class App extends Component {
   }
 
   handleOpenNavigation = () => {
-    const lat: ?number = _.get(this.state, 'activeEvent.latlng.latitude');
-    const long: ?number = _.get(this.state, 'activeEvent.latlng.longitude');
+    if (!this.state.activeEvent) { return; }
+    const lat: ?number = this.state.activeEvent.latitude;
+    const long: ?number = this.state.activeEvent.longitude;
+
     if (lat && long) {
       const url: string = `http://maps.google.com/maps?daddr=${lat},${long}&amp;ll=`;
       Linking.canOpenURL(url).then(supported => {
@@ -259,57 +270,6 @@ class App extends Component {
     }
   }
 
-  loadEvents = async () => {
-    this.setState({ loading: true });
-
-    const imageFragment = client.createFragment(`
-      fragment on Event {
-        image {
-          uri
-          title
-        }
-      }
-    `);
-
-    client.query(`
-      {
-        events {
-          id
-          title
-          description
-          latitude
-          longitude
-          type
-          free
-          ticketLink
-          times {
-            start
-            end
-          }
-          ...${imageFragment}
-          contactInfo {
-            address
-            link
-            email
-          }
-        }
-      }
-    `).then(result => {
-      const events = result.events.map(event => ({
-        ...event,
-        times: event.times.map(time => ({
-          start: new Date(time.start),
-          end: new Date(time.end),
-        })),
-      }));
-      this.setState({ events, loading: false });
-    })
-    .catch(err => {
-      console.error(err);
-      // TODO: handling
-    });
-  }
-
   setDate = (value: number) => {
     if (value !== this.state.date) {
       this.setState({ date: value, activeEvent: null });
@@ -317,9 +277,10 @@ class App extends Component {
   };
 
   markerPressed = (marker: MapMarker) => {
-    const event: ?ApiEvent = this.state.events
+    const event: ?ApiEvent = this.props.events
       .filter(e => e.id === marker.id)[0];
     this.setState({ activeEvent: event });
+    // console.log('set active event to', event);
   }
 
   renderError = () => (
@@ -329,7 +290,7 @@ class App extends Component {
   );
 
   renderMap = () => {
-    const markers = this.state.events
+    const markers = this.props.events
       .filter(event => {
         const length = event.times.length;
         for (let i = 0; i < length; i++) {

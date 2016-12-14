@@ -19,6 +19,7 @@ type Props = {
   bottomSheetColor: number;
   onPress: Function;
 }
+
 const DURATION = 120;
 
 class Header extends React.Component {

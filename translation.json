@@ -3,6 +3,7 @@
     "common": {
       "loading": "Looking up events nearby...",
       "errorOpenNavigation": "Cannot open navigation for this event",
+      "errorOpenCalendar": "Unable to send this event to calendar",
       "errorLoadingEvents": "Error loading events",
       "free": "Free",
       "paid": "Paid",
@@ -14,6 +15,7 @@
     "common": {
       "loading": "Ladataan tapahtumia...",
       "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
+      "errorOpenCalendar": "Tapahtuman lisääminen kalenteriin epäonnistui",
       "errorLoadingEvents": "Virhe ladatessa tapahtumia",
       "free": "Ilmainen",
       "paid": "Maksullinen",

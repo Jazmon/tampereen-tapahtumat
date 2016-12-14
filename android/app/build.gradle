@@ -1,4 +1,5 @@
 apply plugin: "com.android.application"
+apply plugin: 'newrelic'
 
 import com.android.build.OutputFile
 
@@ -90,8 +91,8 @@ android {
         applicationId "com.tampereentapahtumat"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.1.1"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -118,6 +119,9 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
         }
+        buildTypes.each {
+            it.buildConfigField 'String', 'NEW_RELIC_TOKEN', TAMPEREEN_TAPAHTUMAT_NEW_RELIC_TOKEN
+        }
     }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
@@ -143,6 +147,8 @@ dependencies {
     compile project(':react-native-geocoder')
     compile project(':react-native-blur')
     compile project(':react-native-bottom-sheet-behavior')
+    compile project(":react-native-newrelic")
+    compile fileTree(dir: "node_modules/react-native-newrelic/android/libs", include: ["*.jar"])
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
     //noinspection GradleDynamicVersion

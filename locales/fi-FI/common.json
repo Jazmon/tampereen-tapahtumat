@@ -1,6 +1,7 @@
 {
   "loading": "Ladataan tapahtumia...",
   "errorOpenNavigation": "Navigaation avaaminen epäonnistui",
+  "errorOpenCalendar": "Tapahtuman lisääminen kalenteriin epäonnistui",
   "errorLoadingEvents": "Virhe ladatessa tapahtumia",
   "free": "Ilmainen",
   "paid": "Maksullinen",

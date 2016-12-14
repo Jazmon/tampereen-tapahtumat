@@ -39,15 +39,15 @@ const getTimesString = (event: ApiEvent, date: number) => {
 
 const DetailItemList = ({ event, date, openUrl, openNavigation, openTicketUrl }: Props) => (
   <View>
-    {!!event.contactInfo.link &&
+    {event && event.contactInfo && event.contactInfo.link &&
       <DetailItem icon="md-globe" text={i18n.t('common:website')} onPress={openUrl} />
     }
-    {!!event.contactInfo.address &&
+    {event && event.contactInfo && event.contactInfo.address &&
       <DetailItem icon="md-locate" text={event.contactInfo.address} onPress={openNavigation} />
     }
     <DetailItem icon="md-timer" text={getTimesString(event, date)} />
     <DetailItem icon="logo-euro" text={getPriceText(event)} onPress={openTicketUrl} />
-    {!!event.contactInfo.email &&
+    {event && event.contactInfo && event.contactInfo.email &&
       <DetailItem icon="md-mail" text={event.contactInfo.email} />
     }
   </View>

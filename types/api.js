@@ -135,6 +135,6 @@ declare type ApiEvent = {
   // updatedAt: string;
   times: Array<ApiTime>;
   image: ApiImage;
-  contactInfo: ApiContactInfo;
-  formContactInfo: ApiFormContactInfo;
+  contactInfo: ?ApiContactInfo;
+  formContactInfo: ?ApiFormContactInfo;
 }

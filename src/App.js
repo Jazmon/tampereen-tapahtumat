@@ -169,14 +169,31 @@ class App extends Component {
 
   handleFabPress = () => {
     const { activeEvent } = this.state;
-    if (activeEvent) {
+    if (activeEvent && !activeEvent.contactInfo) {
+      ToastAndroid.show(i18n.t('common:errorOpenCalendar'), ToastAndroid.SHORT);
+    } else if (activeEvent && activeEvent.contactInfo && activeEvent.contactInfo.address) {
+      // TODO figure out which date to add
+      let start = null;
+      let end = null;
+      if (activeEvent.times[0].start instanceof Date) {
+        start = activeEvent.times[0].start.getTime();
+      } else {
+        start = activeEvent.times[0].start;
+      }
+      if (activeEvent.times[0].end instanceof Date) {
+        end = activeEvent.times[0].end.getTime();
+      } else {
+        end = activeEvent.times[0].end;
+      }
       Calendar.insertEvent({
-        start: activeEvent.times[0].start,
-        end: activeEvent.times[0].end,
+        start,
+        end,
         title: activeEvent.title,
         description: activeEvent.description,
         location: activeEvent.contactInfo.address,
       });
+    } else {
+      ToastAndroid.show(i18n.t('common:errorOpenCalendar'), ToastAndroid.SHORT);
     }
   }
 
@@ -221,7 +238,8 @@ class App extends Component {
   }
 
   handleOpenUrl = () => {
-    const url: ?string = _.get(this.state, 'activeEvent.contactInfo.link');
+    if (!this.state.activeEvent || !this.state.activeEvent.contactInfo) { return; }
+    const url: ?string = this.state.activeEvent.contactInfo.link;
     if (url) {
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
@@ -232,7 +250,8 @@ class App extends Component {
   }
 
   handleOpenTicketUrl = () => {
-    const url: ?string = _.get(this.state, 'activeEvent.ticketLink');
+    if (!this.state.activeEvent) { return; }
+    const url: ?string = this.state.activeEvent.ticketLink;
     if (url) {
       Linking.canOpenURL(url).then(supported => {
         if (supported) {
@@ -243,8 +262,10 @@ class App extends Component {
   }
 
   handleOpenNavigation = () => {
-    const lat: ?number = _.get(this.state, 'activeEvent.latlng.latitude');
-    const long: ?number = _.get(this.state, 'activeEvent.latlng.longitude');
+    if (!this.state.activeEvent) { return; }
+    const lat: ?number = this.state.activeEvent.latitude;
+    const long: ?number = this.state.activeEvent.longitude;
+
     if (lat && long) {
       const url: string = `http://maps.google.com/maps?daddr=${lat},${long}&amp;ll=`;
       Linking.canOpenURL(url).then(supported => {

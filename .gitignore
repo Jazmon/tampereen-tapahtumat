@@ -31,26 +31,19 @@ build/
 .idea
 .gradle
 local.properties
-<<<<<<< ours
 *.keystore
-=======
 *.iml
->>>>>>> theirs
 
 # node.js
 #
 node_modules/
 npm-debug.log
-<<<<<<< ours
 coverage/
-=======
->>>>>>> theirs
 yarn-error.log
 
 # BUCK
 buck-out/
 \.buckd/
-<<<<<<< ours
 android/app/libs
 android/keystores/debug.keystore
 
@@ -59,12 +52,7 @@ builds/
 # Merge origs
 *.orig
 
-# VS Code
-.vscode
-
 newrelic.properties
-=======
-*.keystore
 
 # fastlane
 #
@@ -79,4 +67,3 @@ newrelic.properties
 
 # Bundle artifact
 *.jsbundle
->>>>>>> theirs

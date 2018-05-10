@@ -22,18 +22,8 @@
 [include]
 [libs]
 node_modules/react-native/Libraries/react-native/react-native-interface.js
-<<<<<<< ours
-node_modules/react-native/flow
-flow-typed/**/*.js
-flow/
-flow/*.js
-types/api.js
-types/map.js
-types/app.js
-=======
 node_modules/react-native/flow/
 node_modules/react-native/flow-github/
->>>>>>> theirs
 
 [options]
 emoji=true
@@ -57,13 +47,7 @@ suppress_type=$FlowFixMeState
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixMe\\($\\|[^(]\\|(\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)
 suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*react_native[a-z,_]*\\)?)\\)?:? #[0-9]+
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
-<<<<<<< ours
-suppress_comment=\\(.\\|\n\\)*\\$FlowIssue
-
-unsafe.enable_getters_and_setters=true
-=======
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
->>>>>>> theirs
 
 [version]
 ^0.67.0

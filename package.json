@@ -16,7 +16,9 @@
     "lint": "eslint -c .eslintrc.js src",
     "lint:fix": "eslint -c .eslintrc.js src --fix",
     "flow": "flow",
-    "createTranslation": "node ./scripts/createTranslation.js"
+    "createTranslation": "node ./scripts/createTranslation.js",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Atte Huhtakangas <atte.huhtakangas@gmail.com>",
   "license": "ISC",
@@ -49,7 +51,7 @@
     "lokka-transport-http": "^1.6.1",
     "moment": "2.16.0",
     "react": "15.3.1",
-    "react-native": "0.37.0",
+    "react-native": "0.39.1",
     "react-native-animatable": "^0.6.1",
     "react-native-blur": "^1.0.1",
     "react-native-bottom-sheet-behavior": "^0.0.10",
@@ -65,7 +67,8 @@
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
     "redux-logger": "2.7.4",
-    "remote-redux-devtools": "0.5.4"
+    "remote-redux-devtools": "0.5.4",
+    "snyk": "^1.87.0"
   },
   "devDependencies": {
     "eslint": "^3.9.1",
@@ -80,5 +83,6 @@
     "flow-bin": "^0.33.0",
     "node-fetch": "^1.6.3"
   },
-  "main": "index.js"
+  "main": "index.js",
+  "snyk": true
 }

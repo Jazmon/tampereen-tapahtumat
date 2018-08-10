@@ -65,7 +65,7 @@
     "redux": "^3.6.0",
     "redux-immutable": "^3.0.8",
     "redux-logger": "2.7.4",
-    "remote-redux-devtools": "0.5.4"
+    "remote-redux-devtools": "0.5.13"
   },
   "devDependencies": {
     "eslint": "^3.9.1",
